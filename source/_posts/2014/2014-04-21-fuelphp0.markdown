@@ -1,0 +1,114 @@
+---
+layout: post
+title: "FuelPHPを初めてみる #00インストール"
+date: 2014-04-21 16:38:04 +0900
+comments: true
+category: PHP
+tags: [FuelPHP,install,oil]
+keywords: [FuelPHP,install,oil]
+published: true
+
+---
+
+
+# はじめてのFuelPHP
+
+ちょっとさわってみることになったのでいろいろとメモしていきたいなと思います。  
+環境はMacOSXで。  
+oilコマンドからのプロジェクト作成までです。
+<!-- more -->
+
+
+## oilのインストール
+
+コマンドラインからだと簡単インストール。  
+下記コマンドを実行すればオッケーです。
+
+
+```
+curl get.fuelphp.com/oil | sh
+```
+
+## プロジェクトの作成
+
+やることを一気に書いちゃいます。
+
+```
+oil create [projectName]
+cd [projectName]
+rm -rf .git .gitmodules *.md docs fuel/core fuel/packages
+git init
+git submodule add git://github.com/fuel/core.git fuel/core
+git submodule add git://github.com/fuel/oil.git fuel/packages/oil
+git submodule add git://github.com/fuel/auth.git fuel/packages/auth
+git submodule add git://github.com/fuel/parser.git fuel/packages/parser
+git submodule add git://github.com/fuel/orm.git fuel/packages/orm
+git submodule add git://github.com/fuel/email.git fuel/packages/email
+git submodule foreach 'git checkout 1.7/master'
+git add .
+git commit -m "initial commit"
+```
+
+クローンする時は
+
+```
+git clone --recursive [リポジトリURL]
+```
+
+サブモジュールをアップデートしたい時は
+
+```
+git submodule foreach 'git pull'
+git submodule foreach 'git checkout [目的のバージョン]/master'
+```
+
+# エラーが出たところ
+インストールする時にいくつかエラーが出てたのでその辺りをまとめて。
+
+
+## default_timezoneの設定エラー
+
+`oil create`した時に
+
+```
+Error - date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in COREPATH/classes/fuel.php on line 161
+```
+
+タイムゾーンの設定ができてないよ！のエラー。  
+これは`config.php`のtimezoneを設定すればオッケーです。
+
+```
+vi fuel/app/config/config.php
+```
+
+```
+'default_timezone'   => 'Asia/Tokyo',
+```
+
+97行目あたりに`// 'default_timezone'   => null,`とコメントアウトされている部分があるのでここを変更。
+
+## Composerがインストールできてない！のエラー
+
+そのままプロジェクトを配置してアクセスした時にブラウザに
+
+```
+Composer is not installed. Please run "php composer.phar update" in the root to install Composer
+```
+
+が表示される。  
+
+プロジェクトを置いたルートディレクトリ(`composer.phar`が置かれているディレクトリ)で
+
+```
+php composer.phar update
+```
+
+をすればオッケーです。
+
+
+
+
+
+## 参考
+- [FuelPHPプロジェクトをgit管理するときにすべきこと](http://qiita.com/L_e_k_o/items/956bd92645769dece5e7)
+もはやこのページのブックマークを残しておきたいがための記事ですが。

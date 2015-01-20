@@ -1,0 +1,188 @@
+---
+layout: post
+title: "ios8-swift"
+date: 2014-10-18 16:25:43 +0900
+comments: true
+categories:
+published: false
+---
+
+[iOS 8/Swift エンジニア勉強会＠ヤフー](http://connpass.com/event/8629/)  
+
+------
+
+[#ios8yahoo](https://twitter.com/search?q=%23ios8yahoo&src=typd)
+
+# iOS8概要
+hirama2さん  
+[スライド](http://www.slideshare.net/himaratsu/ios-8swift-ios8yahoo)  
+
+## 新しいAPI
+- App Extension
+アプリ間連携の仕組み。  
+ウィジェットやカスタムキーボード  
+全部で７種類  
+Share  
+Action  
+Today (widget)  
+Photo Editing  
+Document Provider  
+CustomKeyboard  
+Interactive Extention
+- XXXKit  
+CloudKit  
+HomeKit  
+HealthKit  
+- WKWebView
+- iTunesConnect  
+TestFlight  
+- AppStore  
+App Previews  
+App Bundle  
+Analytics  
+
+## Swift
+いろいろな言語に似ていて学習障壁が低い  
+
+# Xcode6新機能
+- Swift対応,Playground
+- XCTest  
+  非同期テスト,パフォーマンステスト
+- Interface Builder  
+  カスタムビュークラスのライブレンダリング,カスタムフォント  
+- Debugger  
+Viewの階層構造を3D表示  
+queueに積まれたblocksの表示
+- SoriteKit, SceneKit
+
+---
+
+階層構造やプロパティの表示
+Debug navigator
+
+
+- 自前ViewクラスをIB上で描画できる
+自前Viewクラスの上にIB_DESIGNABLE  
+プロパティの方のにIBInspectableをつける  
+
+- 非同期テスト
+
+-----
+うさぎまる//定時 @CarmineScarlet
+-waitForExpectationsWithTimeout:handler:で非同期テストが出来る。 #ios8yahoo  
+KVOは -keyValueObservingExpectationForObject:keyPath:expectedValue: Notificationは -expectationForNotification:object:handler: を使う #ios8yahoo  
+-----
+
+# 既存アプリのiOS8対応
+対応段階→3段階あるかなーという感じ
+- iOS8での正常動作
+- iOS8独自機能
+- iPhone6/6Plusレイアウト対応
+
+## つまったところ事例
+
+- アプリ回転時のレイアウト崩れ  
+[[UIScreen mainScreen] applicationFrame];  
+→height,widthの値が変わるようになった。  
+回転県知事に呼ばれるメソッドの処理も変更されている！！  
+
+[[UIScreen mainScreen] applicationFrame];  
+[[UIScreen mainScreen] bounds];  
+[Application sharedApplication] applicationFrame];
+とかをつかっている場合は注意が必要
+
+- テーブルビューの罫線
+self.tableview.layoutMerginsの設定もしてあげる必要がある  
+
+- デバイストークン
+7  
+registerForRemoteNotifigationTypesをしていするだけでいけた  
+
+8  
+通知タイプの設定・カテゴリ・登録・許可を取るをしないとけない  
+
+- iPadでカメラが反応しない  
+
+despatch_async(非同期)で起動しないといけないんだって。  
+アルバムから写真を選択する場合も同様。  
+
+- タブの画像が表示されない  
+iOS7でのsetFinishedSelectImage が使えなくなった！  
+
+- Extentionの共通ロジック  
+アプリ本体とExtentionで利用する共通部品クラスにおいて[UIApplication sharedApplication]がつかわれているメソッドがあった。  
+NS_EXTENSION_UNAVAILABLE_IOS  
+
+Proprocessor Macroを使う方法で回避することができる。  
+
+- Extension Today
+→ガイドラインがあるよ！！
+
+## ヤフオクアプリがiOS8対応にかかった工数
+政策・開発の順  
+不具合修正 0 4  
+ウィジェット作成 3 4  
+
+# iOS8 Widget
+bit.ly/ios8_widget → [スライド](http://www.slideshare.net/tanabee/ios8widget)  
+
+# Document Provider
+
+## 何ができるのか？
+自分のアプリに対して他のアプリがファイルの操作をすることができる。  
+imprort export open move  
+→Dropboxが実装されてるよ！！  
+
+- Import  
+HostAppがドキュメントプロバイダーからファイルを受け取る  
+- Export  
+ドキュメントプロバイダーにHostAppがファイルを渡す。  
+- Open  
+ドキュメントを編集する
+- Move  
+ドキュメントを移動する  
+
+## Document Providerの構成
+- DocumentPickerViewController Extension  
+import,Export,UIのサポート  
+- FileProvider Extentsion  
+Open,Moveのサポート  
+
+# HomeKit
+[スライド](http://techtechwalker.blogspot.jp/2014/10/ios8homekit200.html#sthash.6OebPHAh)  
+スマート家電とiPhoneを連携させるためのkit  
+BLE Wifiで連携できる。made for iphoneっていうライセンスつきの家電しかむりだよ！！  
+・・・MFi家電。  
+netatmo  
+
+# Swiftで学ぶ複素数
+[スライド](http://www.slideshare.net/taketo1024/swift-40423935)  
+
+[swift-complex](https://github.com/dankogai/swift-complex)
+
+# Chris
+LLVM,Swift開発の人  
+
+REPLのような仕組みをコンパイラ言語に作りたかったからplaygroundができた
+興味のあるものに対しての情熱
+
+
+
+
+
+# LT
+- [Swiftでアプリを開発した体験記](http://www.slideshare.net/susieyy/swiftsiori)
+- [オプショナル型](http://www.slideshare.net/hasegawatomoki/ss-40424010)  
+[参考](http://qiita.com/cotrpepe/items/518c4476ca957a42f5f1)
+
+SceneKit  
+3Dモデルのためのkit。Shaderまわりがすごい綺麗なんだって。  
+- [Swift-JSON](http://www.slideshare.net/dankogai/ios8yahoo-swiftjson)  　　
+[Swift-JSON](https://github.com/dankogai/swift-complex)  
+→ライブラリ。  Software desginで来月から連載するらしいよ
+
+
+
+http://www.slideshare.net/dankogai/ios8yahoo-swiftjson
+http://www.slideshare.net/himaratsu/ios-8swift-ios8yahoo
+https://developer.apple.com/jp/devcenter/ios/library/documentation/ExtensibilityPG.pdf

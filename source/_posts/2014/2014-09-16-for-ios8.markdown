@@ -1,0 +1,20 @@
+---
+layout: post
+title: "iOS8対応"
+date: 2014-09-16 16:11:53 +0900
+comments: true
+category: for
+tags: ["ios8"]
+keywords: for, ios8
+published: false
+
+---
+
+## Push通知の対応
+Push通知の許可がアプリ起動直後ではなく任意の場所で許可のアラートが出せるようになったみたい。
+
+```
+[[UIApplication sharedApplication] registerForRemoteNotifications];
+```
+
+<!-- more -->

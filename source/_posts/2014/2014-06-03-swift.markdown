@@ -1,0 +1,97 @@
+---
+layout: post
+title: "[絶賛更新中]iOS,OSX向けの新しい言語「swift」について"
+date: 2014-06-16 10:34:05 +0900
+comments: true
+category: iOS
+tags: [Swift,Language,iOS,OSX]
+keywords: Swift,Programming
+published: true
+
+---
+
+Appleから新しいiOS,OS X向け言語が発表されたみたいです・ω・
+
+[Swift](https://developer.apple.com/swift/)
+
+なんて速そうなお名前。
+さっそくiBook StoreにSwiftに関する電子書籍がアップされていたので読んでみました。
+<!-- more -->
+
+<div class="pochireba" style="text-align:left;font-size:small;padding:20px 0;/zoom: 1;overflow: hidden;"><a href="https://itunes.apple.com/jp/book/swift-programming-language/id881256329?mt=11&uo=4&at=10l8vp" target="_blank" ><img src="http://a1.mzstatic.com/us/r30/Publication4/v4/a9/9d/d1/a99dd1d5-39b9-71ce-7500-2eb3e8d56990/cover.60x60-50.jpg" alt="The Swift Programming Language" width="60" height="60" style="float:left;margin:0 15px 0 0;width:60px;height:60px;" class="pochi_img" ></a><div class="pochi_info" style="text-align:left;/zoom: 1;overflow: hidden;"><div class="pochi_name"><a href="https://itunes.apple.com/jp/book/swift-programming-language/id881256329?mt=11&uo=4&at=10l8vp" target="_blank" >The Swift Programming Language</a></div><div class="pochi_price" style="display:inline;">無料</div><div class="pochi_time" style="font-size:x-small;display:inline;">(2014.06.03時点)</div>&nbsp;<a href="https://itunes.apple.com/jp/book/swift-programming-language/id881256329?mt=11&uo=4&at=10l8vp" style="width:60px;color:#ffffff;background:#000000;font-size:8px;font-weight:bold;text-align:center;display:inline;text-decoration:none;border:0px;padding:2px;border-radius:5px;white-space:nowrap;" target="_blank" >App Store</a><div class="pochi_seller"><a href="https://itunes.apple.com/jp/artist/apple-inc./id405307759?mt=11&uo=4&at=10l8vp" target="_blank" >Apple Inc.</a></div><div class="pochi_post" style="font-size:x-small;">posted with <a href="http://pochireba.com" rel="nofollow" target="_blank">ポチレバ</a></div></div><div class="pochireba-footer" style="clear: left"></div></div>
+
+第２段の書籍もアップされましたー！
+<div class="pochireba" style="text-align:left;font-size:small;padding:20px 0;/zoom: 1;overflow: hidden;"><a href="https://itunes.apple.com/jp/book/using-swift-cocoa-objective/id888894773?mt=11&uo=4&at=10l8vp" target="_blank" ><img src="http://a2.mzstatic.com/us/r30/Publication6/v4/4f/c3/c6/4fc3c655-d36a-9442-ca7d-1d798d5f19ef/using_swift_cover.60x60-50.jpg" alt="Using Swift with Cocoa and Objective-C" width="60" height="60" style="float:left;margin:0 15px 0 0;width:60px;height:60px;" class="pochi_img" ></a><div class="pochi_info" style="text-align:left;/zoom: 1;overflow: hidden;"><div class="pochi_name"><a href="https://itunes.apple.com/jp/book/using-swift-cocoa-objective/id888894773?mt=11&uo=4&at=10l8vp" target="_blank" >Using Swift with Cocoa and Objective-C</a></div><div class="pochi_price" style="display:inline;">無料</div><div class="pochi_time" style="font-size:x-small;display:inline;">(2014.06.16時点)</div>&nbsp;<a href="https://itunes.apple.com/jp/book/using-swift-cocoa-objective/id888894773?mt=11&uo=4&at=10l8vp" style="width:60px;color:#ffffff;background:#000000;font-size:8px;font-weight:bold;text-align:center;display:inline;text-decoration:none;border:0px;padding:2px;border-radius:5px;white-space:nowrap;" target="_blank" >App Store</a><div class="pochi_seller"><a href="https://itunes.apple.com/jp/artist/apple-inc./id405307759?mt=11&uo=4&at=10l8vp" target="_blank" >Apple Inc.</a></div><div class="pochi_post" style="font-size:x-small;">posted with <a href="http://pochireba.com" rel="nofollow" target="_blank">ポチレバ</a></div></div><div class="pochireba-footer" style="clear: left"></div></div>
+※合間にまとめてるためまったり更新です＞＜  
+
+
+
+## 変数と定数
+
+定数は`let`で宣言、変数は`var`で宣言します。
+
+```
+let maxNum = 50
+var number = 0
+```
+
+上記で、`maxNum`という`50`が入った定数が宣言。  
+`number`という変数を`0`で初期化という形になります。  
+
+なるほど。  
+`let`で宣言した場合は定数という扱いなので、内容が変更される予定がなければ基本的には`let`で宣言するのが望ましいです。  
+
+
+### 型推論
+Swiftには型推論という機能があるようで、代入する値によって型を推論してくれるようです。
+
+```
+let number = 4
+let name = 'PGMY'
+var data = 5.4
+```
+
+これで、  
+`number`は`Integer`型の定数  
+`name`は`String`型の定数  
+`data`は`Double`型の変数  
+という感じの宣言になります。  
+
+コンマで区切れば複数宣言も可能です。
+
+```
+var x = 0.0, y = 0.0, z = 0.0
+
+```
+
+
+### 型指定
+もちろん型を指定して宣言することもできます。  
+
+```
+var message: String
+```
+この`:`は`…の型は…`といった感じの意味になっていて、`:`の後ろに指定したい型を書きます。  
+宣言時に型を指定した時はその他の型を入れることはできません。
+```
+message = 'MESSAGE'
+```
+
+基本的には型指定を使わなくても、宣言時に型推論を頼って初期値を入れてしまえば、問題ありません。
+
+### 定数・変数の名前に利用できるもの
+Unicode文字に含まれている文字であればどんなものでも宣言として使えます。  
+
+```
+let π = 3.14159
+let あいさつ = "こんにちは！"
+```
+iPhoneで利用されている絵文字なんてのも定数・変数として利用でちゃいます（このブログではちょっと表示できませんが）。  
+
+## 定数・変数の出力
+出力については`println`関数を使うことで文字列を簡単に出力できます。
+Xcodeであればコンソール出力部分に出力されます。
+
+```
+println("This is a string")
+```

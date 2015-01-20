@@ -1,0 +1,123 @@
+---
+layout: post
+title: "iOS-Study"
+date: 2014-10-03 19:41:21 +0900
+comments: true
+category: iOS-Study
+tags: []
+keywords: iOS-Study
+published: false
+---
+
+<!-- more -->
+
+
+# AutoLayout
+- AutoLayoutを使ってアニメーションすると依存が多くなる  
+- UIScrollViewはちょっと難しいみたい。  
+- メイソンリーってコードで書けるライブラリがあるみたい。  
+
+
+## Custom Keyboard Extension
+日本語キーボードはまだ市場が出来上がってないみたい・ω・！  
+@k_katsumi  
+- アプリ  
+N+Keyboard 親指シフト  
+今日のアニメ  
+
+## 制限
+提供されるキーボードの中のみ。  
+高さは自由  
+日本語入力のインライン変換はできない  
+
+UITextDocumentProxy  
+UIKeyInput  
+
+Atokは右に寄せたり左に寄せたりできるところがいいって言われてるみたい。  
+キー入力 ⇔ レンダリング・フィードバック ⇔ かな漢字変換  
+かな漢字変換部分が難しくなってる。  
+Google日本語入力のWebAPIとか使ったりすることもできる。  
+
+OpenWnn  
+mozc  
+
+※GitHubで  
+[Mozc-for-iOS](https://github.com/kishikawakatsumi/Mozc-for-iOS)  
+[JapaneseKeyboardKit](https://github.com/kishikawakatsumi/JapaneseKeyboardKit)  
+
+大きさ  
+キーボードの大きさはAutoLayout制約をつけないと変わらない
+ViewWillApper以降でないと変わらない
+
+## 注意すること
+NumberPadをつけないといけないって規約が一応あるけどなくても通ってる人もいたり・・・。  
+Extention系は使えるメモリが少ないので注意。  
+
+
+# Extention Today
+通知センターウィジェットって呼ばれる。
+iQON天気  
+ユーザーは自分で追加しないといけないので本体のアプリの方でお知らせしてあげないと気づかれないことが多い
+
+## 注意事項
+Extention Todayは単体ではリリースできない。必ずほすとアプリと一緒でないといけない  
+Extentionはcontaining appとコード共有ができない（設定する必要があry
+
+ホストアプリで使用しているローカルディスクやUserDefaultsなどの参照ができない
+
+
+## コード共有
+- コンパイル対象に含めてしまう。  
+⇒あんまりおすすめできない。importファイルを１つ１つ追加していかないといけない　　
+- 埋め込みフレームワークを使用する  
+file > new > target > Framework & Library
+
+Extentionではカメラだったりとか利用できない  
+
+## データ共有
+App Groups(ポータルでの設定)ってのがDev CenterでGroupIDを追加することでデータの共有が可能になる。  
+XcodeでApp Groupsを設定。  
+KeychainはKeychain sharingを使う  
+
+## 最後に
+左マージンが推奨されている。  
+デバッグ・テストはシミュレーターを利用できるが作成したExtensionを指定してビルドをする必要がある。
+オフィシャルの日本語ドキュメントでてるよっっ！！
+
+通知センターで開かれるとviewdidloadが呼ばれる。
+
+# Swift  
+SIORI ⇒Swiftで作ってあるんだって。  
+RestKit
+Interactive Transition
+#defineとマクロを使ったライブラリとかは使えない＞＜
+Alamonfire
+
+
+# ObjCとSwiftのコードの共有  
+[PixivLTSample](https://github.com/saku/PixivLTSample)  
+
+## クラスの拡張
+ObjCで作ったクラスはSwiftで拡張できる。  
+Swiftで作ったクラスはObjCでは拡張できな。
+
+## 動的なクラス生成について
+ObjCのクラスを生成 > NSClassFromString  
+Swiftのkルアスを生成 > NSClassFromStringは使えない
+[appName]-Swift.hで読んであげるといける
+
+## メソッド
+ObjCで定義したグローバルメソッドはSwiftで呼べるが  
+Swiftで定義したグローバルメソッドはSwiftでは呼べない
+
+
+# Share Extention
+[スライド](http://www.slideshare.net/kitasuke/share-extensionpixiv)  
+
+# iOS8時代のUISplitViewController  
+Adaptive  
+Size Class
+ Regular  
+ Compact  
+
+UITraitCollection
