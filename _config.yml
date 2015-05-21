@@ -87,7 +87,7 @@ pinboard_user:
 pinboard_count: 3
 
 # Delicious
-delicious_user:
+delicious_user: pgmy
 delicious_count: 3
 
 # Disqus Comments
@@ -98,7 +98,9 @@ disqus_show_comment_count: false
 google_analytics_tracking_id: UA-34429647-2
 
 # Facebook Like
-facebook_like: false
+facebook_like: true
+
+feedburner_username: PgmyProgrammingBlog
 
 #prose.io settings
 prose:
