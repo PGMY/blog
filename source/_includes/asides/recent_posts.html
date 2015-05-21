@@ -1,0 +1,11 @@
+                     <div class="col-md-4">
+                      <h4>Recent Posts</h4>
+                        
+                        <ul>
+                          {% for post in site.posts limit: site.recent_posts %}
+                            <li>
+                              <a href="{{ root_url }}{{ post.url }}">{{ post.title }}</a>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                    </div>

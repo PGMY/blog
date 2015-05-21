@@ -1,0 +1,219 @@
+---
+layout: post
+title: "<S>Objective-CからSwiftにしたら処理が劇的に重くなった話</S>"
+date: 2014-07-07 14:22:22 +0900
+comments: true
+category: iOS
+tags: [Swift,Objective-C]
+keywords: swift
+published: true
+
+---
+
+⇒ Arrayの扱いが変わってきたので一旦この記事は保留で全体を見直すことにしました。
+
+------
+<!-- more -->
+絶賛まだ修正中ですが、「[Assetsを表示するプログラムをSwiftにしてみる](http://pgmy.github.io/blog/2014/06/27/assetslibrary-swift/)」でいろいろと作業しながらSwiftの勉強をしていたのですが、自分のおもいつくままの方法でObjective-CからSwiftにしたら処理が耐えられないほど重くなってしまいました・・・・。  
+いろいろと原因追及をしながら考えてみたいなと思います。  
+・・・考えている途中のメモです。  
+解決したら解決方法を追記する予定ですが現在解決しておりませぬ。  
+コメント募集中？  
+
+そもそも未熟すぎるのが悪いというのは大目に見てください・・・orz
+
+# 劇重になった問題の処理
+
+問題のコード部分はAssetLibraryからデータを取り出して日付でソートするという部分です。  
+日付順に格納したかったのでソート処理をしてデータを格納しなおしてごにょごにょしてました。  
+そもそもがサンプルで作ったソースなので元々が良くないのかもしれませんが、Objective-Cでは数秒程度の処理がSwiftにすることで数分の処理へと変貌してしまいました。
+
+- Objective-Cで。
+
+```
+ALAssetsGroupType assetsGroupType = ALAssetsGroupAlbum | ALAssetsGroupEvent | ALAssetsGroupFaces | ALAssetsGroupSavedPhotos;
+
+NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+[formatter setDateFormat:@"yyyy/MM/dd"];
+
+// アセットライブラリから取得したグループ内のアセットごとの処理
+ALAssetsGroupEnumerationResultsBlock groupResultBlock = ^(ALAsset *asset, NSUInteger index, BOOL *stop) {
+  if (asset) {
+    NSDate   *assetDate    = [asset valueForProperty:ALAssetPropertyDate];
+    NSString *assetDateStr = [formatter stringFromDate:assetDate];
+    [allAssets addObject:@{ ASSET: asset, DATE: assetDate, DATE_STR: assetDateStr }];
+  }
+};
+
+NSComparator comparetor = ^NSComparisonResult (id obj1, id obj2) {
+  NSDate *datea = obj1[DATE];
+  NSDate *dateb = obj2[DATE];
+
+  return [dateb compare:datea];
+};
+
+
+// ライブラリからアセットグループを取得する処理
+ALAssetsLibraryGroupsEnumerationResultsBlock resultBlock = ^(ALAssetsGroup *assetsGroup, BOOL *stop) {
+  //        NSLog(@"AssetsGroup : %@", assetsGroup);
+  ALAssetsFilter *onlyPhotosFilter = [ALAssetsFilter allPhotos];
+  [assetsGroup setAssetsFilter:onlyPhotosFilter];
+  if (assetsGroup) {
+    if ([assetsGroup numberOfAssets] > 0) {
+      [assetsGroup enumerateAssetsUsingBlock:groupResultBlock];
+    }
+  } else {
+    // 全体sort
+    [allAssets sortWithOptions:NSSortConcurrent usingComparator:comparetor];
+    for (NSDictionary *asset in allAssets) {
+      NSString *dateStr = asset[DATE_STR];
+      if (self.assetsData[dateStr]) {   // 存在していたら
+        [self.assetsData[dateStr] addObject:asset[ASSET]];
+      } else {
+        NSMutableArray *sectionArray = [[NSMutableArray alloc] init];
+        [sectionArray addObject:asset[ASSET]];
+        [self.assetsData setObject:sectionArray forKey:dateStr];
+        [sectionArray release];
+        [self.sectionList addObject:dateStr];
+      }
+    }
+    [formatter release];
+    [allAssets release];
+    [self.collectionView reloadData];
+  }
+};
+```
+
+- Swiftで
+
+```
+let assetsGroupType :ALAssetsGroupType! = ALAssetsGroupType(0xFFFFFFFF)
+
+var fomatter = NSDateFormatter()
+fomatter.dateFormat = "yyyy/MM/dd"
+
+var groupResultBlock : ALAssetsGroupEnumerationResultsBlock = { (asset: ALAsset!, index: Int, stop:CMutablePointer<ObjCBool>) -> Void in
+  if asset {
+    let assetDate: NSDate = asset.valueForProperty(ALAssetPropertyDate) as NSDate
+    let assetDateStr: String = fomatter.stringFromDate(assetDate) as String
+    allAssets.append([self.ASSET:asset, self.DATE:assetDate, self.DATE_STR:assetDateStr])
+  }
+}
+
+var resultBlock : ALAssetsLibraryGroupsEnumerationResultsBlock = { (assetsGroup:ALAssetsGroup!, stop: CMutablePointer<ObjCBool>) -> Void in
+  let onlyPhotosFilter: ALAssetsFilter = ALAssetsFilter.allPhotos()
+  if assetsGroup {
+    assetsGroup.setAssetsFilter( onlyPhotosFilter )
+    if assetsGroup.numberOfAssets() > 0 {
+      assetsGroup.enumerateAssetsUsingBlock(groupResultBlock)
+    }
+  } else {
+    sort( allAssets ){ $0[self.DATE_STR] as String > $1[self.DATE_STR] as String }
+
+    for anAsset: Dictionary<Int,AnyObject> in allAssets {
+      let assetDict: NSDictionary = anAsset
+      let dateStr: String! = assetDict[self.DATE_STR] as String
+      if self.assetsData[dateStr] {
+        var asstsArr:Array<ALAsset> = self.assetsData[dateStr]!
+        asstsArr.append(anAsset[self.ASSET] as ALAsset)
+        self.assetsData[dateStr] = asstsArr
+      } else {
+        var sectionArray:Array<ALAsset> = []
+        sectionArray.append(anAsset[self.ASSET] as ALAsset)
+        self.assetsData[dateStr] = sectionArray
+        self.sectionList.append(dateStr)
+      }
+
+    }
+    self.collectionView!.reloadData()
+  }
+}
+```
+
+Swiftにうまく変換できなかった部分は思いつくままに無理矢理やっている部分があります。  
+処理としては下記のものになります。
+
+- `allAssets`という配列にまずは`Assets`たちを全部入れていく
+- `allAssets`を日付でソートする
+- ソートした結果をCollectionViewで使いやすいように`self.assetsData`へ日付をkeyにしたDictionaryに格納していく
+
+以上の作業をしています。  
+
+細かくみていきたいと思います。
+
+## 第１の問題点 : ALAssetsGroupType
+AssetsLibraryからデータを取り出す時に`ALAssetsGroupType`を指定することで必要なデータのみ表示されるように調整しています。  
+
+```
+ALAssetsGroupType assetsGroupType = ALAssetsGroupAlbum | ALAssetsGroupEvent | ALAssetsGroupFaces | ALAssetsGroupSavedPhotos;
+```
+
+```
+let assetsGroupType :ALAssetsGroupType! = ALAssetsGroupType(0xFFFFFFFF)
+```
+
+実はここで問題が起きてしまいました。  
+AssetsLibraryを利用するので
+
+```
+import AssetsLibrary
+```
+
+を記載しています。が、`ALAssetsGroupAlbum`が呼び出せないのです。  
+ヘッダファイルに飛んでみると、Objective-Cではenumで記述されていた部分が、変数の宣言に切り替わっています。  
+しかも、`ALAssetsGroupType`は`Int`型ですが、ObjCで宣言されていた`ALAssetsGroupAlbum`などは`CUnsignedInt`型です。  
+そして`ALAssetsGroupType`は`typealias`で宣言されています。  
+
+```
+var ALAssetsGroupLibrary: CUnsignedInt { get } // The Library group that includes all assets.
+var ALAssetsGroupAlbum: CUnsignedInt { get } // All the albums synced from iTunes or created on the device.
+var ALAssetsGroupEvent: CUnsignedInt { get } // All the events synced from iTunes.
+var ALAssetsGroupFaces: CUnsignedInt { get } // All the faces albums synced from iTunes.
+var ALAssetsGroupSavedPhotos: CUnsignedInt { get } // The Saved Photos album.
+
+var ALAssetsGroupPhotoStream: CUnsignedInt { get } // The PhotoStream album.
+
+var ALAssetsGroupAll: CUnsignedInt { get } // The same as ORing together all the available group types,
+
+typealias ALAssetsGroupType = Int
+```
+
+この子たちの扱いがわかりません・・・。  
+いろいろ試行錯誤して下記の書き方にしてみました。
+
+```
+let assetsGroupType :ALAssetsGroupType!  = ALAssetsGroupType(ALAssetsGroupAll)
+```
+
+こうするとこの行でXcodeが落ちてしまいますorz  
+うーん。まだ勉強不足故このあたりをどう書けばいいのかわからず、結局`0xFFFFFFFF`と直に書いて進むことにしてしまいました。  
+絶賛解決方法探し中。  
+ちなみにplaygroundでは
+
+```
+Playground execution failed: error: <REPL>:60:1: error: use of unresolved identifier 'ALAssetsGroupAll'
+```
+と、表示されています・・・。importが間違えてるのかなぁ・・・。
+
+## 第２の問題点 : sort
+
+ObjCでは`NSComparator`を使ってた部分をSwiftでは`sort`があるのでそれを使いました。  
+allAssetsには
+
+```
+NSComparator comparetor = ^NSComparisonResult (id obj1, id obj2) {
+  NSDate *datea = obj1[DATE];
+  NSDate *dateb = obj2[DATE];
+
+  return [dateb compare:datea];
+};
+[allAssets sortWithOptions:NSSortConcurrent usingComparator:comparetor];
+```
+
+```
+sort( allAssets ){ $0[self.DATE_STR] as String > $1[self.DATE_STR] as String }
+```
+
+# 参考
+- [【エヌ教授の事件簿】高速プログラミング言語Swiftは本当に速いのか!?](http://ch.nicovideo.jp/akiba-cyberspacecowboys/blomaga/ar546266)
+- [SwiftはAppleが主張するほど高速ではない - 最初のベンチマークより](http://www.infoq.com/jp/news/2014/06/apple-swift-performance-hit)

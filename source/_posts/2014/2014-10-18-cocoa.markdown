@@ -1,0 +1,149 @@
+---
+layout: post
+title: "ReactiveCocoa"
+date: 2014-10-18 13:03:29 +0900
+comments: true
+categories:
+published: false
+---
+https://twitter.com/hashtag/rac_tokyo?src=hash
+
+# ReactiveCocoa  
+@ tinpay  
+ChatWorkの人！iPhone Love部の人！！  
+
+## ReactiveCocoaって
+ObjectiveCで関数型リアクティブプログラミングをサポートするライブラリ  
+ObjCでMVVCを実現する  
+リアクティブプログラミング？
+時間とともに変化する関係性を記述するプログラミング  
+
+```
+a = 1;  
+b = a + 1;    // ※リアクティブプログラミングでは関係性を記述するのでaの値が変わるとbの値もかわる。
+a = 3;
+print(b); // 命令型の場合は3
+// リアクティブプログラミングでは結果は5になる
+```
+
+MVVM  
+Mode,View,ViewModel
+デリゲート
+[サンプル](https://github.com/tinpay/RACSample)があります。
+
+## メリット・デメリット
+- メリット  
+  ViewControllerがすっきりする  
+  Mおでlにロジックが描かれているのでテストが書きやすい  
+  一時的に使う変数が少なくなる  
+- デメリット  
+  難しい。  
+  Signalを連鎖しすぎるとみにくくなる  
+
+# FrilでのReactiveCocoa
+ninjinkun  
+
+Github  
+NJKWebViewProgress  
+NJKScrollFullScreen  
+
+あなたが求めていたリアクティブプログラミング入門  
+ninjinkun,hatenablog.com/entry/introrxja  
+リアクティブプログラミングは非同期データストリームを扱うプログラミング。  
+
+## なぜReactiveCocoa(RAC)か
+アプリがどんどん複雑化している。  
+Webサービス連携アプリの増加  
+非同期処理の多用 アプリが非常に多くの状態と非同期処理を持っている。  
+多用のAPIと非同期に通信して状態を適切に更新、ユーザーに表示する  
+→これが大変！！  
+
+## 特徴
+Event^driven  
+Scalable  
+Resilient  
+Responsice  
+サーバーでもクライアントでも使える概念  
+こんな会社も使ってる→Github,Netflix,Chatwork,Freee,Fablic,Increments  
+
+## 利用ポリシーΣ・ω・*
+Appleの推奨されているものではないので!!  
+RACにロックインされるような実装はさける  
+RACオブジェクトをモジュール間のインターフェイスに使用しない。  
+
+ 用途
+- テキストの Validation
+- Delegateらっぱー  
+  BlocksKitと同じ用途  
+- MVVMへの穏やかな移行
+ViewModel？  
+→Viewを描画するための状態保持  
+ViewModel-View間をbinding  
+ViewModelの更新は自動的にViewに反映される  
+
+RACViewModel
+本ーcunctional reactive programming on ios  
+MutableなものはVMに集める、
+JSONから生成されたNSObjectはImmutableに、
+VMに対するユニットテストを書く
+RACはbindのみに使う。
+
+Reactive Extensions RX  
+関数型リアクティブプログラミング？  
+
+
+
+# freeのアプリ
+
+値を入力したらViewの状態を変化させるケースが多い→管理が複雑  
+
+ViewModel UIViewControllwerの状態管理
+APIリクエストの発行
+Modelの操作
+→ビジネすロジック部分がViewModelに
+
+Github octkit.objc
+
+ikeshoさんのQiitaみるといいかも。
+leanpub.com/iosfrp
+RAC signal,RAC observe,カテゴリ拡張 あたりでとどめつつ使うといいみたい。  
+→コアな部分使い始めるとつらくなるんだって＞＜
+
+-----
+ikeshoさん ReactiveCocoa の　commiterの人！  
+RAC3 -> Swiftで作られている  
+swift-api-redux branch # 1532  
+
+# RAC3.0
+Generics support
+ColdSignal
+
+HotSignalとColdSignal
+HotSignal 内部的に常に動いてて  
+
+ObservableProperty
+値の変更をColdSignalとして通知することができるプロパティ  
+
+Action ( RACCommandの置き換え)
+inputからoutputを返すアクション ()主にUI用 mein threadで動作する)の実行・結果を返す  
+
+KVO
+
+submoduleで追加する・・・しかない＞＜  
+git submodule add https://github.com/reactivecocoa/reactivecocoa.git external/reactivecocoa
+
+LlamaKitを使ってる。から、調整する。
+
+-----
+CSEvents
+CDEvents
+
+rac_textSignal
+RACObserve
+
+sendCom@lete
+
+RACSignal emplty
+
+
+distinctUntilChanged

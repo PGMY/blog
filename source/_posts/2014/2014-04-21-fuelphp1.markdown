@@ -1,0 +1,48 @@
+---
+layout: post
+title: "FuelPHPを初めてみる #01ディレクトリ構成"
+date: 2014-04-21 16:53:46 +0900
+comments: true
+category: PHP
+tags: FuelPHP
+keywords: FuelPHP
+published: false
+
+---
+
+PHPアプリを作るのがそもそも初めてなので、FuelPHPのディレクトリ構成とかをざっくり見ていきたいと思います。
+
+
+[プロジェクト]
+- fuel(FuelPHPのプログラムが入っているディレクトリ)
+  - app(アプリケーション用プログラムが入っているディレクトリ)
+    - cache
+    - classes
+      - controller(コントローラー)
+      - model(モデル)
+      - view
+    - config
+      - development
+      - production
+      - staging
+      - test
+    - cache
+    - cache
+    - cache
+    - cache
+    - cache
+    - cache
+- public(Webサーバーの公開ディレクトリ)
+
+
+
+
+<!-- more -->
+
+## 参考
+
+- [流行に乗り遅れないために！？ 話題のFuelPHPをとりあえず触ってみたい人の為の超入門](http://assemblog.com/cat/article/120.html)
+- [FuelPHPでプログラマーボックスを再構築したので、このフレームワークの良さを伝えてみる。](http://programmerbox.com/2014-01-08_fuelphp_construct_blog/)
+- []()
+- []()
+- []()

@@ -1,0 +1,110 @@
+---
+layout: post
+title: "噂のHACKをインストールしてみる"
+date: 2014-04-02 14:39:47 +0900
+comments: true
+category: hack
+tags: [Facebook,hacklang,hack]
+keywords: hack
+published: true
+
+---
+
+- [http://hhvm.com/](http://hhvm.com/)
+- [http://hacklang.org/](http://hacklang.org/)
+
+<div class="github-widget" data-repo="facebook/hhvm"></div>
+
+作業めもな感じになります
+
+<!-- more -->
+
+# インストールしてみる
+利用する環境はCentOSなので[HHVM Pre built packages for Centos-6.4](https://github.com/facebook/hhvm/wiki/HHVM-Pre-built-packages-for-Centos-6.4)を見ながら作業していきました。
+
+```
+sudo yum install http://ftp.riken.jp/Linux/fedora/epel/6/i386/epel-release-6-8.noarch.rpm
+cd /etc/yum.repos.d
+sudo wget http://www.hop5.in/yum/el6/hop5.repo
+sudo yum install hhvm
+```
+
+以上の手順で簡単インストール・ω・  
+
+## でてきたエラー集
+### Error: Package: *****
+アップデート時に出るようになってしまったエラー
+
+```
+Error: Package: perl-IO-Compress-2.052-1.el6.rfx.noarch (rpmforge-extras)
+           Requires: perl(Compress::Raw::Zlib) = 2.052
+           Installed: 1:perl-Compress-Raw-Zlib-2.021-136.el6.x86_64 (@base)
+               perl(Compress::Raw::Zlib) = 2.021
+           Available: perl-Compress-Raw-Zlib-2.030-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.030
+           Available: perl-Compress-Raw-Zlib-2.033-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.033
+           Available: perl-Compress-Raw-Zlib-2.034-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.034
+           Available: perl-Compress-Raw-Zlib-2.035-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.035
+           Available: perl-Compress-Raw-Zlib-2.037-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.037
+           Available: perl-Compress-Raw-Zlib-2.051-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.051
+           Available: perl-Compress-Raw-Zlib-2.052-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.052
+```
+
+```
+yum erase perl-Compress-Raw-Zlib
+```
+
+こんな感じにひとまず削除してあげると大丈夫みたい。
+
+### Error: Protected multilib versions ****
+
+```
+Error: Protected multilib versions: libstdc++-4.8.2-8.el6.x86_64 != libstdc++-4.4.7-4.el6.i686
+```
+
+このエラーが出る時はいくつかのバージョンが存在していてのエラーなので下記を実行するといいみたい。
+
+```
+package-cleanup --cleandupes
+```
+`package-cleanup: command not found`が表示される時は`yum-utils`をインストールする
+
+```
+yum clean all
+yum install yum-utils
+```
+
+でも結局だめでした。
+
+次にこれでupdate
+
+```
+yum upgrade --setopt=protected_multilib=false --skip-broken
+```
+
+なんとかいけました。これで大丈夫・・・なのかな？
+
+# サンプルを動かしてみる
+
+<div class="github-widget" data-repo="hhvm/hack-example-site"></div>
+
+ここにサンプルサイトが公開されてますΣd・ω・
+
+```
+git clone git@github.com:hhvm/hack-example-site.git
+cd hack-example-site
+./setup
+```
+
+※時間がなくなったのでのちほど公開
+
+
+## 参考
+- [Hack: a new programming language for HHVM](https://code.facebook.com/posts/264544830379293/hack-a-new-programming-language-for-hhvm/)
+- [新言語Hackで最強PHPerになろう！](http://qiita.com/yone098@github/items/7ff3616030e8d19400a7)

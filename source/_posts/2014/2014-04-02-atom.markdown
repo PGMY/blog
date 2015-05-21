@@ -1,0 +1,58 @@
+---
+layout: post
+title: "GithubによるエディタAtomな情報まとめて"
+date: 2014-04-02 17:21:47 +0900
+comments: true
+category: atom
+tags: [Github,atom]
+keywords: atom
+published: true
+
+---
+
+ブックマークついでにまとめておきたくて・・・。
+
+# [ATOM - A hackable text editor for the 21st Century](https://atom.io/)
+> Atomとは
+> GitHub 製テキストエディタ。Sublime のようにデフォルト状態でも十分使える、かつカスタマイズ可能
+      from :[GitHub 製エディタ Atom リファレンス](http://qiita.com/spesnova/items/d3096d062d70e7385e9d)
+
+
+<!-- more -->
+
+## [Get Atom without an invite.](https://coderwall.com/p/fmxtzg)
+coderwallからこっそりAtom for Mac. VERSION: 0.69を入手できちゃいます
+
+## 便利系情報
+### ATOM パッケージ作成情報
+- [atomのpackageの作り方 from scratch](http://yosuke-furukawa.hatenablog.com/entry/2014/03/02/230456)
+- [Github製エディタAtomでパッケージを作ってみた](http://blog.stanaka.org/entry/2014/03/03/225327)
+
+
+### リファレンス・チートシート
+- [GitHub 製エディタ Atom リファレンス](http://qiita.com/spesnova/items/d3096d062d70e7385e9d)
+- [Atom Editor Keyboard Shortcut Cheat Sheet](https://bugsnag.com/blog/atom-editor-cheat-sheet)
+
+
+## Core Settings
+- Audio Beep  
+  ビープ音を鳴らすかどうか
+- Destroy Empty Panes  
+- Exclude Vcs Ignored Paths  
+- Ignored Names  
+- Project Home  
+
+## Editor Settings
+- Auto Indent  
+- Font Family  
+- Font Size  
+- Non Word Charactors  
+- Normalize Indent On Paste  
+- Oreferred Line Length  
+- Show Indent Guide  
+- Show Invisibles  
+- Show Line Numbers  
+- Soft Tabs  
+- Soft Wrap  
+- Soft Wrap At Preferred Line Length  
+- Tab Length  

@@ -1,0 +1,35 @@
+---
+layout: post
+title: "sassをはじめてみたい！の、メモ"
+date: 2014-04-14 14:18:06 +0900
+comments: true
+category: sass
+tags: []
+keywords: sass
+published: true
+
+---
+
+とりあえず調べたサイトとかをめもめも。
+
+## sassのインストール
+
+```
+sudo gem install sass
+```
+
+Macだとコレだけで大丈夫みたい。Rubyは元々使ってたこともあって、インストール等は必要ありませんでした。  
+Macは標準で入ってる？そうなのでそもそもインストール作業は必要ないのかな？
+
+<!-- more -->
+
+## GUIソフトKoalaを入れてみる
+⇒http://koala-app.com/
+
+
+
+## 参考
+- [これからSassを始めたい人へ！導入手順をまとめてみた(Dreamweaver対応)](http://liginc.co.jp/web/html-css/css/56599)
+- [効率良くCSSコーディングできるSassを使ってみよう！Mac+Codaなら設定も簡単！](http://www.webcreatorbox.com/tech/css-sass/)
+- [コーディングのスピードを上げる為の6つの方法](http://www.webcreatorbox.com/tech/coding-speed-up/)
+- [Sass - チュートリアル](http://hail2u.net/documents/sass-tutorial.html)

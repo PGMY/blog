@@ -1,0 +1,57 @@
+{% capture root_url %}{{ site.root | strip_slash }}{% endcapture %}
+{% include head.html %}
+<body{% if page.body_id %} id="{{ page.body_id }}" {% endif %} {% if page.sidebar == false %} class="no-sidebar" {% endif %} {% if page.sidebar == 'collapse' or site.sidebar == 'collapse' %} class="collapse-sidebar sidebar-footer" {% endif %}>
+
+	<nav role="navigation">
+	  	{% include navigation.html %}
+	</nav>
+
+	<div class="col-md-12">
+        <!-- Main Header Nav -->
+        <div class="row jumb-bot">
+            <div class="col-md-1"></div>
+            <div class="jumbotron jumb-bot-jumbu col-md-10">
+              {% if page.title %}
+                <p>{{ page.title }}</p>
+
+              {% else %}
+
+                <h1>{{ site.title }}</h1>
+                <p>{{ site.subtitle }}</p>
+
+              {% endif %}
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+        <!-- End Main Header Nav -->
+
+        <div class="row">
+        	<div class="col-md-1"></div>
+            <div class="col-md-7">
+              {{ content }}
+            </div>
+            <div class="col-md-3">
+                {% if site.feedburner_username %}
+                <div class="panel panel-primary" style="margin-top:10%;">
+                  <div class="panel-body">
+
+                     <form action="http://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('http://feedburner.google.com/fb/a/mailverify?uri={{site.feedburner_username}}', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+                        <div class="input-group">
+                        <input type="text" class="form-control" name="email"/>
+                        <input type="hidden" value="{{site.feedburner_username}}" name="uri"/>
+                        <input type="hidden" name="loc" value="en_US"/>
+                        <span class="input-group-btn">
+                          <input type="submit" class="btn btn-primary" value="Subscribe Us" />
+                        </span>
+                      </div>
+                      <p><a href="http://feeds.feedburner.com/{{site.feedburner_username}}"><img style="margin-left:auto;margin-right:auto;" src="http://feeds.feedburner.com/~fc/{{site.feedburner_username}}?bg=007196&amp;fg=FFFFFF&amp;anim=1" height="26" width="88" style="border:1;" alt="" /></a></form>
+                  </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+  		{% include footer.html %}
+  	</div>
+</body>
+</html>

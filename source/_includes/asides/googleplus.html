@@ -1,0 +1,17 @@
+{% if site.googleplus_user %}
+					<div class="col-md-4">
+                      <h4>Follow Us Here</h4>
+                      <!-- Place this tag where you want the widget to render. -->
+                      <div class="g-page" data-width="273" data-href="//plus.google.com/u/0/{{ site.googleplus_user}}" data-theme="dark" data-layout="landscape" style="border:0px;" data-rel="publisher"></div>
+
+                      <!-- Place this tag after the last widget tag. -->
+                      <script type="text/javascript">
+                        (function() {
+                          var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                          po.src = 'https://apis.google.com/js/platform.js';
+                          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+                        })();
+                      </script>
+                    </div>
+{% endif %}
+
