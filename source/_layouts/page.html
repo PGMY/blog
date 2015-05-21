@@ -2,13 +2,12 @@
 layout: default
 ---
 
-{% capture root_url %}{{ site.root | strip_slash }}{% endcapture %}
               <div class="blog-post-small">
                 {% if page.title %}
                 <h3>{% if site.titlecase %}{{ page.title | titlecase }}{% else %}{{ page.title }}{% endif %}</h3>
                 {% if page.date %}<p><i class="fa fa-calendar"></i>{% include post/date.html %}{{ time }}</p>{% endif %}
                 {% endif %}
-
+                
 
                 <p>{{ content }}</p>
                 <div>
@@ -27,5 +26,11 @@ layout: default
                       <div id="disqus_thread" aria-live="polite">{% include post/disqus_thread.html %}</div>
                     </section>
                     {% endif %}
-                </div>
+                </div>     
               </div>
+              
+
+ 
+  
+  
+
