@@ -5,6 +5,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
+        {% capture root_url %}{{ site.root | strip_slash }}{% endcapture %}
         <a class="navbar-brand" href="{{ root_url }}/">{{ site.title }}</a>
       </div>
       <div class="navbar-collapse collapse navbar-inverse-collapse">
@@ -19,11 +20,11 @@
             </fieldset>
           </form>
           {% endif %}
-        <ul class="nav navbar-nav navbar-right left-syms">  
+        <ul class="nav navbar-nav navbar-right left-syms">
           <li><a href="http://github.com/{{site.github_user}}"><i class="fa fa-github"></i> <span>Github</span></a></li>
           <li><a href="http://plus.google.com/{{site.googleplus_user:}}"><i class="fa fa-google-plus-square"></i> <span>Google Plus</span></a></li>
           <li><a href="http://twitter.com/{{site.twitter_user}}"><i class="fa fa-twitter"></i> <span>Twitter</span></a></li>
-          <li><a href="{{site.url}}/{{site.subscribe_rss}}"><i class="fa fa-rss"></i> <span>RSS Feed</span></a></li>
+          <li><a href="{{site.subscribe_rss}}"><i class="fa fa-rss"></i> <span>RSS Feed</span></a></li>
         </ul>
       </div>
     </div>

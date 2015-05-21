@@ -1,4 +1,5 @@
 {% if site.pinboard_user %}
+{% capture root_url %}{{ site.root | strip_slash }}{% endcapture %}
 <section class="well">
   <h1>My Pinboard</h1>
   <ul id="pinboard_linkroll" class="nav">Fetching linkroll...</ul>

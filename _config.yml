@@ -2,7 +2,7 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://pgmy.github.io/blog/
+url: http://pgmy.github.io/blog
 title: PGMY Programming Blog
 subtitle: こつこつ成長していきたい。そんな日々。
 author: Your Name
@@ -29,7 +29,7 @@ email:
 root: /blog
 permalink: /:year/:month/:day/:title/
 source: source
-destination: public/blog
+destination: public
 plugins: plugins
 code_dir: downloads/code
 category_dir: categories
