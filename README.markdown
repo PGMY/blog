@@ -1,3 +1,9 @@
+
+
+PGMY Programming Blog : [![Build Status](https://travis-ci.org/PGMY/blog.svg?branch=master)](https://travis-ci.org/PGMY/blog)
+
+--------
+
 ## Octopress 3.0
 
 Note: Octopress 3.0 is in development at https://github.com/octopress/octopress
