@@ -1,11 +1,11 @@
 {% capture root_url %}{{ site.root | strip_slash }}{% endcapture %}
 {% include head.html %}
 <body{% if page.body_id %} id="{{ page.body_id }}" {% endif %} {% if page.sidebar == false %} class="no-sidebar" {% endif %} {% if page.sidebar == 'collapse' or site.sidebar == 'collapse' %} class="collapse-sidebar sidebar-footer" {% endif %}>
-	
+
 	<nav role="navigation">
 	  	{% include navigation.html %}
 	</nav>
-  
+
 	<div class="col-md-12">
         <!-- Main Header Nav -->
         <div class="row jumb-bot">
@@ -15,16 +15,16 @@
                 <p>{{ page.title }}</p>
 
               {% else %}
-               
+
                 <h1>{{ site.title }}</h1>
                 <p>{{ site.subtitle }}</p>
-  
+
               {% endif %}
-            </div>            
+            </div>
             <div class="col-md-1"></div>
         </div>
         <!-- End Main Header Nav -->
-        
+
         <div class="row">
         	<div class="col-md-1"></div>
             <div class="col-md-7">
@@ -34,7 +34,7 @@
                 {% if site.feedburner_username %}
                 <div class="panel panel-primary" style="margin-top:10%;">
                   <div class="panel-body">
-                    
+
                      <form action="http://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('http://feedburner.google.com/fb/a/mailverify?uri={{site.feedburner_username}}', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
                         <div class="input-group">
                         <input type="text" class="form-control" name="email"/>
@@ -48,10 +48,11 @@
                   </div>
                 </div>
                 {% endif %}
+								{% include_array sidebar_asides %}
             </div>
             <div class="col-md-1"></div>
-        </div> 
+        </div>
   		{% include footer.html %}
-  	</div>  
+  	</div>
 </body>
 </html>
