@@ -10,9 +10,9 @@ footer: false
   {% assign year = this_year %}
   <h1>{{ year }}</h1>
   <ul>
-    {% endunless %}
+{% endunless %}
     <li><article>
-      {% include archive_post.html %}
+  {% include archive_post.html %}
     </li></article>
-    {% endfor %}
+{% endfor %}
   </ul>
