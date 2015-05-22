@@ -21,6 +21,7 @@ single: true
       <div id="disqus_thread" aria-live="polite">{% include post/disqus_thread.html %}</div>
     </section>
     {% endif %}
+    {% include custom/zenback.html %}
     <ul class="pager">
       {% capture root_url %}{{ site.root | strip_slash }}{% endcapture %}
       {% if page.previous.url %}
