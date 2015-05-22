@@ -72,6 +72,10 @@ github_repo_count: 0
 github_show_profile_link: true
 github_skip_forks: true
 
+# qiita
+qiita_user: PGMY
+qiita_token: ee00030acca7bb280d81e4e61879914761700f01
+
 # Twitter
 twitter_user: PGMYBIZ
 twitter_tweet_button: true
@@ -103,6 +107,7 @@ google_analytics_tracking_id: UA-34429647-2
 # Facebook Like
 facebook_like: true
 
+# FeedBurner
 feedburner_username: PgmyProgrammingBlog
 
 #prose.io settings
