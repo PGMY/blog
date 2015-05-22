@@ -1,12 +1,12 @@
 <div class="blog-post-small">
 	{% capture root_url %}{{ site.root | strip_slash }}{% endcapture %}
 	{% capture category %}{{ post.categories | size }}{% endcapture %}
-	<h3><a href="{{ root_url }}{{ post.url }}">{{post.title}}</a></h3>
-	<time datetime="{{ post.date | datetime | date_to_xmlschema }}" pubdate>{{ post.date | date: "<span class='year'>%Y</span>/<span class='month'>%b</span>/<span class='day'>%d</span>"}}</time>
-	{% if category != '0' %}
-	<p>
-	  <span class="categories">posted in {{ post.categories | category_links }}</span>
-	</p>
-	{% endif %}
-
+	<li><time datetime="{{ post.date | datetime | date_to_xmlschema }}" pubdate>{{ post.date | date: "<span class='month'>%b</span>/<span class='day'>%d</span>"}} : </time>
+		<a href="{{ root_url }}{{ post.url }}">{{post.title}}</a>
+		{% if category != '0' %}
+		<p>
+		  <span class="categories">posted in {{ post.categories | category_links }}</span>
+		</p>
+		{% endif %}
+	</li>
 </div>
