@@ -11,11 +11,11 @@
 # A generator that creates tag pages for jekyll sites.
 #
 # Included filters :
-# - tag_links:      Outputs the list of Tags as comma-separated <a> links.
+# - tag_links:      Outputs the list of tags as comma-separated <a> links.
 # - date_to_html_string: Outputs the post.date as formatted html, with hooks for CSS styling.
 #
 # Available _config.yml settings :
-# - tag_dir:          The subfolder to build tag pages in (default is 'Tags').
+# - tag_dir:          The subfolder to build tag pages in (default is 'tags').
 # - tag_title_prefix: The string used before the tag name in the page title (default is
 #                          'Tag: ').
 
@@ -106,8 +106,8 @@ module Jekyll
     # Loops through the list of tag pages and processes each one.
     def write_tag_indexes
       if self.layouts.key? 'tag_index'
-        dir = self.config['tag_dir'] || 'Tags'
-        self.Tags.keys.each do |tag|
+        dir = self.config['tag_dir'] || 'tags'
+        self.tags.keys.each do |tag|
           self.write_tag_index(File.join(dir, tag.to_url), tag)
         end
 
@@ -145,15 +145,15 @@ ERR
   # Adds some extra filters used during the tag creation process.
   module Filters
 
-    # Outputs a list of Tags as comma-separated <a> links. This is used
+    # Outputs a list of tags as comma-separated <a> links. This is used
     # to output the tag list for each post on a tag page.
     #
-    #  +Tags+ is the list of Tags to format.
+    #  +tags+ is the list of tags to format.
     #
     # Returns string
     #
-    def tag_links(Tags)
-      Tags.sort.map { |c| tag_link c }.join(', ')
+    def tag_links(tags)
+      tags.sort.map { |c| tag_link c }.join(', ')
     end
 
     # Outputs a single tag as an <a> link.
