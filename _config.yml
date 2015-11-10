@@ -95,7 +95,7 @@ pinboard_user:
 pinboard_count: 3
 
 # Delicious
-delicious_user: 
+delicious_user:
 delicious_count: 3
 
 # Disqus Comments
@@ -138,3 +138,40 @@ prose:
           label: "Published"
           element: "checkbox"
           value: true
+
+
+oscailte:
+    hire: # The "Available for Hire" widget
+        visible:
+            footer: false
+            sidebar: true
+        footer-cols: 6 # Number of columns available for the footer component, max 12
+        available: true # Whether or not you're available for hire
+        vibrant: false # Makes the widget much more noticeable
+        message: "Available for new opportunities"
+    social:
+        visible: true
+        title: # Defaults to "Follow me!" if not present
+        adn: # App.net
+        coinbase:
+        dribbble:
+        facebook:
+            user:
+            app_id: # For enabling Open Graph metadata
+        github:
+            user: PGMY
+            show_profile_link: true
+        googleplus:
+        hackernews:
+        keybase:
+        linkedin:
+        pinterest:
+        reddit:
+        stackoverflow:
+        twitter:
+            user: PGMY
+            widget: # Shows the Recent Tweets widget in sidebar
+                is_shown: true
+                show_profile_link: true
+                widget_id:
+        youtube:
