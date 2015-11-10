@@ -1,21 +1,4 @@
-		      <li><a href="{{ root_url }}/blog/archives">Archives</a></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Category<b class="caret"></b></a>
-            <ul class="dropdown-menu">
-            {% for category in site.categories %}
-              {% capture category_url %}/{{ site.category_dir }}/{{ category | first | slugize | downcase | replace:' ','-' | append:'/index.html'}}{% endcapture %}
-              <li><a style="text-transform:uppercase;" href="{{ root_url | append:category_url }}">{{ category | first }} <span class="badge">{{ category | last | size }}</span></a></li>
-            {% endfor %}
-            </ul>
-          </li>
-					<!--
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tag<b class="caret"></b></a>
-						<ul class="dropdown-menu">
-						{% for tag in site.tags %}
-							{% capture tag_url %}/{{ site.tag_dir }}/{{ tag | first | slugize | downcase | replace:' ','-' | append:'/index.html'}}{% endcapture %}
-							<li><a style="text-transform:uppercase;" href="{{ root_url | append:tag_url }}">{{ tag | first }} <span class="badge">{{ tag | last | size }}</span></a></li>
-						{% endfor %}
-						</ul>
-					</li>
-				-->
+<ul class="menu">
+    <li><a href="{{ root_url }}/">Home</a></li>
+    <li><a href="{{ root_url }}/blog/">Blog</a></li>
+</ul>
