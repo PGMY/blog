@@ -144,7 +144,7 @@ oscailte:
     hire: # The "Available for Hire" widget
         visible:
             footer: false
-            sidebar: true
+            sidebar: false
         footer-cols: 6 # Number of columns available for the footer component, max 12
         available: true # Whether or not you're available for hire
         vibrant: false # Makes the widget much more noticeable
