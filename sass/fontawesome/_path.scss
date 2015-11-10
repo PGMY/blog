@@ -12,3 +12,14 @@
   font-weight: normal;
   font-style: normal;
 }
+
+@font-face {
+  font-family: 'FLOPDesignFont';
+  src: url('#{$fa-font-path}/FLOPDesignFont.eot?v=#{$fa-version}');
+  src: url('#{$fa-font-path}/FLOPDesignFont.eot?#iefix&v=#{$fa-version}') format('embedded-opentype'),
+    url('#{$fa-font-path}/FLOPDesignFont.woff?v=#{$fa-version}') format('woff'),
+    url('#{$fa-font-path}/FLOPDesignFont.ttf?v=#{$fa-version}') format('truetype');
+  //src: url('#{$fa-font-path}/FontAwesome.otf') format('opentype'); // used when developing fonts
+  font-weight: normal;
+  font-style: normal;
+}

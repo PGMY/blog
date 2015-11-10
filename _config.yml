@@ -95,7 +95,7 @@ pinboard_user:
 pinboard_count: 3
 
 # Delicious
-delicious_user: pgmy
+delicious_user: 
 delicious_count: 3
 
 # Disqus Comments
