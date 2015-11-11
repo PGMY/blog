@@ -61,7 +61,7 @@ module Jekyll
       lists = {}
       max, min = 1, 1
       config = context.registers[:site].config
-      tag_dir = config['root'] + config['tag_dir'] + '/'
+      tag_dir = config['root'] + '/' + config['tag_dir'] + '/'
       tags = context.registers[:site].tags
       tags.keys.sort_by{ |str| str.downcase }.each do |tag|
         count = tags[tag].count
