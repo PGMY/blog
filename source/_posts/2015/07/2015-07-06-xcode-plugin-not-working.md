@@ -21,16 +21,17 @@ tags:
 [Xcode5.1〜6.2：Xcodeのバージョンをアップデートしたらプラグインが効かない、使えなくなった場合の対処方法](http://scrtree.github.io/blog/2015/03/11/resolved-xcode6-dot-2-update-problem/)  
 ちなみに今回はXcode6.3から6.4にアップデートした時にまたかーとなりました。  
 
-UUIDの追加はこれで。
 
-```
-find ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins -name Info.plist | xargs -IFILE defaults write FILE DVTPlugInCompatibilityUUIDs -array-add 7FDF5C7A-131F-4ABB-9EDC-8C5F8F0B8A90
-```
-
-UUID自体を確認するのはこっち。  
+UUID自体を確認する
 
 ```
 defaults read /Applications/Xcode.app/Contents/Info.plist DVTPlugInCompatibilityUUID
 ```
 
-ちなみに記載しているUUIDはXcode6.4のものです。
+表示されたUUIDを追加する
+
+```
+find ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins -name Info.plist | xargs -IFILE defaults write FILE DVTPlugInCompatibilityUUIDs -array-add 【UUIDをここに】
+```
+
+このあと再起動すれば読み込みできるようになります！
