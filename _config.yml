@@ -170,7 +170,7 @@ oscailte:
         reddit:
         stackoverflow:
         twitter:
-            user: PGMY
+            user: PGMYBIZ
             widget: # Shows the Recent Tweets widget in sidebar
                 is_shown: true
                 show_profile_link: true
