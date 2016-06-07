@@ -4,8 +4,19 @@
 // changes to be made to the Oscailte theme itself.
 
 // THESE FILES AREA LOADED ALPHABETICALLY
-article, sidebar {
+
+.rticle__title {
+  margin-left: 0px;
+}
+.article, .sidebar {
     background: white;
     padding: 10px;
+    box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.2);
+}
+
+#disqus {
+    background: white;
+    padding: 10px;
+    margin-top: 15px;
     box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.2);
 }
