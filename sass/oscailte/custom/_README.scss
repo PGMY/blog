@@ -5,7 +5,7 @@
 
 // THESE FILES AREA LOADED ALPHABETICALLY
 
-.article, .sidebar {
+.article, .sidebar, .page {
     background: white;
     padding: 10px;
     box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.2);
@@ -22,4 +22,11 @@
   .article--single .article__title::before {
     margin-left: 0em;
   }
+}
+
+.divider{
+    margin: 0.5em 0;
+}
+.article__meta {
+    padding: 0.1rem 0;
 }
