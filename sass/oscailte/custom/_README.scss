@@ -5,9 +5,6 @@
 
 // THESE FILES AREA LOADED ALPHABETICALLY
 
-.rticle__title {
-  margin-left: 0px;
-}
 .article, .sidebar {
     background: white;
     padding: 10px;
@@ -19,4 +16,10 @@
     padding: 10px;
     margin-top: 15px;
     box-shadow: 1px 1px 1px 1px rgba(0,0,0,0.2);
+}
+
+@media only screen and (min-width: 62em) {
+  .article--single .article__title::before {
+    margin-left: 0em;
+  }
 }
