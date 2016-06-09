@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "This is the title for your homepage"
+title: "PGMY Programming Blog"
 date: 2013-08-16 23:48
 comments: false
 show_title: false
@@ -28,6 +28,18 @@ is_homepage: true
     {% endif %}
     </div>
 
+    <div id="archive-list">
+      {% for post in site.posts reverse %}
+      {% capture this_year %}{{ post.date | date: "%Y" }}{% endcapture %}
+      {% unless year == this_year %}
+        {% assign year = this_year %}
+        <h2>{{ year }}</h2>
+      {% endunless %}
+        <article>
+          {% include blog/archive_post.html %}
+        </article>
+      {% endfor %}
+    </div>
 <!--
 <div class="row top-xs">
     <div class="col-xs-12 col-lg-4">
