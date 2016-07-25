@@ -5,7 +5,5 @@
 {% capture was_updated %}{{ updated_date | size }}{% endcapture %}
 
 {% if has_pub_date %}
-    <time class="article__date pull-left" datetime="{{ pub_date_xml }}" pubdate{% if was_updated != '0' %} title="Last updated: {{ updated_date }}"{% endif %}><i class="fa fa-calendar"></i> {{ pub_date }}{% if was_updated != '0' %} <sup>*</sup>{% endif %}</time>
+    <time class="article__date pull-left" datetime="{{ pub_date_xml }}" pubdate{% if was_updated != '0' %} title="Last updated: {{ updated_date }}"{% endif %}><i class="fa fa-calendar"></i> {{ pub_date }}{% if was_updated != '0' %} <sup>*(UPDATE:{{ updated_date }})</sup>{% endif %}</time>
 {% endif %}
-
-
