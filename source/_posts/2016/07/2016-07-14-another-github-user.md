@@ -2,12 +2,12 @@
 layout: post
 title: "１つの端末で２つのGithubアカウントを利用する"
 date: 2016-07-14 12:52:22 +0900
-updated: 2016-07-22 13:14:12 +0900
+updated: 2016-07-25 10:57:25 +0900
 comments: true
 category: Snippet
 tags: [Github,Git,RSA,SSH]
 keywords:
-published: false
+published: true
 ---
 
 毎回手順を忘れるのでメモしておくことにした
