@@ -114,13 +114,13 @@ task :new_post, :title do |t, args|
     post.puts "layout: post"
     post.puts "title: \"#{title.gsub(/&/,'&amp;')}\""
     post.puts "date: #{Time.now.strftime('%Y-%m-%d %H:%M:%S %z')}"
-    post.puts "updated: #{Time.now.strftime('%Y-%m-%d %H:%M:%S %z')}"
     post.puts "comments: true"
     post.puts "category: "
     post.puts "tags: []"
     post.puts "keywords: "
     post.puts "published: false"
     post.puts "---"
+    post.puts "<!-- more -->"
   end
 end
 

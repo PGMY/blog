@@ -10,9 +10,11 @@ keywords:
 published: true
 ---
 
-時間できたら整理する。
+# アプリ譲渡作業備忘録
+## 前準備
 
-## 参考記事
+
+# 参考記事
 - [iOS Developer Library:アプリケーションの譲渡と削除](https://developer.apple.com/library/ios/documentation/LanguagesUtilities/Conceptual/iTunesConnect_Guide_Jpn/Chapters/TransferringAndDeletingApps.html#//apple_ref/doc/uid/TP40014483-CH31-SW1)
 - [アプリのアカウント移行について](http://qiita.com/t_furuya/items/dc4019ff3c599a9f759f)
 - [iOSアプリの譲渡をやってみた（その１](http://www.sria.co.jp/blog/2015/01/transfer-of-ios-app-to-do-part-1/)
