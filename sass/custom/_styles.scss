@@ -121,7 +121,7 @@
   	border-bottom: 1px solid #049CDB;
   }
 
-  .article--index h1.article__title:before {
+  .article--index .article__header h1.article__title:before {
       content: initial;
       position: initial;
       background: initial;
@@ -131,7 +131,7 @@
       width: initial;
   }
 
-  .article--index h1.article__title:after {
+  .article--index .article__header h1.article__title:after {
       content: initial;
       position: initial;
       background: initial;
