@@ -50,29 +50,29 @@
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#ffe8e8e8', GradientType=0);
 }
-
-h3 a{
-    position: relative;
-    margin: 0 0 1.5em;
-    padding: 0.8em 0 0.8em 1.5em;
-    border: 2px solid #007196;
-    font-size: 1.143em;
-    font-weight: bold;
-}
-
-h3 a:before{
-    content: "";
-    position: absolute;
-    background: #007196;
-    top: 50%;
-    left: 0.5em;
-    margin-top :-15px;
-    height: 30px;
-    width: 8px;
-    // border-radius: 2px;
-    // -webkit-border-radius: 2px;
-    // -moz-border-radius: 2px;
-}
+// 
+// h3 a{
+//     position: relative;
+//     margin: 0 0 1.5em;
+//     padding: 0.8em 0 0.8em 1.5em;
+//     border: 2px solid #007196;
+//     font-size: 1.143em;
+//     font-weight: bold;
+// }
+//
+// h3 a:before{
+//     content: "";
+//     position: absolute;
+//     background: #007196;
+//     top: 50%;
+//     left: 0.5em;
+//     margin-top :-15px;
+//     height: 30px;
+//     width: 8px;
+//     // border-radius: 2px;
+//     // -webkit-border-radius: 2px;
+//     // -moz-border-radius: 2px;
+// }
 .article__title {
 	padding: .2em .5em;
 	background-color: #f6f6f6;
