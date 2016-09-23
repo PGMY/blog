@@ -73,11 +73,7 @@
 //     // -webkit-border-radius: 2px;
 //     // -moz-border-radius: 2px;
 // }
-.article__title {
-	padding: .2em .5em;
-	background-color: #f6f6f6;
-	border-bottom: 1px solid #049CDB;
-}
+
 
 h1{
     position: relative;
@@ -117,4 +113,16 @@ h1:after{
     -webkit-transform: rotate(15deg);
     -o-transform: rotate(15deg);
     -ms-transform: rotate(15deg);
+}
+
+.article__title {
+	padding: .2em .5em;
+	background-color: #f6f6f6;
+	border-bottom: 1px solid #049CDB;
+}
+
+h1.article__title:before {
+}
+
+h1.article__title:after {
 }
