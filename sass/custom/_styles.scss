@@ -78,7 +78,7 @@
 h1{
     position: relative;
     color: #111;
-    font-size: 1.143em;
+    font-size: 1.3em;
     font-weight: bold;
     margin: 0 0 1.5em;
     padding: 0.5em 0.5em 0.5em 1.7em;
@@ -139,4 +139,12 @@ h1.article__title:after {
     left: initial;
     height: initial;
     width: initial;
+}
+
+h2{
+    margin: 0 0 1.5em;
+    padding: 0.8em;
+    border-bottom: 3px double #049CDB;
+    font-size: 1.2em;
+    font-weight: bold;
 }
