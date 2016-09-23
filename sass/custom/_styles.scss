@@ -75,7 +75,7 @@
 // }
 
 .article {
-  h1:not(header) {
+  h1{
       position: relative;
       color: #111;
       font-size: 1.3em;
@@ -85,7 +85,7 @@
       border-bottom: 3px solid #049CDB;
   }
 
-  h1:not(header):before {
+  h1:before{
       content: "";
       position: absolute;
       background: #61c7f1;
@@ -100,7 +100,7 @@
       -ms-transform: rotate(45deg);
   }
 
-  h1:not(header):after {
+  h1:after{
       content: "";
       position: absolute;
       background:#4db2dc;
@@ -115,33 +115,33 @@
       -ms-transform: rotate(15deg);
   }
 
-  // header {
-  //   .article__title {
-  //   	padding: .2em .5em;
-  //   	background-color: #f6f6f6;
-  //   	border-bottom: 1px solid #049CDB;
-  //   }
-  //
-  //   h1.article__title:before {
-  //       content: initial;
-  //       position: initial;
-  //       background: initial;
-  //       top: initial;
-  //       left: initial;
-  //       height: initial;
-  //       width: initial;
-  //   }
-  //
-  //   h1.article__title:after {
-  //       content: initial;
-  //       position: initial;
-  //       background: initial;
-  //       top: initial;
-  //       left: initial;
-  //       height: initial;
-  //       width: initial;
-  //   }
-  // }
+  header {
+    .article__title {
+    	padding: .2em .5em;
+    	background-color: #f6f6f6;
+    	border-bottom: 1px solid #049CDB;
+    }
+
+    h1:before {
+        content: initial;
+        position: initial;
+        background: initial;
+        top: initial;
+        left: initial;
+        height: initial;
+        width: initial;
+    }
+
+    h1:after {
+        content: initial;
+        position: initial;
+        background: initial;
+        top: initial;
+        left: initial;
+        height: initial;
+        width: initial;
+    }
+  }
 
   h2{
       margin: 0 0 1.5em;
