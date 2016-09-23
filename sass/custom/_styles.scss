@@ -75,8 +75,7 @@
 // }
 
 .article {
-  :not(header) {
-  h1{
+  h1:not(header) {
       position: relative;
       color: #111;
       font-size: 1.3em;
@@ -86,7 +85,7 @@
       border-bottom: 3px solid #049CDB;
   }
 
-  h1:before{
+  h1:not(header):before {
       content: "";
       position: absolute;
       background: #61c7f1;
@@ -101,7 +100,7 @@
       -ms-transform: rotate(45deg);
   }
 
-  h1:after{
+  h1:not(header):after {
       content: "";
       position: absolute;
       background:#4db2dc;
@@ -115,7 +114,6 @@
       -o-transform: rotate(15deg);
       -ms-transform: rotate(15deg);
   }
-}
 
   // header {
   //   .article__title {
