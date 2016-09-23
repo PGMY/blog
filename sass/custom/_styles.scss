@@ -50,7 +50,7 @@
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#ffe8e8e8', GradientType=0);
 }
-// 
+//
 // h3 a{
 //     position: relative;
 //     margin: 0 0 1.5em;
@@ -77,4 +77,44 @@
 	padding: .2em .5em;
 	background-color: #f6f6f6;
 	border-bottom: 1px solid #049CDB;
+}
+
+h1{
+    position: relative;
+    color: #111;
+    font-size: 1.143em;
+    font-weight: bold;
+    margin: 0 0 1.5em;
+    padding: 0.5em 0.5em 0.5em 1.7em;
+    border-bottom: 3px solid #049CDB;
+}
+
+h1:before{
+    content: "";
+    position: absolute;
+    background: #61c7f1;
+    top: 0;
+    left: 0.4em;
+    height: 12px;
+    width: 12px;
+    transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+}
+
+h1:after{
+    content: "";
+    position: absolute;
+    background:#4db2dc;
+    top: 1.0em;
+    left: 0;
+    height: 8px;
+    width: 8px;
+    transform: rotate(15deg);
+    -moz-transform: rotate(15deg);
+    -webkit-transform: rotate(15deg);
+    -o-transform: rotate(15deg);
+    -ms-transform: rotate(15deg);
 }
