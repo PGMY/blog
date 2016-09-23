@@ -75,6 +75,7 @@
 // }
 
 .article {
+  :not(header) {
   h1{
       position: relative;
       color: #111;
@@ -114,32 +115,35 @@
       -o-transform: rotate(15deg);
       -ms-transform: rotate(15deg);
   }
+}
 
-  .article--index .article__header .article__title {
-  	padding: .2em .5em;
-  	background-color: #f6f6f6;
-  	border-bottom: 1px solid #049CDB;
-  }
-
-  .article--index .article__header h1.article__title:before {
-      content: initial;
-      position: initial;
-      background: initial;
-      top: initial;
-      left: initial;
-      height: initial;
-      width: initial;
-  }
-
-  .article--index .article__header h1.article__title:after {
-      content: initial;
-      position: initial;
-      background: initial;
-      top: initial;
-      left: initial;
-      height: initial;
-      width: initial;
-  }
+  // header {
+  //   .article__title {
+  //   	padding: .2em .5em;
+  //   	background-color: #f6f6f6;
+  //   	border-bottom: 1px solid #049CDB;
+  //   }
+  //
+  //   h1.article__title:before {
+  //       content: initial;
+  //       position: initial;
+  //       background: initial;
+  //       top: initial;
+  //       left: initial;
+  //       height: initial;
+  //       width: initial;
+  //   }
+  //
+  //   h1.article__title:after {
+  //       content: initial;
+  //       position: initial;
+  //       background: initial;
+  //       top: initial;
+  //       left: initial;
+  //       height: initial;
+  //       width: initial;
+  //   }
+  // }
 
   h2{
       margin: 0 0 1.5em;
