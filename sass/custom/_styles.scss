@@ -122,7 +122,21 @@ h1:after{
 }
 
 h1.article__title:before {
+    content: initial
+    position: initial;
+    background: initial;
+    top: initial;
+    left: initial;
+    height: initial;
+    width: initial;
 }
 
 h1.article__title:after {
+    content: initial
+    position: initial;
+    background: initial;
+    top: initial;
+    left: initial;
+    height: initial;
+    width: initial;
 }
