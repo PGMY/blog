@@ -52,8 +52,8 @@ ERROR: Build step failed with exception java.lang.NullPointerException at au.com
 /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/PackageApplication
 ```
 
-上記ビルドスクリプト内の`@codesign_args`から`resource-rules`と`--resource-rules=$destApp/ResourceRules.plist`を削除してあげる。  
-参考先は`ResourceRules.plist`が存在している場合としていない場合とで分けるように修正してくれていました＞ω＜
+上記ビルドスクリプト内の `@codesign_args` から `resource-rules` と `--resource-rules=$destApp/ResourceRules.plist` を削除してあげる。  
+参考先は` ResourceRules.plist` が存在している場合としていない場合とで分けるように修正してくれていました＞ω＜
 
 ```
 ...
