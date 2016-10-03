@@ -3,8 +3,8 @@ layout: post
 title: "macOS10.12 SierraにアップデートしたらうちのJenkins執事ちゃんがストライキを起こしてしまったメモ"
 date: 2016-10-03 16:11:35 +0900
 comments: true
-category:
-tags: []
+category: Xcode
+tags: [Jenkins,Xcode,iOS,Sierra]
 keywords:
 published: true
 ---
