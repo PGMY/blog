@@ -4,7 +4,7 @@ title: "Swift3 処理時間の計測"
 date: 2016-11-10 11:11:07 +0900
 comments: true
 category: Swift3
-tags: []
+tags: [snippets]
 keywords:
 published: true
 ---

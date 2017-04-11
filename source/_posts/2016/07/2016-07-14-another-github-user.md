@@ -5,7 +5,7 @@ date: 2016-07-14 12:52:22 +0900
 updated: 2016-07-25 10:57:25 +0900
 comments: true
 category: Snippet
-tags: [Github,Git,RSA,SSH]
+tags: [Github,Git,RSA,SSH,Snippets]
 keywords:
 published: true
 ---
