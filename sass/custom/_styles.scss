@@ -161,4 +161,11 @@ body {
     font-size: 1em;
     padding-left: 10px;
   }
+  .pull-right {
+    width: 50%;
+    text-align: center;
+  }
+  .article--archive+hr, .usp__divider {
+    margin: 1em 0;
+  }
 }
