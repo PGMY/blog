@@ -83,6 +83,12 @@ $meta-color: lighten($typography--color, 20%);
   }
 }
 
+#archive-list {
+  .article__title {
+    font-size: 0.8em;
+  }
+}
+
 .article__tags {
     ul {
         @extend .inline;
