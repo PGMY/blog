@@ -17,6 +17,7 @@ before_script:
 - bundle exec rake setup_github_pages[$REPO]
 - git checkout -- _config.yml
 script:
+- bundle install
 - bundle exec rake generate
 after_script:
 - bundle exec rake deploy
