@@ -75,7 +75,12 @@ $meta-color: lighten($typography--color, 20%);
 
 .article__title {
     font-family: $post--title-font;
-        border-bottom: 7px double #049CDB;
+}
+
+.article__header {
+  .article__title {
+      border-bottom: 7px double #049CDB;
+  }
 }
 
 .article__tags {
