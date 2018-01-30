@@ -1,5 +1,10 @@
-@import 'oscailte/oscailte';
-@import 'custom/colors';
-// @import 'custom/syntax';
-@import 'custom/typography';
-@import 'custom/styles';
+@import "compass";
+@include global-reset;
+
+@import "custom/colors";
+@import "custom/fonts";
+@import "custom/layout";
+@import "base";
+@import "partials";
+@import "plugins/**/*";
+@import "custom/styles";
