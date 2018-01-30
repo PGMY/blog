@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Error | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/error/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Code Sign error: Your build settings specify a provisioning profile with the UUID]]></title>
+    <link href="http://pgmy.github.io/blog/2014/02/21/code-sign-error-your-build-settings-specify-a-provisioning-profile-with-the-uuid/"/>
+    <updated>2014-02-21T06:53:08+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/02/21/code-sign-error-your-build-settings-specify-a-provisioning-profile-with-the-uuid</id>
+    <content type="html"><![CDATA[<pre><code>Check dependencies
+Code Sign error: No matching provisioning profile found: Your build settings specify a provisioning profile with the UUID XXXXX-XXXXX-XXXXX, however, no such provisioning profile was found.
+CodeSign error: code signing is required for product type 'Application' in SDK 'iOS 7.0'
+
+** BUILD FAILED **
+</code></pre>
+
+<p>上記エラーが出た時。</p>
+
+<p>project.pbxprojをメモ帳とかで開いてPROVISIONING_PROFILEがある行を全て削除すればいいみたい。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Octopressでjavascripts/libs/jXHR.js 404 (Not Found)]]></title>
+    <link href="http://pgmy.github.io/blog/2014/02/10/octopressdejavascripts-slash-libs-slash-jxhr-dot-js-404-not-found/"/>
+    <updated>2014-02-10T06:41:04+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/02/10/octopressdejavascripts-slash-libs-slash-jxhr-dot-js-404-not-found</id>
+    <content type="html"><![CDATA[<p>Octopressを設置するとコンソールにエラー出力が。</p>
+
+<pre><code>GET http://pgmy.github.io/javascripts/libs/jXHR.js 404 (Not Found) 
+</code></pre>
+
+<p>このブログをおいているのが<code>http://pgmy.github.io/blog</code>なので正しくは</p>
+
+<pre><code>http://pgmy.github.io/blog/javascripts/libs/jXHR.js
+</code></pre>
+
+<p>にならないといけないところ。</p>
+
+<p>検索すると同様の問題が出てきたのでメモ。
+- <a href="http://giskou.com/blog/octopress-finally-working/">Octopress Finally Working</a>
+- <a href="https://github.com/imathis/octopress/issues/221">jXHR in github.html has wrong URL #221</a></p>
+
+<pre><code>jxhr.src = '/javascripts/libs/jXHR.js'
+</code></pre>
+
+<p>となっている箇所を</p>
+
+<pre><code>jxhr.src = '/blog/javascripts/libs/jXHR.js'
+</code></pre>
+
+<p>へ変更する</p>
+
+<p>これでオッケーΣd・ω・</p>
+]]></content>
+  </entry>
+  
+</feed>

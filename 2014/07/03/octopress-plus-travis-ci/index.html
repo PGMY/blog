@@ -1,0 +1,592 @@
+<!doctype html>
+    <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+    <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+    <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+    <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+
+    
+      
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Octopress+Travis CI - PGMY Programming Blog</title>
+        <meta name="author" content="PGMY">
+        
+        <meta name="description" content="Octopress+Travis CI 2014-07-03 octopress Comments OctopressをTravis CIを使って自動デプロイに挑戦してみましたΣ
+なんとも試行錯誤しまくるハメになったものの、Octopress + GitHub Pages + &hellip;">
+        <meta name="keywords" content="Octopress+Travis, CI">
+        <meta name="viewport" content="width=device-width">
+        <link rel="canonical" href="http://pgmy.github.io/blog/2014/07/03/octopress-plus-travis-ci">
+
+        <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,400italic' rel='stylesheet' type='text/css'>
+        <link href="http://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet" type="text/css">
+
+        
+        <link href="/blog/favicon.png" rel="icon">
+        <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet">
+        <link href="/blog/blog/atom.xml" rel="alternate" title="PGMY Programming Blog" type="application/atom+xml">
+    </head>
+
+
+    <body >
+
+        <header id="header">
+    <div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-4">
+        <a href="/blog/" class="site-title">PGMY Programming Blog</a>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-8">
+        <nav>
+    <input type="checkbox" id="toggle">
+    <label for="toggle" class="toggle" data-open="Main Menu" data-close="Close Menu"></label>
+    <ul class="menu">
+    <li><a href="/blog/">Home</a></li>
+    <li><a href="/blog/archives/">Archives</a></li>
+    <li><a href="/blog/bookmark/">BookMark</a></li>
+    <li><a href="/blog/pgmy/">Me</a></li>
+</ul>
+
+</nav>
+
+    </div>
+</div>
+
+</header>
+
+
+        <div id="main-content">
+
+            <!--[if lte IE 9]>
+<div class="row upgrade-row">
+    <div class="col-lg-12">
+        <div class="upgrade">
+            <i class="upgrade__icon fa fa-warning"></i>
+            <h1 class="upgrade__title h6">Ohnoes!</h1>
+            <p class="upgrade__text">
+                Unfortunately, certain parts of this site may not display correctly in your version of Internet Explorer!<br>
+                If possible, you should consider <a href="http://browsehappy.com/">upgrading your browser</a>.
+            </p>
+        </div>
+    </div>
+</div>
+<!-- <![endif]-->
+
+
+            
+
+            <div class="row top-xs center-sm center-md center-lg site-wrapper">
+                
+                <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8">
+                
+                    <article class="article article--single">
+    <header class="article__header">
+    
+        <h1 class="article__title">Octopress+Travis CI</h1>
+    
+
+    
+        <div class="article__meta clearfix">
+            
+
+
+
+
+
+
+    <time class="article__date pull-left" datetime="2014-07-03T02:56:41+00:00" pubdate><i class="fa fa-calendar"></i> 2014-07-03 </time>
+
+
+            
+
+    <div class="article__tags pull-left">
+        <i class="fa fa-tags"></i>
+        <ul class="unstyled">
+        
+
+            
+                <li><a class='category' href='/blog/blog/categories/octopress/'>octopress</a></li>
+            
+        
+        </ul>
+    </div>
+
+
+            
+                <a class="pull-right" href="#disqus_thread">
+                    Comments <i class="fa fa-comment"></i>
+                </a>
+            
+        </div>
+    
+</header>
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- PGMY-Responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-0667701444055003"
+     data-ad-slot="6896982449"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<br />
+
+
+
+
+
+    <p>OctopressをTravis CIを使って自動デプロイに挑戦してみましたΣ<br/>
+なんとも試行錯誤しまくるハメになったものの、<a href="http://blog.yasuoza.com/2014/01/13/octopress-plus-github-pages-plus-travis/">Octopress + GitHub Pages + Travis</a>の通りにやってやっとこさうまく行きました。<br/>
+はじめはトークンを利用しての方法にしてたんですがうまく行かず、結局公開鍵使ってのデプロイですー。</p>
+
+<!-- more -->
+
+
+<a name="Step.1.-.travis................................."></a>
+<h2>Step 1 - travisコマンドをインストール</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem install travis</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これをたたけばオッケーです。<br/>
+環境によっては<code>sudo</code>権限必要ですよーう！</p>
+
+<a name="Step.2.-.TravisCI...................................."></a>
+<h2>Step 2 - TravisCI用の鍵を作って登録します</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># 鍵を作成する
+</span><span class='line'>ssh-keygen -t rsa -C 'youremail@examp.com' -f ~/.ssh/travis_rsa
+</span><span class='line'># クリップボードにコピーする
+</span><span class='line'>cat ~/.ssh/travis_rsa.pub | pbcopy</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>https://github.com/ユーザー名/リポジトリ名/settings/keys</code><br/>
+上記URLからデプロイキーを登録します</p>
+
+<a name="Step.3.-.Prose................................."></a>
+<h2>Step 3 - Proseのための設定を追加する</h2>
+
+<p><code>_config.yml</code>に下記をそのまま追加させてもらいました</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#prose.io settings
+</span><span class='line'>prose:
+</span><span class='line'>  rooturl: "source"
+</span><span class='line'>  metadata:
+</span><span class='line'>    "source/_posts":
+</span><span class='line'>      - name: "layout"
+</span><span class='line'>        field:
+</span><span class='line'>          element: "hidden"
+</span><span class='line'>          value: "post"
+</span><span class='line'>      - name: "title"
+</span><span class='line'>        field:
+</span><span class='line'>          element: "text"
+</span><span class='line'>          value: "Title"
+</span><span class='line'>      - name: "comments"
+</span><span class='line'>        field:
+</span><span class='line'>          label: "Allow comments"
+</span><span class='line'>          element: "checkbox"
+</span><span class='line'>          value: true
+</span><span class='line'>      - name: "categories"
+</span><span class='line'>        field:
+</span><span class='line'>          element: "text"
+</span><span class='line'>          value: "misc"
+</span><span class='line'>      - name: "published"
+</span><span class='line'>        field:
+</span><span class='line'>          label: "Published"
+</span><span class='line'>          element: "checkbox"
+</span><span class='line'>          value: true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Proseから編集する際のルートとなるディレクトリと編集できるファイルを設定します。<br/>
+詳細は<a href="https://github.com/prose/prose/wiki/Prose-Configuration">Prose Configuration</a>に記載されているようですが、私は<a href="http://rogerz.github.io/blog/2013/02/21/prose-io-github-travis-ci/">参考先</a>のデータをそのまま利用させてもらいました。</p>
+
+<a name="Step.4.-.TravisCI................................."></a>
+<h2>Step 4 - TravisCIのための設定を追加する</h2>
+
+<p><code>.travis.yml</code>を下記のように書きます</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>language: ruby
+</span><span class='line'>rvm:
+</span><span class='line'>- 2.1.0
+</span><span class='line'>branches:
+</span><span class='line'>  only:
+</span><span class='line'>  - master
+</span><span class='line'>before_script:
+</span><span class='line'>- git config --global user.name "ユーザー名(via Travis CI)"
+</span><span class='line'>- git config --global user.email "メールアドレス"
+</span><span class='line'>- git remote set-url origin $REPO.git
+</span><span class='line'>- if [ -z "$id_rsa_{1..23}" ]; then echo 'No $id_rsa_{1..23} found !' ; exit 1; fi
+</span><span class='line'>- echo -n $id_rsa_{1..23} &gt;&gt; ~/.ssh/travis_rsa_64
+</span><span class='line'>- base64 --decode --ignore-garbage ~/.ssh/travis_rsa_64 &gt; ~/.ssh/id_rsa
+</span><span class='line'>- chmod 600 ~/.ssh/id_rsa
+</span><span class='line'>- echo -e "Host github.com\n\tStrictHostKeyChecking no\n" &gt;&gt; ~/.ssh/config
+</span><span class='line'>- bundle exec rake setup_github_pages[$REPO]
+</span><span class='line'>- git checkout -- _config.yml
+</span><span class='line'>script:
+</span><span class='line'>- bundle exec rake generate
+</span><span class='line'>after_script:
+</span><span class='line'>- bundle exec rake deploy
+</span><span class='line'>env:
+</span><span class='line'>  global:
+</span><span class='line'>  - REPO="git@github.com:ユーザー名/リポジトリ"</span></code></pre></td></tr></table></div></figure>
+
+
+<a name="Step.5.-................"></a>
+<h2>Step 5 - 鍵の暗号化</h2>
+
+<p>base64で鍵を暗号化します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Macを使っている場合はこれで。
+</span><span class='line'>$ base64 --break=0 ~/.ssh/travis_rsa &gt; ~/.ssh/travis_rsa_64
+</span><span class='line'>
+</span><span class='line'># Linuxの場合はこっちを使います
+</span><span class='line'># base64 --wrap=0 ~/.ssh/travis_rsa &gt; ~/.ssh/travis_rsa_64
+</span><span class='line'>
+</span><span class='line'>$ bash &lt;(cat ~/.ssh/travis_rsa_64 | perl -pe 's/(.{100})/$1\n/g' | nl | perl -pe 's/\s*(\d+)\s*(.*)/travis encrypt id_rsa_$1="$2" --add/')</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>.travis.yml</code>内の<code>$id_rsa_{1..23}</code>部分の<code>23</code>の個数を数えます</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cat ~/.ssh/travis_rsa_64 | perl -pe 's/(.{100})/$1\n/g' | nl | tail</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>...
+</span><span class='line'>21    ZktBVTJMZHFZajA0UUpFZnQvd01mblRDTWQKRVBMdHF3QU9rM05wOUh5T3V0MlZ1SnREa3VHVU14dUlKWWcvT0JDU0thSEhUMW1P
+</span><span class='line'>22    bWJ5eSt5QmtUdkdiQkx3OApPT29lRFBzLzRwUEpibjN5eTVCemk2TEtLK3hwRHBzYUg5MHZwUkg3WXdRd3NLQUNvdElLNHdzPQot
+</span><span class='line'>23    LS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じに出力されるので、左側の数字を使います。</p>
+
+<a name="Step.6.-.Rakefile........."></a>
+<h2>Step 6 - Rakefileを修正</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>-  cd "#{deploy_dir}" do
+</span><span class='line'>-    system "git pull"
+</span><span class='line'>+  cd "#{deploy_dir}" do
+</span><span class='line'>+    system "git pull origin #{deploy_branch}"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでオッケーでした！！パチパチ。</p>
+
+<a name="L......"></a>
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://rogerz.github.io/blog/2013/02/21/prose-io-github-travis-ci/">Octopress+Prose+Github+Travis CI = Coders' Blog</a></li>
+<li><a href="http://gutti.jp/blog/2014/02/19/octopress-travis-ci/">OctopressをTravis CIでデプロイするやつ</a></li>
+<li><a href="http://pchw.github.io/blog/2013/06/27/octopress-travis/">OctopressとTravis CIを連携させてBlog生成を自動にする</a></li>
+<li><a href="http://blog.yasuoza.com/2014/01/13/octopress-plus-github-pages-plus-travis/">Octopress + GitHub Pages + Travis</a></li>
+</ul>
+
+
+
+
+</article>
+
+<section id="post_ad">
+    <div>
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- PGMY-Responsive -->
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-0667701444055003"
+       data-ad-slot="6896982449"
+       data-ad-format="auto"></ins>
+  <script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+</section>
+
+
+<section id="disqus">
+    <h1 class="disqus__title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+
+
+                </div>
+
+                
+                <aside class="sidebar col-xs-12 col-md-4 col-lg-4">
+                    <div class="row">
+
+    
+
+    
+<section class="social col-xs-12 col-sm-6 col-md-12">
+    <h1>
+        Follow me!
+    </h1>
+    <ul class="unstyled">
+        
+        
+        
+        
+        <li><a class="github" href="//github.com/PGMY"><i class="fa fa-github"></i> Github</a></li>
+        
+        
+        
+        
+        
+        
+        
+        <li><a class="twitter" href="//twitter.com/PGMYBIZ"><i class="fa fa-twitter"></i> Twitter</a></li>
+        
+    </ul>
+</section>
+
+
+
+    <section>
+  <h1>About Me</h1>
+  <p>A little something about me.</p>
+</section>
+<section id="recent-posts" class="col-xs-12 col-sm-6 col-md-12">
+    <h1>Recent Posts</h1>
+    <ul class="divided">
+        
+        <li class="post">
+            <a href="/blog/2016/11/10/swift3-processing-time/">Swift3 処理時間の計測</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/10/03/jenkins-macos10-dot-12-sierra/">macOS10.12 SierraにアップデートしたらうちのJenkins執事ちゃんがストライキを起こしてしまったメモ</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/08/31/font/">文字組をコントロールするフォントとライブラリ</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/08/03/uibutton/">uibuttonのtextサイズ自動調整</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/07/25/apptransfer/">iOS アプリ譲渡 App Transfer</a>
+        </li>
+        
+    </ul>
+</section>
+
+  
+  <section class="col-xs-12 col-sm-6 col-md-12">
+    <div class="github-card" data-github="PGMY" data-width="100%" data-height="" data-theme="default"></div>
+    <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
+  </section>
+  
+<section class="col-xs-12 col-sm-6 col-md-12">
+  <a class="qiita-timeline" href="https://qiita.com/users/PGMY" data-qiita-username="PGMY">PGMYのtips</a><script src="//qiita-widget.suin.org/widget.js"></script>
+</section>
+
+<section id="twitter-timeline" class="col-xs-12 col-sm-6 col-md-12">
+    <h1>
+        Latest Tweets
+        
+        <small class="pull-right">
+            <a class="btn" href="//twitter.com/PGMYBIZ" title="@PGMYBIZ on Twitter" target="_blank">
+                <i class="fa fa-external-link"></i>
+            </a>
+        </small>
+        
+    </h1>
+
+    <a class="twitter-timeline" data-dnt="true" href="//twitter.com/PGMYBIZ"  data-widget-id=""  data-link-color="#049cdb" data-tweet-limit="" data-chrome="noheader nofooter transparent noscrollbar">Tweets by @PGMYBIZ</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+<section>
+  <h1>Tag Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/tags/api' style='font-size: 108.57142857142857%'>API(1)</a> <a href='/blog/tags/apptransfer' style='font-size: 108.57142857142857%'>AppTransfer(1)</a> <a href='/blog/tags/assetslibrary' style='font-size: 108.57142857142857%'>AssetsLibrary(1)</a> <a href='/blog/tags/atom' style='font-size: 108.57142857142857%'>atom(1)</a> <a href='/blog/tags/avspeechsynthesizer' style='font-size: 108.57142857142857%'>AVSpeechSynthesizer(1)</a> <a href='/blog/tags/codesign' style='font-size: 108.57142857142857%'>CodeSign(1)</a> <a href='/blog/tags/collectionview' style='font-size: 108.57142857142857%'>CollectionView(1)</a> <a href='/blog/tags/custom' style='font-size: 108.57142857142857%'>Custom(1)</a> <a href='/blog/tags/custom' style='font-size: 108.57142857142857%'>custom(1)</a> <a href='/blog/tags/e-mail-plugin' style='font-size: 108.57142857142857%'>E-Mail plugin(1)</a> <a href='/blog/tags/error' style='font-size: 117.14285714285714%'>Error(2)</a> <a href='/blog/tags/facebook' style='font-size: 108.57142857142857%'>Facebook(1)</a> <a href='/blog/tags/font' style='font-size: 108.57142857142857%'>font(1)</a> <a href='/blog/tags/font' style='font-size: 108.57142857142857%'>Font(1)</a> <a href='/blog/tags/fuelphp' style='font-size: 108.57142857142857%'>FuelPHP(1)</a> <a href='/blog/tags/git' style='font-size: 108.57142857142857%'>Git(1)</a> <a href='/blog/tags/git' style='font-size: 108.57142857142857%'>git(1)</a> <a href='/blog/tags/github' style='font-size: 117.14285714285714%'>Github(2)</a> <a href='/blog/tags/hack' style='font-size: 108.57142857142857%'>hack(1)</a> <a href='/blog/tags/hacklang' style='font-size: 108.57142857142857%'>hacklang(1)</a> <a href='/blog/tags/hex' style='font-size: 108.57142857142857%'>Hex(1)</a> <a href='/blog/tags/homebrew' style='font-size: 108.57142857142857%'>homebrew(1)</a> <a href='/blog/tags/ibeacon' style='font-size: 108.57142857142857%'>iBeacon(1)</a> <a href='/blog/tags/install' style='font-size: 108.57142857142857%'>install(1)</a> <a href='/blog/tags/ios' style='font-size: 125.71428571428572%'>iOS(3)</a> <a href='/blog/tags/jenkins' style='font-size: 108.57142857142857%'>Jenkins(1)</a> <a href='/blog/tags/language' style='font-size: 117.14285714285714%'>Language(2)</a> <a href='/blog/tags/library' style='font-size: 108.57142857142857%'>library(1)</a> <a href='/blog/tags/library' style='font-size: 108.57142857142857%'>Library(1)</a> <a href='/blog/tags/mysql' style='font-size: 108.57142857142857%'>MySQL(1)</a> <a href='/blog/tags/objective-c' style='font-size: 108.57142857142857%'>Objective-C(1)</a> <a href='/blog/tags/octopress' style='font-size: 117.14285714285714%'>Octopress(2)</a> <a href='/blog/tags/oil' style='font-size: 108.57142857142857%'>oil(1)</a> <a href='/blog/tags/osx' style='font-size: 108.57142857142857%'>OSX(1)</a> <a href='/blog/tags/plugin' style='font-size: 108.57142857142857%'>Plugin(1)</a> <a href='/blog/tags/prefectly' style='font-size: 108.57142857142857%'>Prefectly(1)</a> <a href='/blog/tags/rsa' style='font-size: 108.57142857142857%'>RSA(1)</a> <a href='/blog/tags/sample' style='font-size: 108.57142857142857%'>Sample(1)</a> <a href='/blog/tags/sierra' style='font-size: 108.57142857142857%'>Sierra(1)</a> <a href='/blog/tags/snippet' style='font-size: 108.57142857142857%'>Snippet(1)</a> <a href='/blog/tags/snippets' style='font-size: 108.57142857142857%'>snippets(1)</a> <a href='/blog/tags/snippets' style='font-size: 108.57142857142857%'>Snippets(1)</a> <a href='/blog/tags/ssh' style='font-size: 108.57142857142857%'>SSH(1)</a> <a href='/blog/tags/sshpass' style='font-size: 108.57142857142857%'>sshpass(1)</a> <a href='/blog/tags/swift' style='font-size: 160.0%'>Swift(7)</a> <a href='/blog/tags/tagcloud' style='font-size: 108.57142857142857%'>TagCloud(1)</a> <a href='/blog/tags/travisci' style='font-size: 108.57142857142857%'>TravisCI(1)</a> <a href='/blog/tags/uibutton' style='font-size: 108.57142857142857%'>UIButton(1)</a> <a href='/blog/tags/uipickerview' style='font-size: 108.57142857142857%'>uipickerview(1)</a> <a href='/blog/tags/vim' style='font-size: 108.57142857142857%'>vim(1)</a> <a href='/blog/tags/warning' style='font-size: 108.57142857142857%'>Warning(1)</a> <a href='/blog/tags/xcode' style='font-size: 125.71428571428572%'>Xcode(3)</a> <a href='/blog/tags/memo' style='font-size: 108.57142857142857%'>メモ(1)</a> </span>
+</section>
+<section class="col-xs-12 col-sm-6 col-md-12">
+    <h1>PR</h1>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- PGMY-Responsive -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-0667701444055003"
+         data-ad-slot="6896982449"
+         data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</section>
+
+
+</div>
+
+                </aside>
+                
+            </div>
+        </div>
+
+        
+
+    
+    
+
+
+
+
+<footer class="footer">
+    <div class="row middle-xs">
+        
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <p class="footer__copyright">
+    All content copyright PGMY.<br>
+    Code under <a href="//github.com/coogie/oscailte/blob/master/README.md">MIT Licence</a>.
+</p>
+
+        </div>
+        
+        
+    </div>
+</footer>
+
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+<script defer src="/blog/javascripts/octopress.js"></script>
+<script defer src="/blog/javascripts/jquery.githubRepoWidget.min.js"></script>
+
+
+<script>
+    var _gaq=[['_setAccount','UA-34429647-2'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+
+
+<script>
+    var disqus_shortname = 'pgmy';
+    
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://pgmy.github.io/blog/2014/07/03/octopress-plus-travis-ci/';
+        var disqus_url = 'http://pgmy.github.io/blog/2014/07/03/octopress-plus-travis-ci/';
+        var disqus_script = 'embed.js';
+    
+    (function () {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+<script>
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/blog/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'PGMY',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+</script>
+<script src="/blog/javascripts/github.js"></script>
+
+
+
+
+
+
+
+
+    </body>
+
+</html>

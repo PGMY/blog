@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Objective-C | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/objective-c/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[<S>Objective-CからSwiftにしたら処理が劇的に重くなった話</S>]]></title>
+    <link href="http://pgmy.github.io/blog/2014/07/07/swift/"/>
+    <updated>2014-07-07T05:22:22+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/07/07/swift</id>
+    <content type="html"><![CDATA[<p>⇒ Arrayの扱いが変わってきたので一旦この記事は保留で全体を見直すことにしました。</p>
+
+<hr />
+
+<!-- more -->
+
+
+<p>絶賛まだ修正中ですが、「<a href="http://pgmy.github.io/blog/2014/06/27/assetslibrary-swift/">Assetsを表示するプログラムをSwiftにしてみる</a>」でいろいろと作業しながらSwiftの勉強をしていたのですが、自分のおもいつくままの方法でObjective-CからSwiftにしたら処理が耐えられないほど重くなってしまいました・・・・。<br/>
+いろいろと原因追及をしながら考えてみたいなと思います。<br/>
+・・・考えている途中のメモです。<br/>
+解決したら解決方法を追記する予定ですが現在解決しておりませぬ。<br/>
+コメント募集中？</p>
+
+<p>そもそも未熟すぎるのが悪いというのは大目に見てください・・・orz</p>
+
+<a name="L................................."></a>
+<h1>劇重になった問題の処理</h1>
+
+<p>問題のコード部分はAssetLibraryからデータを取り出して日付でソートするという部分です。<br/>
+日付順に格納したかったのでソート処理をしてデータを格納しなおしてごにょごにょしてました。<br/>
+そもそもがサンプルで作ったソースなので元々が良くないのかもしれませんが、Objective-Cでは数秒程度の処理がSwiftにすることで数分の処理へと変貌してしまいました。</p>
+
+<ul>
+<li>Objective-Cで。</li>
+</ul>
+
+
+<pre><code>ALAssetsGroupType assetsGroupType = ALAssetsGroupAlbum | ALAssetsGroupEvent | ALAssetsGroupFaces | ALAssetsGroupSavedPhotos;
+
+NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+[formatter setDateFormat:@"yyyy/MM/dd"];
+
+// アセットライブラリから取得したグループ内のアセットごとの処理
+ALAssetsGroupEnumerationResultsBlock groupResultBlock = ^(ALAsset *asset, NSUInteger index, BOOL *stop) {
+  if (asset) {
+    NSDate   *assetDate    = [asset valueForProperty:ALAssetPropertyDate];
+    NSString *assetDateStr = [formatter stringFromDate:assetDate];
+    [allAssets addObject:@{ ASSET: asset, DATE: assetDate, DATE_STR: assetDateStr }];
+  }
+};
+
+NSComparator comparetor = ^NSComparisonResult (id obj1, id obj2) {
+  NSDate *datea = obj1[DATE];
+  NSDate *dateb = obj2[DATE];
+
+  return [dateb compare:datea];
+};
+
+
+// ライブラリからアセットグループを取得する処理
+ALAssetsLibraryGroupsEnumerationResultsBlock resultBlock = ^(ALAssetsGroup *assetsGroup, BOOL *stop) {
+  //        NSLog(@"AssetsGroup : %@", assetsGroup);
+  ALAssetsFilter *onlyPhotosFilter = [ALAssetsFilter allPhotos];
+  [assetsGroup setAssetsFilter:onlyPhotosFilter];
+  if (assetsGroup) {
+    if ([assetsGroup numberOfAssets] &gt; 0) {
+      [assetsGroup enumerateAssetsUsingBlock:groupResultBlock];
+    }
+  } else {
+    // 全体sort
+    [allAssets sortWithOptions:NSSortConcurrent usingComparator:comparetor];
+    for (NSDictionary *asset in allAssets) {
+      NSString *dateStr = asset[DATE_STR];
+      if (self.assetsData[dateStr]) {   // 存在していたら
+        [self.assetsData[dateStr] addObject:asset[ASSET]];
+      } else {
+        NSMutableArray *sectionArray = [[NSMutableArray alloc] init];
+        [sectionArray addObject:asset[ASSET]];
+        [self.assetsData setObject:sectionArray forKey:dateStr];
+        [sectionArray release];
+        [self.sectionList addObject:dateStr];
+      }
+    }
+    [formatter release];
+    [allAssets release];
+    [self.collectionView reloadData];
+  }
+};
+</code></pre>
+
+<ul>
+<li>Swiftで</li>
+</ul>
+
+
+<pre><code>let assetsGroupType :ALAssetsGroupType! = ALAssetsGroupType(0xFFFFFFFF)
+
+var fomatter = NSDateFormatter()
+fomatter.dateFormat = "yyyy/MM/dd"
+
+var groupResultBlock : ALAssetsGroupEnumerationResultsBlock = { (asset: ALAsset!, index: Int, stop:CMutablePointer&lt;ObjCBool&gt;) -&gt; Void in
+  if asset {
+    let assetDate: NSDate = asset.valueForProperty(ALAssetPropertyDate) as NSDate
+    let assetDateStr: String = fomatter.stringFromDate(assetDate) as String
+    allAssets.append([self.ASSET:asset, self.DATE:assetDate, self.DATE_STR:assetDateStr])
+  }
+}
+
+var resultBlock : ALAssetsLibraryGroupsEnumerationResultsBlock = { (assetsGroup:ALAssetsGroup!, stop: CMutablePointer&lt;ObjCBool&gt;) -&gt; Void in
+  let onlyPhotosFilter: ALAssetsFilter = ALAssetsFilter.allPhotos()
+  if assetsGroup {
+    assetsGroup.setAssetsFilter( onlyPhotosFilter )
+    if assetsGroup.numberOfAssets() &gt; 0 {
+      assetsGroup.enumerateAssetsUsingBlock(groupResultBlock)
+    }
+  } else {
+    sort( allAssets ){ $0[self.DATE_STR] as String &gt; $1[self.DATE_STR] as String }
+
+    for anAsset: Dictionary&lt;Int,AnyObject&gt; in allAssets {
+      let assetDict: NSDictionary = anAsset
+      let dateStr: String! = assetDict[self.DATE_STR] as String
+      if self.assetsData[dateStr] {
+        var asstsArr:Array&lt;ALAsset&gt; = self.assetsData[dateStr]!
+        asstsArr.append(anAsset[self.ASSET] as ALAsset)
+        self.assetsData[dateStr] = asstsArr
+      } else {
+        var sectionArray:Array&lt;ALAsset&gt; = []
+        sectionArray.append(anAsset[self.ASSET] as ALAsset)
+        self.assetsData[dateStr] = sectionArray
+        self.sectionList.append(dateStr)
+      }
+
+    }
+    self.collectionView!.reloadData()
+  }
+}
+</code></pre>
+
+<p>Swiftにうまく変換できなかった部分は思いつくままに無理矢理やっている部分があります。<br/>
+処理としては下記のものになります。</p>
+
+<ul>
+<li><code>allAssets</code>という配列にまずは<code>Assets</code>たちを全部入れていく</li>
+<li><code>allAssets</code>を日付でソートする</li>
+<li>ソートした結果をCollectionViewで使いやすいように<code>self.assetsData</code>へ日付をkeyにしたDictionaryに格納していく</li>
+</ul>
+
+
+<p>以上の作業をしています。</p>
+
+<p>細かくみていきたいと思います。</p>
+
+<a name="L...................:.ALAssetsGroupType"></a>
+<h2>第１の問題点 : ALAssetsGroupType</h2>
+
+<p>AssetsLibraryからデータを取り出す時に<code>ALAssetsGroupType</code>を指定することで必要なデータのみ表示されるように調整しています。</p>
+
+<pre><code>ALAssetsGroupType assetsGroupType = ALAssetsGroupAlbum | ALAssetsGroupEvent | ALAssetsGroupFaces | ALAssetsGroupSavedPhotos;
+</code></pre>
+
+<pre><code>let assetsGroupType :ALAssetsGroupType! = ALAssetsGroupType(0xFFFFFFFF)
+</code></pre>
+
+<p>実はここで問題が起きてしまいました。<br/>
+AssetsLibraryを利用するので</p>
+
+<pre><code>import AssetsLibrary
+</code></pre>
+
+<p>を記載しています。が、<code>ALAssetsGroupAlbum</code>が呼び出せないのです。<br/>
+ヘッダファイルに飛んでみると、Objective-Cではenumで記述されていた部分が、変数の宣言に切り替わっています。<br/>
+しかも、<code>ALAssetsGroupType</code>は<code>Int</code>型ですが、ObjCで宣言されていた<code>ALAssetsGroupAlbum</code>などは<code>CUnsignedInt</code>型です。<br/>
+そして<code>ALAssetsGroupType</code>は<code>typealias</code>で宣言されています。</p>
+
+<pre><code>var ALAssetsGroupLibrary: CUnsignedInt { get } // The Library group that includes all assets.
+var ALAssetsGroupAlbum: CUnsignedInt { get } // All the albums synced from iTunes or created on the device.
+var ALAssetsGroupEvent: CUnsignedInt { get } // All the events synced from iTunes.
+var ALAssetsGroupFaces: CUnsignedInt { get } // All the faces albums synced from iTunes.
+var ALAssetsGroupSavedPhotos: CUnsignedInt { get } // The Saved Photos album.
+
+var ALAssetsGroupPhotoStream: CUnsignedInt { get } // The PhotoStream album.
+
+var ALAssetsGroupAll: CUnsignedInt { get } // The same as ORing together all the available group types,
+
+typealias ALAssetsGroupType = Int
+</code></pre>
+
+<p>この子たちの扱いがわかりません・・・。<br/>
+いろいろ試行錯誤して下記の書き方にしてみました。</p>
+
+<pre><code>let assetsGroupType :ALAssetsGroupType!  = ALAssetsGroupType(ALAssetsGroupAll)
+</code></pre>
+
+<p>こうするとこの行でXcodeが落ちてしまいますorz<br/>
+うーん。まだ勉強不足故このあたりをどう書けばいいのかわからず、結局<code>0xFFFFFFFF</code>と直に書いて進むことにしてしまいました。<br/>
+絶賛解決方法探し中。<br/>
+ちなみにplaygroundでは</p>
+
+<pre><code>Playground execution failed: error: &lt;REPL&gt;:60:1: error: use of unresolved identifier 'ALAssetsGroupAll'
+</code></pre>
+
+<p>と、表示されています・・・。importが間違えてるのかなぁ・・・。</p>
+
+<a name="L...................:.sort"></a>
+<h2>第２の問題点 : sort</h2>
+
+<p>ObjCでは<code>NSComparator</code>を使ってた部分をSwiftでは<code>sort</code>があるのでそれを使いました。<br/>
+allAssetsには</p>
+
+<pre><code>NSComparator comparetor = ^NSComparisonResult (id obj1, id obj2) {
+  NSDate *datea = obj1[DATE];
+  NSDate *dateb = obj2[DATE];
+
+  return [dateb compare:datea];
+};
+[allAssets sortWithOptions:NSSortConcurrent usingComparator:comparetor];
+</code></pre>
+
+<pre><code>sort( allAssets ){ $0[self.DATE_STR] as String &gt; $1[self.DATE_STR] as String }
+</code></pre>
+
+<a name="L......"></a>
+<h1>参考</h1>
+
+<ul>
+<li><a href="http://ch.nicovideo.jp/akiba-cyberspacecowboys/blomaga/ar546266">【エヌ教授の事件簿】高速プログラミング言語Swiftは本当に速いのか!?</a></li>
+<li><a href="http://www.infoq.com/jp/news/2014/06/apple-swift-performance-hit">SwiftはAppleが主張するほど高速ではない - 最初のベンチマークより</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

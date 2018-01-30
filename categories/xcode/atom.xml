@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+    <title><![CDATA[Category: xcode | PGMY Programming Blog]]></title>
+    <link href="http://pgmy.github.io/blog/categories/xcode/atom.xml" rel="self"/>
+    <link href="http://pgmy.github.io/blog/"/>
+    <updated>2018-01-30T07:51:29+00:00</updated>
+    <id>http://pgmy.github.io/blog/</id>
+    <author>
+        <name><![CDATA[PGMY]]></name>
+        
+      </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+
+    
+    <entry>
+        <title type="html"><![CDATA[macOS10.12 SierraにアップデートしたらうちのJenkins執事ちゃんがストライキを起こしてしまったメモ]]></title>
+        <link href="http://pgmy.github.io/blog/2016/10/03/jenkins-macos10-dot-12-sierra/"/>
+        <updated>2016-10-03T07:11:35+00:00</updated>
+        <id>http://pgmy.github.io/blog/2016/10/03/jenkins-macos10-dot-12-sierra</id>
+        <content type="html"><![CDATA[<p>Macをアップデートしたらうちの大事な執事ちゃんがストライキを起こしたのでなだめる方法をめもめも。<br/>
+正直原因が多岐に渡っていたので、実は必要なかった設定とかがあるかもしれない…</p>
+
+<p>余計な処理とか推奨されない対応してるとかあったら教えてください偉い人Σ・ω・｀</p>
+
+<p>XcodeBuilderを利用させるために四苦八苦したメモです。
+brewとrubyは既にmacOS10.12に対応させるためごにょごにょしてあります。</p>
+
+<!-- more -->
+
+
+<a name="L...............Jenkins......................................."></a>
+<h2>とりあえずJenkinsが真っ白になってしまった…</h2>
+
+<p>OSをアップデートしてから起動画面を見に行くと画面が真っ白に…
+CSS等が読み込まれずに文字だけの表示というのは経験があったんだけども、画面全体が真っ白で何も映らない。<br/>
+接続エラーの画面ではないのでJenkins自体はちゃんと起動している様子。
+Chromeで確認すると413エラーが帰ってきていたのでそのあたりで検索かけたら見つけましたほんっとうにありがとうございます！！！！！！</p>
+
+<p>⇒<a href="http://orca8.blogspot.jp/2014/08/jenkinsfull-head-413.html">JenkinsでFULL head 413を返すとき</a></p>
+
+<p>とりあえずクッキーを消せばどうにかなる！
+ということなので、個別にCookieを編集・削除できるExtention <a href="https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg?hl=ja">EditThisCookie</a> を導入しました・ω・これ、便利。<br/>
+ざざっとJenkinsページのCookieをまるまる削除したら画面が表示されるようになりましたわーい♪♪</p>
+
+<a name="NullPointer.............."></a>
+<h2>NullPointer??なエラー</h2>
+
+<p>画面が表示されるようになったのでさっそくXcodeBuildを試してみる…</p>
+
+<pre><code>ERROR: Build step failed with exception java.lang.NullPointerException at au.com.rayh.XCodeBuilder.perform
+</code></pre>
+
+<p>上記とともにざざざっとスタックトレースが表示されているんだけども…どうやらRubyまわりの問題みたい。
+実はSierraにアップデートしてからrubyの管理をrbenvで管理するように変更したのだけれども、こちらに対応させる必要があった様子。
+<a href="http://qiita.com/kitaro_tn/items/22fd3830ba9a85ad5320">Jenkinsでrubyのビルドでハマった点</a>で設定方法が解説されてたのでこの通りにしました。</p>
+
+<a name="resource-rules..deprecated.in.Mac.OS.X....10.10..............."></a>
+<h2>resource-rules (deprecated in Mac OS X >= 10.10)! なエラー</h2>
+
+<p>どうやら<code>--resource-rules</code>オプションがdeprecatedになっている様子なので
+<a href="https://www.jayway.com/2015/05/21/fixing-your-ios-build-scripts/">Fixing your iOS build scripts</a>を参考に</p>
+
+<pre><code>/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/PackageApplication
+</code></pre>
+
+<p>上記ビルドスクリプト内の <code>@codesign_args</code> から <code>resource-rules</code> と <code>--resource-rules=$destApp/ResourceRules.plist</code> を削除してあげる。<br/>
+参考先は<code>ResourceRules.plist</code> が存在している場合としていない場合とで分けるように修正してくれていました＞ω＜</p>
+
+<pre><code>...
+my @codesign_args;
+    if (-e '$destApp/ResourceRules.plist') {  # If ResourceRules.plist exists, include it in codesign arguments, for backwards compatability
+        @codesign_args = ("/usr/bin/codesign", "--force", "--preserve-metadata=identifier,entitlements,resource-rules",
+                         "--sign", $opt{sign},
+                         "--resource-rules=$destApp/ResourceRules.plist");
+    } else { # If ResourceRules.plist isn't found, don't include it in the codesign arguments
+        @codesign_args = ("/usr/bin/codesign", "--force", "--preserve-metadata=identifier,entitlements",
+                         "--sign", $opt{sign});
+    }
+</code></pre>
+
+<a name="ambiguous............"></a>
+<h2>ambiguousなエラー</h2>
+
+<pre><code>error: /usr/bin/codesign --force --preserve-metadata=identifier,entitlements --sign iPhone Distribution: [証明書] --entitlements /var/folders/_c/xblnly_j59n4vmbhq061q_g00000gp/T/W_1s7LZRB8/entitlements_plist3tPGS55p /var/folders/_c/xblnly_j59n4vmbhq061q_g00000gp/T/W_1s7LZRB8/Payload/MEME-Run-iOS.app failed with error 1. Output: iPhone Distribution: [証明書]: ambiguous (matches "iPhone Distribution: [証明書]" in /Users/[ユーザー名]/Library/Keychains/login.keychain-db and "iPhone Distribution: [証明書]" in /Library/Keychains/System.keychain)
+</code></pre>
+
+<p>これは通常証明書が２つ存在している場合等に表示されるエラー。使っている証明書と期限切れの証明書がまだキーチェーンの中に入っている場合は削除すれば問題ない。<br/>
+Xcode8からはAuto Siging機能が追加されているので、<a href="http://dev.classmethod.jp/smartphone/xcode-8-signing/">What&rsquo;s New in Xcode App Signing</a>を参考に、プロビジョニング等の設定を全てAutoに変更し、Jenkins内のXcodeBuilder設定の証明書の記述も全て削除してしまえば問題なくビルドできるようになりました。</p>
+
+<p>ふあーーーすっきり。
+ちょっと対応が多すぎて実際必要だったのがどれやら…
+とりあえず整理のためにめもめもしておきます。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[[解決]The app references non-public selectors]]></title>
+        <link href="http://pgmy.github.io/blog/2014/10/22/the-app-references-non-public-selectors/"/>
+        <updated>2014-10-22T07:33:22+00:00</updated>
+        <id>http://pgmy.github.io/blog/2014/10/22/the-app-references-non-public-selectors</id>
+        <content type="html"><![CDATA[<p>アプリを申請用にValidateしようとした時のエラーめも。<br/>
+Xcode 6.1特定で出るみたいです＞＜</p>
+
+<blockquote><p>iTunes Store operation failed.<br/>
+Your app contains non-public API usage.Please review the errors, corrent them, and resubmit your application.</p>
+
+<hr />
+
+<p>iTunes Store operation failed.<br/>
+The app references non-public selectors in Palyload/[APP NAME].app/[APP NAME]:allocBatch:withEntity:coount:, allocWithEntity:, firstIndexForKnownKey:, indexForKey:</p>
+
+<hr />
+
+<p>iTunes Store operation failed.<br/>
+If you think this message was sent in error and that you have only used Apple-published APIs in accordance with the guidelines, send the app&rsquo;s nine-digit Apple ID, along with detailed infomation about why you believe the above APIs where incorrectly flagged, to <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x61;&#x70;&#x70;&#x72;&#x65;&#118;&#105;&#x65;&#x77;&#x40;&#x61;&#112;&#x70;&#x6c;&#101;&#x2e;&#x63;&#111;&#109;&#x2e;">&#x61;&#x70;&#x70;&#114;&#101;&#x76;&#x69;&#101;&#119;&#x40;&#97;&#x70;&#112;&#x6c;&#101;&#x2e;&#99;&#111;&#109;&#x2e;</a> &hellip;.</p></blockquote>
+
+<p>参考：<a href="http://stackoverflow.com/questions/26369633/non-public-selectors-in-payload">Non-public selectors in Payload/</a><br/>
+現時点ではXcode6.0.1で申請を出すしかないみたいです。</p>
+
+<p>古いバージョンのXcodeのダウンロードはここから→<a href="https://developer.apple.com/downloads/index.action">https://developer.apple.com/downloads/index.action</a></p>
+
+<a name="L........."></a>
+<h2>解決策</h2>
+
+<p>Qiitaにも同じ<a href="http://qiita.com/PGMY/items/831618ad416780e0dc7c">投稿</a>をしておいたところ、コメントで教えていただきました！<br/>
+英語なコメントにどきどき。<br/>
+英語力ないのでちゃんと理解するために友人に助けを求めつつ・・・</p>
+
+<p>結論として、</p>
+
+<pre><code>/Users/{user_home_folder}/Library/Developer/Xcode/DerivedData
+</code></pre>
+
+<p>きっちりCleanする時にもよく削除したりしていますが、ここに古いバージョンのXcodeでbuildしたデータが残った状態で、新しいXcodeでArchive->Validationを行うとこのエラーが表示されてしまうみたいです。</p>
+
+<p>DerivedData内のデータを念のため丸ごと削除して行うと無事Xcode6.1でもいけました！</p>
+
+<p>PrivateAPIを使っていないのにこのエラーが出た場合はDerivedDataの削除を試してみてください！</p>
+]]></content>
+    </entry>
+    
+</feed>

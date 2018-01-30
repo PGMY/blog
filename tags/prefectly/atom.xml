@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Prefectly | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/prefectly/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Prefectly For iOS]]></title>
+    <link href="http://pgmy.github.io/blog/2014/06/06/prefectlyforios/"/>
+    <updated>2014-06-06T09:03:16+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/06/06/prefectlyforios</id>
+    <content type="html"><![CDATA[<p>いつも利用させていただいている、素敵な日本地図フォント<a href="http://deform.jp/prefectly/">Prefectly</a>をiOSで表示したくて作ってみました。</p>
+
+<div class="github-widget" data-repo="PGMY/MPrefectlyMap"></div>
+
+
+<p>まだ表示させてるだけなので使いやすくしていかないとなぁ・・・！</p>
+]]></content>
+  </entry>
+  
+</feed>

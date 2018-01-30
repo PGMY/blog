@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Facebook | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/facebook/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[噂のHACKをインストールしてみる]]></title>
+    <link href="http://pgmy.github.io/blog/2014/04/02/hack/"/>
+    <updated>2014-04-02T05:39:47+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/04/02/hack</id>
+    <content type="html"><![CDATA[<ul>
+<li><a href="http://hhvm.com/">http://hhvm.com/</a></li>
+<li><a href="http://hacklang.org/">http://hacklang.org/</a></li>
+</ul>
+
+
+<div class="github-widget" data-repo="facebook/hhvm"></div>
+
+
+<p>作業めもな感じになります</p>
+
+<!-- more -->
+
+
+<a name="L.............................."></a>
+<h1>インストールしてみる</h1>
+
+<p>利用する環境はCentOSなので<a href="https://github.com/facebook/hhvm/wiki/HHVM-Pre-built-packages-for-Centos-6.4">HHVM Pre built packages for Centos-6.4</a>を見ながら作業していきました。</p>
+
+<pre><code>sudo yum install http://ftp.riken.jp/Linux/fedora/epel/6/i386/epel-release-6-8.noarch.rpm
+cd /etc/yum.repos.d
+sudo wget http://www.hop5.in/yum/el6/hop5.repo
+sudo yum install hhvm
+</code></pre>
+
+<p>以上の手順で簡単インストール・ω・</p>
+
+<a name="L........................"></a>
+<h2>でてきたエラー集</h2>
+
+<a name="Error:.Package:......"></a>
+<h3>Error: Package: *****</h3>
+
+<p>アップデート時に出るようになってしまったエラー</p>
+
+<pre><code>Error: Package: perl-IO-Compress-2.052-1.el6.rfx.noarch (rpmforge-extras)
+           Requires: perl(Compress::Raw::Zlib) = 2.052
+           Installed: 1:perl-Compress-Raw-Zlib-2.021-136.el6.x86_64 (@base)
+               perl(Compress::Raw::Zlib) = 2.021
+           Available: perl-Compress-Raw-Zlib-2.030-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.030
+           Available: perl-Compress-Raw-Zlib-2.033-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.033
+           Available: perl-Compress-Raw-Zlib-2.034-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.034
+           Available: perl-Compress-Raw-Zlib-2.035-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.035
+           Available: perl-Compress-Raw-Zlib-2.037-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.037
+           Available: perl-Compress-Raw-Zlib-2.051-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.051
+           Available: perl-Compress-Raw-Zlib-2.052-1.el6.rfx.x86_64 (rpmforge-extras)
+               perl(Compress::Raw::Zlib) = 2.052
+</code></pre>
+
+<pre><code>yum erase perl-Compress-Raw-Zlib
+</code></pre>
+
+<p>こんな感じにひとまず削除してあげると大丈夫みたい。</p>
+
+<a name="Error:.Protected.multilib.versions....."></a>
+<h3>Error: Protected multilib versions ****</h3>
+
+<pre><code>Error: Protected multilib versions: libstdc++-4.8.2-8.el6.x86_64 != libstdc++-4.4.7-4.el6.i686
+</code></pre>
+
+<p>このエラーが出る時はいくつかのバージョンが存在していてのエラーなので下記を実行するといいみたい。</p>
+
+<pre><code>package-cleanup --cleandupes
+</code></pre>
+
+<p><code>package-cleanup: command not found</code>が表示される時は<code>yum-utils</code>をインストールする</p>
+
+<pre><code>yum clean all
+yum install yum-utils
+</code></pre>
+
+<p>でも結局だめでした。</p>
+
+<p>次にこれでupdate</p>
+
+<pre><code>yum upgrade --setopt=protected_multilib=false --skip-broken
+</code></pre>
+
+<p>なんとかいけました。これで大丈夫・・・なのかな？</p>
+
+<a name="L................................."></a>
+<h1>サンプルを動かしてみる</h1>
+
+<div class="github-widget" data-repo="hhvm/hack-example-site"></div>
+
+
+<p>ここにサンプルサイトが公開されてますΣd・ω・</p>
+
+<pre><code>git clone git@github.com:hhvm/hack-example-site.git
+cd hack-example-site
+./setup
+</code></pre>
+
+<p>※時間がなくなったのでのちほど公開</p>
+
+<a name="L......"></a>
+<h2>参考</h2>
+
+<ul>
+<li><a href="https://code.facebook.com/posts/264544830379293/hack-a-new-programming-language-for-hhvm/">Hack: a new programming language for HHVM</a></li>
+<li><a href="http://qiita.com/yone098@github/items/7ff3616030e8d19400a7">新言語Hackで最強PHPerになろう！</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

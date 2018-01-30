@@ -1,0 +1,2125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+    <title><![CDATA[PGMY Programming Blog]]></title>
+    <link href="http://pgmy.github.io/blog/atom.xml" rel="self"/>
+    <link href="http://pgmy.github.io/blog/"/>
+    <updated>2018-01-30T07:51:29+00:00</updated>
+    <id>http://pgmy.github.io/blog/</id>
+    <author>
+        <name><![CDATA[PGMY]]></name>
+        
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+
+    
+    <entry>
+        <title type="html"><![CDATA[Swift3 処理時間の計測]]></title>
+        <link href="http://pgmy.github.io/blog/2016/11/10/swift3-processing-time/"/>
+        <updated>2016-11-10T02:11:07+00:00</updated>
+        <id>http://pgmy.github.io/blog/2016/11/10/swift3-processing-time</id>
+        <content type="html"><![CDATA[<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let start = Date()
+</span><span class='line'>// 処理
+</span><span class='line'>let elapsed = Date().timeIntervalSince(start)
+</span><span class='line'>print(elapsed)</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Benchmark {
+</span><span class='line'>
+</span><span class='line'>    // 開始時刻を保存する変数
+</span><span class='line'>    var startTime: Date
+</span><span class='line'>    var key: String
+</span><span class='line'>
+</span><span class='line'>    // 処理開始
+</span><span class='line'>    init(_ key: String) {
+</span><span class='line'>        self.startTime = Date()
+</span><span class='line'>        self.key = key
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    // 処理終了
+</span><span class='line'>    func finish() {
+</span><span class='line'>        let elapsed = Date().timeIntervalSince(self.startTime) as Double
+</span><span class='line'>        let formatedElapsed = String(format: "%.3f", elapsed)
+</span><span class='line'>        print("Benchmark: \(key), Elasped time: \(formatedElapsed)(s)")
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    // 処理をブロックで受け取る
+</span><span class='line'>    class func measure(key: String, block: () -&gt; ()) {
+</span><span class='line'>        let benchmark = Benchmark(key)
+</span><span class='line'>        block()
+</span><span class='line'>        benchmark.finish()
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p><a href="http://qiita.com/tady/items/40d7c4feecda337cf271">Swiftで重い処理の処理時間を測定する</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[macOS10.12 SierraにアップデートしたらうちのJenkins執事ちゃんがストライキを起こしてしまったメモ]]></title>
+        <link href="http://pgmy.github.io/blog/2016/10/03/jenkins-macos10-dot-12-sierra/"/>
+        <updated>2016-10-03T07:11:35+00:00</updated>
+        <id>http://pgmy.github.io/blog/2016/10/03/jenkins-macos10-dot-12-sierra</id>
+        <content type="html"><![CDATA[<p>Macをアップデートしたらうちの大事な執事ちゃんがストライキを起こしたのでなだめる方法をめもめも。<br/>
+正直原因が多岐に渡っていたので、実は必要なかった設定とかがあるかもしれない…</p>
+
+<p>余計な処理とか推奨されない対応してるとかあったら教えてください偉い人Σ・ω・｀</p>
+
+<p>XcodeBuilderを利用させるために四苦八苦したメモです。
+brewとrubyは既にmacOS10.12に対応させるためごにょごにょしてあります。</p>
+
+<!-- more -->
+
+
+<a name="L...............Jenkins......................................."></a>
+<h2>とりあえずJenkinsが真っ白になってしまった…</h2>
+
+<p>OSをアップデートしてから起動画面を見に行くと画面が真っ白に…
+CSS等が読み込まれずに文字だけの表示というのは経験があったんだけども、画面全体が真っ白で何も映らない。<br/>
+接続エラーの画面ではないのでJenkins自体はちゃんと起動している様子。
+Chromeで確認すると413エラーが帰ってきていたのでそのあたりで検索かけたら見つけましたほんっとうにありがとうございます！！！！！！</p>
+
+<p>⇒<a href="http://orca8.blogspot.jp/2014/08/jenkinsfull-head-413.html">JenkinsでFULL head 413を返すとき</a></p>
+
+<p>とりあえずクッキーを消せばどうにかなる！
+ということなので、個別にCookieを編集・削除できるExtention <a href="https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg?hl=ja">EditThisCookie</a> を導入しました・ω・これ、便利。<br/>
+ざざっとJenkinsページのCookieをまるまる削除したら画面が表示されるようになりましたわーい♪♪</p>
+
+<a name="NullPointer.............."></a>
+<h2>NullPointer??なエラー</h2>
+
+<p>画面が表示されるようになったのでさっそくXcodeBuildを試してみる…</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ERROR: Build step failed with exception java.lang.NullPointerException at au.com.rayh.XCodeBuilder.perform</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上記とともにざざざっとスタックトレースが表示されているんだけども…どうやらRubyまわりの問題みたい。
+実はSierraにアップデートしてからrubyの管理をrbenvで管理するように変更したのだけれども、こちらに対応させる必要があった様子。
+<a href="http://qiita.com/kitaro_tn/items/22fd3830ba9a85ad5320">Jenkinsでrubyのビルドでハマった点</a>で設定方法が解説されてたのでこの通りにしました。</p>
+
+<a name="resource-rules..deprecated.in.Mac.OS.X....10.10..............."></a>
+<h2>resource-rules (deprecated in Mac OS X >= 10.10)! なエラー</h2>
+
+<p>どうやら<code>--resource-rules</code>オプションがdeprecatedになっている様子なので
+<a href="https://www.jayway.com/2015/05/21/fixing-your-ios-build-scripts/">Fixing your iOS build scripts</a>を参考に</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/PackageApplication</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上記ビルドスクリプト内の <code>@codesign_args</code> から <code>resource-rules</code> と <code>--resource-rules=$destApp/ResourceRules.plist</code> を削除してあげる。<br/>
+参考先は<code>ResourceRules.plist</code> が存在している場合としていない場合とで分けるように修正してくれていました＞ω＜</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>...
+</span><span class='line'>my @codesign_args;
+</span><span class='line'>    if (-e '$destApp/ResourceRules.plist') {  # If ResourceRules.plist exists, include it in codesign arguments, for backwards compatability
+</span><span class='line'>        @codesign_args = ("/usr/bin/codesign", "--force", "--preserve-metadata=identifier,entitlements,resource-rules",
+</span><span class='line'>                         "--sign", $opt{sign},
+</span><span class='line'>                         "--resource-rules=$destApp/ResourceRules.plist");
+</span><span class='line'>    } else { # If ResourceRules.plist isn't found, don't include it in the codesign arguments
+</span><span class='line'>        @codesign_args = ("/usr/bin/codesign", "--force", "--preserve-metadata=identifier,entitlements",
+</span><span class='line'>                         "--sign", $opt{sign});
+</span><span class='line'>    }</span></code></pre></td></tr></table></div></figure>
+
+
+<a name="ambiguous............"></a>
+<h2>ambiguousなエラー</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>error: /usr/bin/codesign --force --preserve-metadata=identifier,entitlements --sign iPhone Distribution: [証明書] --entitlements /var/folders/_c/xblnly_j59n4vmbhq061q_g00000gp/T/W_1s7LZRB8/entitlements_plist3tPGS55p /var/folders/_c/xblnly_j59n4vmbhq061q_g00000gp/T/W_1s7LZRB8/Payload/MEME-Run-iOS.app failed with error 1. Output: iPhone Distribution: [証明書]: ambiguous (matches "iPhone Distribution: [証明書]" in /Users/[ユーザー名]/Library/Keychains/login.keychain-db and "iPhone Distribution: [証明書]" in /Library/Keychains/System.keychain)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これは通常証明書が２つ存在している場合等に表示されるエラー。使っている証明書と期限切れの証明書がまだキーチェーンの中に入っている場合は削除すれば問題ない。<br/>
+Xcode8からはAuto Siging機能が追加されているので、<a href="http://dev.classmethod.jp/smartphone/xcode-8-signing/">What&rsquo;s New in Xcode App Signing</a>を参考に、プロビジョニング等の設定を全てAutoに変更し、Jenkins内のXcodeBuilder設定の証明書の記述も全て削除してしまえば問題なくビルドできるようになりました。</p>
+
+<p>ふあーーーすっきり。
+ちょっと対応が多すぎて実際必要だったのがどれやら…
+とりあえず整理のためにめもめもしておきます。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[文字組をコントロールするフォントとライブラリ]]></title>
+        <link href="http://pgmy.github.io/blog/2016/08/31/font/"/>
+        <updated>2016-08-31T03:21:38+00:00</updated>
+        <id>http://pgmy.github.io/blog/2016/08/31/font</id>
+        <content type="html"><![CDATA[<p>文章中におけるかっこ <code>【】</code> などの微妙な隙間を調整するための２つの手段。<br/>
+Webサイト等だといろいろ気になるところなので…このサイトにも使ってみようかな。<br/>
+気になったのでメモ。</p>
+
+<a name="L............"></a>
+<h1>フォント</h1>
+
+<p><a href="https://qrac.github.io/yakuhanjp/">Yaku Han JP</a></p>
+
+<div class="github-widget" data-repo="qrac/yakuhanjp"></div>
+
+
+<p>フォント自体を調整して利用する。<br/>
+サイトには比較もあってわかりやすい。</p>
+
+<a name="L..............."></a>
+<h1>ライブラリ</h1>
+
+<p><a href="http://terkel.jp/archives/2016/07/mojik/">Mojik</a></p>
+
+<div class="github-widget" data-repo="terkel/mojik"></div>
+
+
+<blockquote><p>ウェブにおける和文の文字組みをコントロールするためのJavaScriptライブラリ</p></blockquote>
+
+<p>こちらはJSライブラリ。<br/>
+フォントを指定のものに変更するのではなく、 <code>マッチする要素から上記に該当する箇所を検出し、それぞれマークアップが挿入される</code> とのことなので使い勝手は良さそうです。</p>
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[uibuttonのtextサイズ自動調整]]></title>
+        <link href="http://pgmy.github.io/blog/2016/08/03/uibutton/"/>
+        <updated>2016-08-03T02:46:43+00:00</updated>
+        <id>http://pgmy.github.io/blog/2016/08/03/uibutton</id>
+        <content type="html"><![CDATA[<p>UIButtonのテキストのフォントサイズを自動調整するスニペット<br/>
+忘れて調べ直すことになったのでメモ</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>button.titleLabel.numberOfLines = 1;
+</span><span class='line'>button.titleLabel.adjustsFontSizeToFitWidth = YES;
+</span><span class='line'>button.titleLabel.lineBreakMode = NSLineBreakByClipping;</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[iOS アプリ譲渡 App Transfer]]></title>
+        <link href="http://pgmy.github.io/blog/2016/07/25/apptransfer/"/>
+        <updated>2016-07-25T06:47:18+00:00</updated>
+        <id>http://pgmy.github.io/blog/2016/07/25/apptransfer</id>
+        <content type="html"><![CDATA[<a name="L.............................."></a>
+<h1>アプリ譲渡作業備忘録</h1>
+
+<a name="L........."></a>
+<h2>前準備</h2>
+
+<a name="L............"></a>
+<h1>参考記事</h1>
+
+<ul>
+<li><a href="https://developer.apple.com/library/ios/documentation/LanguagesUtilities/Conceptual/iTunesConnect_Guide_Jpn/Chapters/TransferringAndDeletingApps.html#//apple_ref/doc/uid/TP40014483-CH31-SW1">iOS Developer Library:アプリケーションの譲渡と削除</a></li>
+<li><a href="http://qiita.com/t_furuya/items/dc4019ff3c599a9f759f">アプリのアカウント移行について</a></li>
+<li><a href="http://www.sria.co.jp/blog/2015/01/transfer-of-ios-app-to-do-part-1/">iOSアプリの譲渡をやってみた（その１</a></li>
+<li><a href="http://blog.vgandroid.net/post/67840811903/iosapptransfer%E3%81%97%E3%81%9F%E3%82%89%E3%82%AD%E3%83%BC%E3%83%81%E3%82%A7%E3%83%BC%E3%83%B3%E3%81%AB%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E3%81%A7%E3%81%8D%E3%81%AA%E3%81%8F%E3%81%AA%E3%81%A3%E3%81%9F%E8%A9%B1">【iOS】AppTransferしたらキーチェーンにアクセスできなくなった話</a></li>
+<li><a href="http://www.toyship.org/archives/1680">複数の App ID Prefixとキーチェーンについて</a></li>
+<li><a href="http://qiita.com/yoneapp/items/2b002310719822431df7">App Transferするなら絶対に知っておいてほしいKeychainの話</a></li>
+</ul>
+
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[１つの端末で２つのGithubアカウントを利用する]]></title>
+        <link href="http://pgmy.github.io/blog/2016/07/14/another-github-user/"/>
+        <updated>2016-07-14T03:52:22+00:00</updated>
+        <id>http://pgmy.github.io/blog/2016/07/14/another-github-user</id>
+        <content type="html"><![CDATA[<p>毎回手順を忘れるのでメモしておくことにした</p>
+
+<a name="SSH.Key......"></a>
+<h2>SSH Key問題</h2>
+
+<p>Githubだと別のアカウントで同じSSH Keyを利用できないので、１つの端末で別のgithubアカウントを同時に利用しようと思うとちょっと工夫が必要な感じ。</p>
+
+<a name="L.....................SSH.Key..............."></a>
+<h2>アカウント別のSSH Keyを作成する</h2>
+
+<p>普通に・ω・</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ssh-keygen -t rsa -b 4096 -C "your_email@example.com"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ファイル名はデフォルトのままではなくて、そのアカウントとわかる形の名前にしておくのがいい。</p>
+
+<a name="L.ssh.config......"></a>
+<h2>.ssh/config設定</h2>
+
+<p>configに接続情報を記載する。<br/>
+Host名をgithub.comじゃなくてそのアカウント用と分かるような名前をつけてあげる。<br/>
+HostNameはgithub.comのまま。<br/>
+IdentityFileで作成したkeyへのパスを指定する。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Host github-another-user
+</span><span class='line'>  User git
+</span><span class='line'>  Port 22
+</span><span class='line'>  HostName github.com
+</span><span class='line'>  IdentityFile ~/.ssh/another_rsa
+</span><span class='line'>  TCPKeepAlive yes
+</span><span class='line'>  IdentitiesOnly yes</span></code></pre></td></tr></table></div></figure>
+
+
+<a name="L............"></a>
+<h2>接続する</h2>
+
+<p>通常の <code>git@github.com:PGMY/ProjectName.git</code> で接続するんじゃなくて、configで指定したhost名を書き換えて接続する。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git@github-another-user:PGMY/ProjectName.git</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでおけΣｄ・ω・</p>
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[Push notification snippet]]></title>
+        <link href="http://pgmy.github.io/blog/2015/12/14/push-notification-snippet/"/>
+        <updated>2015-12-14T03:26:45+00:00</updated>
+        <id>http://pgmy.github.io/blog/2015/12/14/push-notification-snippet</id>
+        <content type="html"><![CDATA[<p>ただのめもだよー。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>if ([[[UIDevice currentDevice] systemVersion] floatValue] &gt;= 8.0)
+</span><span class='line'>{
+</span><span class='line'>    [[UIApplication sharedApplication] registerUserNotificationSettings:
+</span><span class='line'>     [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+</span><span class='line'>    [[UIApplication sharedApplication] registerForRemoteNotifications];
+</span><span class='line'>} else {
+</span><span class='line'>    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIUserNotificationTypeBadge |UIUserNotificationTypeSound | UIUserNotificationTypeAlert)];
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>認証まわりがまとまったライブラリもある。
+「PermissionScope」便利だなー。</p>
+
+<div class="github-widget" data-repo="nickoneill/PermissionScope"></div>
+
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[Jenkins 拡張E-mailの設定]]></title>
+        <link href="http://pgmy.github.io/blog/2015/10/13/jenkins-email-settings/"/>
+        <updated>2015-10-13T02:46:46+00:00</updated>
+        <id>http://pgmy.github.io/blog/2015/10/13/jenkins-email-settings</id>
+        <content type="html"><![CDATA[<a name="L..............."></a>
+<h1>プラグイン</h1>
+
+<a name="L......................................................................................."></a>
+<h1>お世話になりました本当にありがとうございます！！！！！！！</h1>
+
+<p><a href="http://changesworlds.com/2015/03/automation-of-mail-notification-by-jenkins/">Jenkinsによるメール通知の自動化</a></p>
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[gcc-warning-options]]></title>
+        <link href="http://pgmy.github.io/blog/2015/09/08/gcc-warning-options/"/>
+        <updated>2015-09-08T01:59:18+00:00</updated>
+        <id>http://pgmy.github.io/blog/2015/09/08/gcc-warning-options</id>
+        <content type="html"><![CDATA[<p>gccの警告オプションを弄ぶ機会があったので調べてたら・・・<br/>
+きっちりしっかりまとまっているところがありました本当にありがとうございます！！！</p>
+
+<p>ということでただのブックマークメモですΣ＞＜</p>
+
+<!-- more -->
+
+
+<a name="L........."></a>
+<h2>日本語</h2>
+
+<p><a href="https://gist.github.com/tosihisa/2585404">gcc の警告オプションを調べてみた。</a></p>
+
+<a name="L......"></a>
+<h2>英語</h2>
+
+<p><a href="https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html">3.8 Options to Request or Suppress Warnings</a></p>
+
+<p>いやぁ・・・まとめて載ってるって便利！</p>
+
+<a name="L..............."></a>
+<h1>警告の無視</h1>
+
+<p>警告が無視したくて探したのでこれもついでに。
+ignoredの後ろのオプションに上記の無視したい対象オプションを指定すればオッケーです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#pragma clang diagnostic push
+</span><span class='line'>#pragma clang diagnostic ignored "-Wsign-compare"
+</span><span class='line'>#pragma clang diagnostic pop</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ーωー*</p>
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[Xcodeをアップデートしたらプラグインが動かなくなったのを解決したメモ]]></title>
+        <link href="http://pgmy.github.io/blog/2015/07/06/xcode-plugin-not-working/"/>
+        <updated>2015-07-06T10:35:13+00:00</updated>
+        <id>http://pgmy.github.io/blog/2015/07/06/xcode-plugin-not-working</id>
+        <content type="html"><![CDATA[<p>まー・・・・・毎回忘れる忘れる。<br/>
+特にBeta版のXcodeとか古いXcodeとか入れているとよくなるんですが、Xcodeをアップデートしたらプラグインが何度インストールしても使えなくなった！！ってことがよくあるわけです。<br/>
+とっても丁寧に解決方法を記載していただいている方がいらっしゃいましたありがとうございます＞△＜！！</p>
+
+<p>もはや管理しきれないブックマークに追加しても何の意味もなさない今日この頃（整理しろ・・・orz)<br/>
+ブログに書いておくのが手っ取り早いじゃーん！ってここに記載します。</p>
+
+<!-- more -->
+
+
+<p>ありがとうございます先：<br/>
+<a href="http://scrtree.github.io/blog/2015/03/11/resolved-xcode6-dot-2-update-problem/">Xcode5.1〜6.2：Xcodeのバージョンをアップデートしたらプラグインが効かない、使えなくなった場合の対処方法</a><br/>
+ちなみに今回はXcode6.3から6.4にアップデートした時にまたかーとなりました。</p>
+
+<p>UUID自体を確認する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>defaults read /Applications/Xcode.app/Contents/Info.plist DVTPlugInCompatibilityUUID</span></code></pre></td></tr></table></div></figure>
+
+
+<p>表示されたUUIDを追加する</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>find ~/Library/Application\ Support/Developer/Shared/Xcode/Plug-ins -name Info.plist | xargs -IFILE defaults write FILE DVTPlugInCompatibilityUUIDs -array-add 【UUIDをここに】</span></code></pre></td></tr></table></div></figure>
+
+
+<p>このあと再起動すれば読み込みできるようになります！</p>
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[[解決]The app references non-public selectors]]></title>
+        <link href="http://pgmy.github.io/blog/2014/10/22/the-app-references-non-public-selectors/"/>
+        <updated>2014-10-22T07:33:22+00:00</updated>
+        <id>http://pgmy.github.io/blog/2014/10/22/the-app-references-non-public-selectors</id>
+        <content type="html"><![CDATA[<p>アプリを申請用にValidateしようとした時のエラーめも。<br/>
+Xcode 6.1特定で出るみたいです＞＜</p>
+
+<blockquote><p>iTunes Store operation failed.<br/>
+Your app contains non-public API usage.Please review the errors, corrent them, and resubmit your application.</p>
+
+<hr />
+
+<p>iTunes Store operation failed.<br/>
+The app references non-public selectors in Palyload/[APP NAME].app/[APP NAME]:allocBatch:withEntity:coount:, allocWithEntity:, firstIndexForKnownKey:, indexForKey:</p>
+
+<hr />
+
+<p>iTunes Store operation failed.<br/>
+If you think this message was sent in error and that you have only used Apple-published APIs in accordance with the guidelines, send the app&rsquo;s nine-digit Apple ID, along with detailed infomation about why you believe the above APIs where incorrectly flagged, to <a href="&#x6d;&#97;&#x69;&#108;&#116;&#x6f;&#58;&#97;&#x70;&#112;&#x72;&#x65;&#x76;&#105;&#101;&#119;&#64;&#x61;&#x70;&#112;&#x6c;&#x65;&#x2e;&#99;&#x6f;&#x6d;&#x2e;">&#x61;&#x70;&#112;&#x72;&#101;&#118;&#105;&#101;&#119;&#64;&#97;&#112;&#x70;&#x6c;&#x65;&#x2e;&#99;&#x6f;&#x6d;&#46;</a> &hellip;.</p></blockquote>
+
+<p>参考：<a href="http://stackoverflow.com/questions/26369633/non-public-selectors-in-payload">Non-public selectors in Payload/</a><br/>
+現時点ではXcode6.0.1で申請を出すしかないみたいです。</p>
+
+<p>古いバージョンのXcodeのダウンロードはここから→<a href="https://developer.apple.com/downloads/index.action">https://developer.apple.com/downloads/index.action</a></p>
+
+<a name="L........."></a>
+<h2>解決策</h2>
+
+<p>Qiitaにも同じ<a href="http://qiita.com/PGMY/items/831618ad416780e0dc7c">投稿</a>をしておいたところ、コメントで教えていただきました！<br/>
+英語なコメントにどきどき。<br/>
+英語力ないのでちゃんと理解するために友人に助けを求めつつ・・・</p>
+
+<p>結論として、</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/Users/{user_home_folder}/Library/Developer/Xcode/DerivedData</span></code></pre></td></tr></table></div></figure>
+
+
+<p>きっちりCleanする時にもよく削除したりしていますが、ここに古いバージョンのXcodeでbuildしたデータが残った状態で、新しいXcodeでArchive->Validationを行うとこのエラーが表示されてしまうみたいです。</p>
+
+<p>DerivedData内のデータを念のため丸ごと削除して行うと無事Xcode6.1でもいけました！</p>
+
+<p>PrivateAPIを使っていないのにこのエラーが出た場合はDerivedDataの削除を試してみてください！</p>
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[gitのコミット履歴のユーザー情報を一括変更する]]></title>
+        <link href="http://pgmy.github.io/blog/2014/09/09/change-git-user-info/"/>
+        <updated>2014-09-09T02:36:45+00:00</updated>
+        <id>http://pgmy.github.io/blog/2014/09/09/change-git-user-info</id>
+        <content type="html"><![CDATA[<p>過去のコミット履歴にあるユーザー情報をまとめて一括変更する方法を調べたのでめもも。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git filter-branch -f --commit-filter '
+</span><span class='line'>        if [ "$GIT_AUTHOR_NAME" = "【変更したいユーザー名】" ];
+</span><span class='line'>        then
+</span><span class='line'>                GIT_AUTHOR_NAME="【変更後ユーザー名】";
+</span><span class='line'>                GIT_AUTHOR_EMAIL="【変更後メールアドレス】";
+</span><span class='line'>                git commit-tree "$@";
+</span><span class='line'>        else
+</span><span class='line'>                git commit-tree "$@";
+</span><span class='line'>        fi' HEAD</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[<S>Objective-CからSwiftにしたら処理が劇的に重くなった話</S>]]></title>
+        <link href="http://pgmy.github.io/blog/2014/07/07/swift/"/>
+        <updated>2014-07-07T05:22:22+00:00</updated>
+        <id>http://pgmy.github.io/blog/2014/07/07/swift</id>
+        <content type="html"><![CDATA[<p>⇒ Arrayの扱いが変わってきたので一旦この記事は保留で全体を見直すことにしました。</p>
+
+<hr />
+
+<!-- more -->
+
+
+<p>絶賛まだ修正中ですが、「<a href="http://pgmy.github.io/blog/2014/06/27/assetslibrary-swift/">Assetsを表示するプログラムをSwiftにしてみる</a>」でいろいろと作業しながらSwiftの勉強をしていたのですが、自分のおもいつくままの方法でObjective-CからSwiftにしたら処理が耐えられないほど重くなってしまいました・・・・。<br/>
+いろいろと原因追及をしながら考えてみたいなと思います。<br/>
+・・・考えている途中のメモです。<br/>
+解決したら解決方法を追記する予定ですが現在解決しておりませぬ。<br/>
+コメント募集中？</p>
+
+<p>そもそも未熟すぎるのが悪いというのは大目に見てください・・・orz</p>
+
+<a name="L................................."></a>
+<h1>劇重になった問題の処理</h1>
+
+<p>問題のコード部分はAssetLibraryからデータを取り出して日付でソートするという部分です。<br/>
+日付順に格納したかったのでソート処理をしてデータを格納しなおしてごにょごにょしてました。<br/>
+そもそもがサンプルで作ったソースなので元々が良くないのかもしれませんが、Objective-Cでは数秒程度の処理がSwiftにすることで数分の処理へと変貌してしまいました。</p>
+
+<ul>
+<li>Objective-Cで。</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALAssetsGroupType assetsGroupType = ALAssetsGroupAlbum | ALAssetsGroupEvent | ALAssetsGroupFaces | ALAssetsGroupSavedPhotos;
+</span><span class='line'>
+</span><span class='line'>NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+</span><span class='line'>[formatter setDateFormat:@"yyyy/MM/dd"];
+</span><span class='line'>
+</span><span class='line'>// アセットライブラリから取得したグループ内のアセットごとの処理
+</span><span class='line'>ALAssetsGroupEnumerationResultsBlock groupResultBlock = ^(ALAsset *asset, NSUInteger index, BOOL *stop) {
+</span><span class='line'>  if (asset) {
+</span><span class='line'>    NSDate   *assetDate    = [asset valueForProperty:ALAssetPropertyDate];
+</span><span class='line'>    NSString *assetDateStr = [formatter stringFromDate:assetDate];
+</span><span class='line'>    [allAssets addObject:@{ ASSET: asset, DATE: assetDate, DATE_STR: assetDateStr }];
+</span><span class='line'>  }
+</span><span class='line'>};
+</span><span class='line'>
+</span><span class='line'>NSComparator comparetor = ^NSComparisonResult (id obj1, id obj2) {
+</span><span class='line'>  NSDate *datea = obj1[DATE];
+</span><span class='line'>  NSDate *dateb = obj2[DATE];
+</span><span class='line'>
+</span><span class='line'>  return [dateb compare:datea];
+</span><span class='line'>};
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>// ライブラリからアセットグループを取得する処理
+</span><span class='line'>ALAssetsLibraryGroupsEnumerationResultsBlock resultBlock = ^(ALAssetsGroup *assetsGroup, BOOL *stop) {
+</span><span class='line'>  //        NSLog(@"AssetsGroup : %@", assetsGroup);
+</span><span class='line'>  ALAssetsFilter *onlyPhotosFilter = [ALAssetsFilter allPhotos];
+</span><span class='line'>  [assetsGroup setAssetsFilter:onlyPhotosFilter];
+</span><span class='line'>  if (assetsGroup) {
+</span><span class='line'>    if ([assetsGroup numberOfAssets] &gt; 0) {
+</span><span class='line'>      [assetsGroup enumerateAssetsUsingBlock:groupResultBlock];
+</span><span class='line'>    }
+</span><span class='line'>  } else {
+</span><span class='line'>    // 全体sort
+</span><span class='line'>    [allAssets sortWithOptions:NSSortConcurrent usingComparator:comparetor];
+</span><span class='line'>    for (NSDictionary *asset in allAssets) {
+</span><span class='line'>      NSString *dateStr = asset[DATE_STR];
+</span><span class='line'>      if (self.assetsData[dateStr]) {   // 存在していたら
+</span><span class='line'>        [self.assetsData[dateStr] addObject:asset[ASSET]];
+</span><span class='line'>      } else {
+</span><span class='line'>        NSMutableArray *sectionArray = [[NSMutableArray alloc] init];
+</span><span class='line'>        [sectionArray addObject:asset[ASSET]];
+</span><span class='line'>        [self.assetsData setObject:sectionArray forKey:dateStr];
+</span><span class='line'>        [sectionArray release];
+</span><span class='line'>        [self.sectionList addObject:dateStr];
+</span><span class='line'>      }
+</span><span class='line'>    }
+</span><span class='line'>    [formatter release];
+</span><span class='line'>    [allAssets release];
+</span><span class='line'>    [self.collectionView reloadData];
+</span><span class='line'>  }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Swiftで</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let assetsGroupType :ALAssetsGroupType! = ALAssetsGroupType(0xFFFFFFFF)
+</span><span class='line'>
+</span><span class='line'>var fomatter = NSDateFormatter()
+</span><span class='line'>fomatter.dateFormat = "yyyy/MM/dd"
+</span><span class='line'>
+</span><span class='line'>var groupResultBlock : ALAssetsGroupEnumerationResultsBlock = { (asset: ALAsset!, index: Int, stop:CMutablePointer&lt;ObjCBool&gt;) -&gt; Void in
+</span><span class='line'>  if asset {
+</span><span class='line'>    let assetDate: NSDate = asset.valueForProperty(ALAssetPropertyDate) as NSDate
+</span><span class='line'>    let assetDateStr: String = fomatter.stringFromDate(assetDate) as String
+</span><span class='line'>    allAssets.append([self.ASSET:asset, self.DATE:assetDate, self.DATE_STR:assetDateStr])
+</span><span class='line'>  }
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>var resultBlock : ALAssetsLibraryGroupsEnumerationResultsBlock = { (assetsGroup:ALAssetsGroup!, stop: CMutablePointer&lt;ObjCBool&gt;) -&gt; Void in
+</span><span class='line'>  let onlyPhotosFilter: ALAssetsFilter = ALAssetsFilter.allPhotos()
+</span><span class='line'>  if assetsGroup {
+</span><span class='line'>    assetsGroup.setAssetsFilter( onlyPhotosFilter )
+</span><span class='line'>    if assetsGroup.numberOfAssets() &gt; 0 {
+</span><span class='line'>      assetsGroup.enumerateAssetsUsingBlock(groupResultBlock)
+</span><span class='line'>    }
+</span><span class='line'>  } else {
+</span><span class='line'>    sort( allAssets ){ $0[self.DATE_STR] as String &gt; $1[self.DATE_STR] as String }
+</span><span class='line'>
+</span><span class='line'>    for anAsset: Dictionary&lt;Int,AnyObject&gt; in allAssets {
+</span><span class='line'>      let assetDict: NSDictionary = anAsset
+</span><span class='line'>      let dateStr: String! = assetDict[self.DATE_STR] as String
+</span><span class='line'>      if self.assetsData[dateStr] {
+</span><span class='line'>        var asstsArr:Array&lt;ALAsset&gt; = self.assetsData[dateStr]!
+</span><span class='line'>        asstsArr.append(anAsset[self.ASSET] as ALAsset)
+</span><span class='line'>        self.assetsData[dateStr] = asstsArr
+</span><span class='line'>      } else {
+</span><span class='line'>        var sectionArray:Array&lt;ALAsset&gt; = []
+</span><span class='line'>        sectionArray.append(anAsset[self.ASSET] as ALAsset)
+</span><span class='line'>        self.assetsData[dateStr] = sectionArray
+</span><span class='line'>        self.sectionList.append(dateStr)
+</span><span class='line'>      }
+</span><span class='line'>
+</span><span class='line'>    }
+</span><span class='line'>    self.collectionView!.reloadData()
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Swiftにうまく変換できなかった部分は思いつくままに無理矢理やっている部分があります。<br/>
+処理としては下記のものになります。</p>
+
+<ul>
+<li><code>allAssets</code>という配列にまずは<code>Assets</code>たちを全部入れていく</li>
+<li><code>allAssets</code>を日付でソートする</li>
+<li>ソートした結果をCollectionViewで使いやすいように<code>self.assetsData</code>へ日付をkeyにしたDictionaryに格納していく</li>
+</ul>
+
+
+<p>以上の作業をしています。</p>
+
+<p>細かくみていきたいと思います。</p>
+
+<a name="L...................:.ALAssetsGroupType"></a>
+<h2>第１の問題点 : ALAssetsGroupType</h2>
+
+<p>AssetsLibraryからデータを取り出す時に<code>ALAssetsGroupType</code>を指定することで必要なデータのみ表示されるように調整しています。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALAssetsGroupType assetsGroupType = ALAssetsGroupAlbum | ALAssetsGroupEvent | ALAssetsGroupFaces | ALAssetsGroupSavedPhotos;</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let assetsGroupType :ALAssetsGroupType! = ALAssetsGroupType(0xFFFFFFFF)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>実はここで問題が起きてしまいました。<br/>
+AssetsLibraryを利用するので</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import AssetsLibrary</span></code></pre></td></tr></table></div></figure>
+
+
+<p>を記載しています。が、<code>ALAssetsGroupAlbum</code>が呼び出せないのです。<br/>
+ヘッダファイルに飛んでみると、Objective-Cではenumで記述されていた部分が、変数の宣言に切り替わっています。<br/>
+しかも、<code>ALAssetsGroupType</code>は<code>Int</code>型ですが、ObjCで宣言されていた<code>ALAssetsGroupAlbum</code>などは<code>CUnsignedInt</code>型です。<br/>
+そして<code>ALAssetsGroupType</code>は<code>typealias</code>で宣言されています。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var ALAssetsGroupLibrary: CUnsignedInt { get } // The Library group that includes all assets.
+</span><span class='line'>var ALAssetsGroupAlbum: CUnsignedInt { get } // All the albums synced from iTunes or created on the device.
+</span><span class='line'>var ALAssetsGroupEvent: CUnsignedInt { get } // All the events synced from iTunes.
+</span><span class='line'>var ALAssetsGroupFaces: CUnsignedInt { get } // All the faces albums synced from iTunes.
+</span><span class='line'>var ALAssetsGroupSavedPhotos: CUnsignedInt { get } // The Saved Photos album.
+</span><span class='line'>
+</span><span class='line'>var ALAssetsGroupPhotoStream: CUnsignedInt { get } // The PhotoStream album.
+</span><span class='line'>
+</span><span class='line'>var ALAssetsGroupAll: CUnsignedInt { get } // The same as ORing together all the available group types,
+</span><span class='line'>
+</span><span class='line'>typealias ALAssetsGroupType = Int</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この子たちの扱いがわかりません・・・。<br/>
+いろいろ試行錯誤して下記の書き方にしてみました。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let assetsGroupType :ALAssetsGroupType!  = ALAssetsGroupType(ALAssetsGroupAll)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうするとこの行でXcodeが落ちてしまいますorz<br/>
+うーん。まだ勉強不足故このあたりをどう書けばいいのかわからず、結局<code>0xFFFFFFFF</code>と直に書いて進むことにしてしまいました。<br/>
+絶賛解決方法探し中。<br/>
+ちなみにplaygroundでは</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Playground execution failed: error: &lt;REPL&gt;:60:1: error: use of unresolved identifier 'ALAssetsGroupAll'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と、表示されています・・・。importが間違えてるのかなぁ・・・。</p>
+
+<a name="L...................:.sort"></a>
+<h2>第２の問題点 : sort</h2>
+
+<p>ObjCでは<code>NSComparator</code>を使ってた部分をSwiftでは<code>sort</code>があるのでそれを使いました。<br/>
+allAssetsには</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>NSComparator comparetor = ^NSComparisonResult (id obj1, id obj2) {
+</span><span class='line'>  NSDate *datea = obj1[DATE];
+</span><span class='line'>  NSDate *dateb = obj2[DATE];
+</span><span class='line'>
+</span><span class='line'>  return [dateb compare:datea];
+</span><span class='line'>};
+</span><span class='line'>[allAssets sortWithOptions:NSSortConcurrent usingComparator:comparetor];</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sort( allAssets ){ $0[self.DATE_STR] as String &gt; $1[self.DATE_STR] as String }</span></code></pre></td></tr></table></div></figure>
+
+
+<a name="L......"></a>
+<h1>参考</h1>
+
+<ul>
+<li><a href="http://ch.nicovideo.jp/akiba-cyberspacecowboys/blomaga/ar546266">【エヌ教授の事件簿】高速プログラミング言語Swiftは本当に速いのか!?</a></li>
+<li><a href="http://www.infoq.com/jp/news/2014/06/apple-swift-performance-hit">SwiftはAppleが主張するほど高速ではない - 最初のベンチマークより</a></li>
+</ul>
+
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[Octopress+Travis CI]]></title>
+        <link href="http://pgmy.github.io/blog/2014/07/03/octopress-plus-travis-ci/"/>
+        <updated>2014-07-03T02:56:41+00:00</updated>
+        <id>http://pgmy.github.io/blog/2014/07/03/octopress-plus-travis-ci</id>
+        <content type="html"><![CDATA[<p>OctopressをTravis CIを使って自動デプロイに挑戦してみましたΣ<br/>
+なんとも試行錯誤しまくるハメになったものの、<a href="http://blog.yasuoza.com/2014/01/13/octopress-plus-github-pages-plus-travis/">Octopress + GitHub Pages + Travis</a>の通りにやってやっとこさうまく行きました。<br/>
+はじめはトークンを利用しての方法にしてたんですがうまく行かず、結局公開鍵使ってのデプロイですー。</p>
+
+<!-- more -->
+
+
+<a name="Step.1.-.travis................................."></a>
+<h2>Step 1 - travisコマンドをインストール</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem install travis</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これをたたけばオッケーです。<br/>
+環境によっては<code>sudo</code>権限必要ですよーう！</p>
+
+<a name="Step.2.-.TravisCI...................................."></a>
+<h2>Step 2 - TravisCI用の鍵を作って登録します</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># 鍵を作成する
+</span><span class='line'>ssh-keygen -t rsa -C 'youremail@examp.com' -f ~/.ssh/travis_rsa
+</span><span class='line'># クリップボードにコピーする
+</span><span class='line'>cat ~/.ssh/travis_rsa.pub | pbcopy</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>https://github.com/ユーザー名/リポジトリ名/settings/keys</code><br/>
+上記URLからデプロイキーを登録します</p>
+
+<a name="Step.3.-.Prose................................."></a>
+<h2>Step 3 - Proseのための設定を追加する</h2>
+
+<p><code>_config.yml</code>に下記をそのまま追加させてもらいました</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#prose.io settings
+</span><span class='line'>prose:
+</span><span class='line'>  rooturl: "source"
+</span><span class='line'>  metadata:
+</span><span class='line'>    "source/_posts":
+</span><span class='line'>      - name: "layout"
+</span><span class='line'>        field:
+</span><span class='line'>          element: "hidden"
+</span><span class='line'>          value: "post"
+</span><span class='line'>      - name: "title"
+</span><span class='line'>        field:
+</span><span class='line'>          element: "text"
+</span><span class='line'>          value: "Title"
+</span><span class='line'>      - name: "comments"
+</span><span class='line'>        field:
+</span><span class='line'>          label: "Allow comments"
+</span><span class='line'>          element: "checkbox"
+</span><span class='line'>          value: true
+</span><span class='line'>      - name: "categories"
+</span><span class='line'>        field:
+</span><span class='line'>          element: "text"
+</span><span class='line'>          value: "misc"
+</span><span class='line'>      - name: "published"
+</span><span class='line'>        field:
+</span><span class='line'>          label: "Published"
+</span><span class='line'>          element: "checkbox"
+</span><span class='line'>          value: true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Proseから編集する際のルートとなるディレクトリと編集できるファイルを設定します。<br/>
+詳細は<a href="https://github.com/prose/prose/wiki/Prose-Configuration">Prose Configuration</a>に記載されているようですが、私は<a href="http://rogerz.github.io/blog/2013/02/21/prose-io-github-travis-ci/">参考先</a>のデータをそのまま利用させてもらいました。</p>
+
+<a name="Step.4.-.TravisCI................................."></a>
+<h2>Step 4 - TravisCIのための設定を追加する</h2>
+
+<p><code>.travis.yml</code>を下記のように書きます</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>language: ruby
+</span><span class='line'>rvm:
+</span><span class='line'>- 2.1.0
+</span><span class='line'>branches:
+</span><span class='line'>  only:
+</span><span class='line'>  - master
+</span><span class='line'>before_script:
+</span><span class='line'>- git config --global user.name "ユーザー名(via Travis CI)"
+</span><span class='line'>- git config --global user.email "メールアドレス"
+</span><span class='line'>- git remote set-url origin $REPO.git
+</span><span class='line'>- if [ -z "$id_rsa_{1..23}" ]; then echo 'No $id_rsa_{1..23} found !' ; exit 1; fi
+</span><span class='line'>- echo -n $id_rsa_{1..23} &gt;&gt; ~/.ssh/travis_rsa_64
+</span><span class='line'>- base64 --decode --ignore-garbage ~/.ssh/travis_rsa_64 &gt; ~/.ssh/id_rsa
+</span><span class='line'>- chmod 600 ~/.ssh/id_rsa
+</span><span class='line'>- echo -e "Host github.com\n\tStrictHostKeyChecking no\n" &gt;&gt; ~/.ssh/config
+</span><span class='line'>- bundle exec rake setup_github_pages[$REPO]
+</span><span class='line'>- git checkout -- _config.yml
+</span><span class='line'>script:
+</span><span class='line'>- bundle exec rake generate
+</span><span class='line'>after_script:
+</span><span class='line'>- bundle exec rake deploy
+</span><span class='line'>env:
+</span><span class='line'>  global:
+</span><span class='line'>  - REPO="git@github.com:ユーザー名/リポジトリ"</span></code></pre></td></tr></table></div></figure>
+
+
+<a name="Step.5.-................"></a>
+<h2>Step 5 - 鍵の暗号化</h2>
+
+<p>base64で鍵を暗号化します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Macを使っている場合はこれで。
+</span><span class='line'>$ base64 --break=0 ~/.ssh/travis_rsa &gt; ~/.ssh/travis_rsa_64
+</span><span class='line'>
+</span><span class='line'># Linuxの場合はこっちを使います
+</span><span class='line'># base64 --wrap=0 ~/.ssh/travis_rsa &gt; ~/.ssh/travis_rsa_64
+</span><span class='line'>
+</span><span class='line'>$ bash &lt;(cat ~/.ssh/travis_rsa_64 | perl -pe 's/(.{100})/$1\n/g' | nl | perl -pe 's/\s*(\d+)\s*(.*)/travis encrypt id_rsa_$1="$2" --add/')</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>.travis.yml</code>内の<code>$id_rsa_{1..23}</code>部分の<code>23</code>の個数を数えます</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cat ~/.ssh/travis_rsa_64 | perl -pe 's/(.{100})/$1\n/g' | nl | tail</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>...
+</span><span class='line'>21    ZktBVTJMZHFZajA0UUpFZnQvd01mblRDTWQKRVBMdHF3QU9rM05wOUh5T3V0MlZ1SnREa3VHVU14dUlKWWcvT0JDU0thSEhUMW1P
+</span><span class='line'>22    bWJ5eSt5QmtUdkdiQkx3OApPT29lRFBzLzRwUEpibjN5eTVCemk2TEtLK3hwRHBzYUg5MHZwUkg3WXdRd3NLQUNvdElLNHdzPQot
+</span><span class='line'>23    LS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じに出力されるので、左側の数字を使います。</p>
+
+<a name="Step.6.-.Rakefile........."></a>
+<h2>Step 6 - Rakefileを修正</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>-  cd "#{deploy_dir}" do
+</span><span class='line'>-    system "git pull"
+</span><span class='line'>+  cd "#{deploy_dir}" do
+</span><span class='line'>+    system "git pull origin #{deploy_branch}"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これでオッケーでした！！パチパチ。</p>
+
+<a name="L......"></a>
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://rogerz.github.io/blog/2013/02/21/prose-io-github-travis-ci/">Octopress+Prose+Github+Travis CI = Coders' Blog</a></li>
+<li><a href="http://gutti.jp/blog/2014/02/19/octopress-travis-ci/">OctopressをTravis CIでデプロイするやつ</a></li>
+<li><a href="http://pchw.github.io/blog/2013/06/27/octopress-travis/">OctopressとTravis CIを連携させてBlog生成を自動にする</a></li>
+<li><a href="http://blog.yasuoza.com/2014/01/13/octopress-plus-github-pages-plus-travis/">Octopress + GitHub Pages + Travis</a></li>
+</ul>
+
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[Assetsを表示するプログラムをSwiftにしてみる]]></title>
+        <link href="http://pgmy.github.io/blog/2014/06/27/assetslibrary-swift/"/>
+        <updated>2014-06-27T05:35:19+00:00</updated>
+        <id>http://pgmy.github.io/blog/2014/06/27/assetslibrary-swift</id>
+        <content type="html"><![CDATA[<p>カメラロールの写真をAssetsLibraryを使って取り出して日付順にソートするプログラムがありまする。</p>
+
+<div class="github-widget" data-repo="PGMY/AssetsLibrary"></div>
+
+
+<p>これをSwiftに書き換えていく記録をつけていきますー。<br/>
+作業を順番に記録していくので構成はちょっとバラバラするかもしれません・・・。</p>
+
+<p><em>つっこみ募集中</em></p>
+
+<!-- more -->
+
+
+<a name="L..........................."></a>
+<h1>基本部分の書き換え</h1>
+
+<a name="main.........AppDelegate"></a>
+<h2>main関数とAppDelegate</h2>
+
+<p>Swiftに書き換えるにはmain関数のファイルを削除し、AppDelegateクラスに<code>@UIApplicationMain</code>をつければオッケーです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import UIKit
+</span><span class='line'>
+</span><span class='line'>@UIApplicationMain
+</span><span class='line'>class AppDelegate: UIResponder, UIApplicationDelegate {
+</span><span class='line'>
+</span><span class='line'>  var window: UIWindow?
+</span><span class='line'>  var myRootViewController: MYRootViewController?
+</span><span class='line'>
+</span><span class='line'>  func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -&gt; Bool {
+</span><span class='line'>    self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+</span><span class='line'>    self.window!.backgroundColor = UIColor.whiteColor()
+</span><span class='line'>    self.myRootViewController = MYRootViewController(nibName: nil, bundle: nil)
+</span><span class='line'>    self.window!.rootViewController = self.myRootViewController;
+</span><span class='line'>    self.window!.makeKeyAndVisible()
+</span><span class='line'>    return true
+</span><span class='line'>  }
+</span><span class='line'>  .....</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じ。もはやいつもの光景</p>
+
+<a name="TabBarController.................."></a>
+<h2>TabBarControllerでぷち詰まり</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>self.dateViewController = DateViewController(nibName:nil, bundle:nil)
+</span><span class='line'>
+</span><span class='line'>var tabs = [self.dateViewController!]
+</span><span class='line'>let tabBarController = UITabBarController()
+</span><span class='line'>tabBarController.setViewControllers(tabs, animated: true)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ここ。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var tabs = [self.dateViewController]</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>!</code>を書かなかったばっかりに<code>.setViewControllers</code>でエラーが出てしまって何が原因かわからずちょっと詰まってしまいました。<br/>
+まだ慣れないorz</p>
+
+<a name="enum........................Assets.Group.Type........."></a>
+<h2>enumで宣言されているAssets Group Typeの指定</h2>
+
+<p>Objective-C</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALAssetsGroupType assetsGroupType = ALAssetsGroupAlbum | ALAssetsGroupEvent | ALAssetsGroupFaces | ALAssetsGroupSavedPhotos;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これをSwiftにしようと思ったのですが、Objective-Cでは</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>enum {
+</span><span class='line'>    ALAssetsGroupLibrary        = (1 &lt;&lt; 0),         // The Library group that includes all assets.
+</span><span class='line'>    ALAssetsGroupAlbum          = (1 &lt;&lt; 1),         // All the albums synced from iTunes or created on the device.
+</span><span class='line'>    ALAssetsGroupEvent          = (1 &lt;&lt; 2),         // All the events synced from iTunes.
+</span><span class='line'>    ALAssetsGroupFaces          = (1 &lt;&lt; 3),         // All the faces albums synced from iTunes.
+</span><span class='line'>    ALAssetsGroupSavedPhotos    = (1 &lt;&lt; 4),         // The Saved Photos album.
+</span><span class='line'>#if __IPHONE_5_0 &lt;= __IPHONE_OS_VERSION_MAX_ALLOWED
+</span><span class='line'>    ALAssetsGroupPhotoStream    = (1 &lt;&lt; 5),         // The PhotoStream album.
+</span><span class='line'>#endif
+</span><span class='line'>    ALAssetsGroupAll            = 0xFFFFFFFF,       // The same as ORing together all the available group types,
+</span><span class='line'>};
+</span><span class='line'>typedef NSUInteger ALAssetsGroupType;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな風に宣言されてましたが、Swiftでは</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var ALAssetsGroupLibrary: CUnsignedInt { get } // The Library group that includes all assets.
+</span><span class='line'>var ALAssetsGroupAlbum: CUnsignedInt { get } // All the albums synced from iTunes or created on the device.
+</span><span class='line'>var ALAssetsGroupEvent: CUnsignedInt { get } // All the events synced from iTunes.
+</span><span class='line'>var ALAssetsGroupFaces: CUnsignedInt { get } // All the faces albums synced from iTunes.
+</span><span class='line'>var ALAssetsGroupSavedPhotos: CUnsignedInt { get } // The Saved Photos album.
+</span><span class='line'>
+</span><span class='line'>var ALAssetsGroupPhotoStream: CUnsignedInt { get } // The PhotoStream album.
+</span><span class='line'>
+</span><span class='line'>var ALAssetsGroupAll: CUnsignedInt { get } // The same as ORing together all the available group types,
+</span><span class='line'>
+</span><span class='line'>typealias ALAssetsGroupType = Int</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こう変わっています。<br/>
+ということで、普通に</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let assetsGroupType :ALAssetsGroupType = ALAssetsGroupAlbum | ALAssetsGroupEvent | ALAssetsGroupFaces | ALAssetsGroupSavedPhotos;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こう書いてしまうと、<code>ALAssetsGroupType</code>はInt型で宣言されてるため、エラーがでてしまいます。<br/>
+ということでそのまま型変換して解決させてみました。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let assetsGroupType :ALAssetsGroupType = Int(ALAssetsGroupAlbum) | Int(ALAssetsGroupEvent) | Int(ALAssetsGroupFaces) | Int(ALAssetsGroupSavedPhotos);</span></code></pre></td></tr></table></div></figure>
+
+
+<p><s>⇒　これじゃ駄目？でした。そもそも<code>import AssetsLibrary</code>と書いているにもかかわらず</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>error: use of unresolved identifier 'ALAssetsGroupAll'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>が出てしまいます。<br/>
+⇒　絶賛調査中</s></p>
+
+<p>Xcodeがアップデートされて読み込めるようになりました・ω・<br/>
+最終的な形はこうなりました。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let assetsGroupType :ALAssetsGroupType!  = ALAssetsGroupType(ALAssetsGroupAlbum|ALAssetsGroupEvent|ALAssetsGroupFaces|ALAssetsGroupSavedPhotos)</span></code></pre></td></tr></table></div></figure>
+
+
+<a name="Blocks...closure..."></a>
+<h2>Blocksをclosureへ</h2>
+
+<p>AssetsLibraryのAssetsごとに入ってくるBlocksをSwiftのClosureに書き換えます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ALAssetsGroupEnumerationResultsBlock groupResultBlock = ^(ALAsset *asset, NSUInteger index, BOOL *stop) {
+</span><span class='line'>  if (asset) {
+</span><span class='line'>    NSDate   *assetDate    = [asset valueForProperty:ALAssetPropertyDate];
+</span><span class='line'>    NSString *assetDateStr = [formatter stringFromDate:assetDate];
+</span><span class='line'>    [allAssets addObject:@{ ASSET: asset, DATE: assetDate, DATE_STR: assetDateStr }];
+</span><span class='line'>  }
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>allAssets</code>は日付ソートをするための<code>Array</code>です。<br/>
+これをClosureにすると</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var groupResultBlock : ALAssetsGroupEnumerationResultsBlock = { (asset: ALAsset!, index: Int, stop:CMutablePointer&lt;ObjCBool&gt;) -&gt; Void in
+</span><span class='line'>  if asset {
+</span><span class='line'>    let assetDate: NSDate = asset.valueForProperty(ALAssetPropertyDate) as NSDate
+</span><span class='line'>    let assetDateStr = fomatter.stringFromDate(assetDate)
+</span><span class='line'>    allAssets.append([self.ASSET:asset, self.DATE:assetDate, self.DATE_STR:assetDateStr])
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じになりました！<br/>
+クロージャーは<code>{(引数) -&gt; 戻り値 in }</code>といった書き方になるみたいです。<br/>
+(正直このクロージャーがイマイチまだ理解しきれてないので学びながら進みたいと思います。)</p>
+
+<a name="L................................."></a>
+<h2>日付で配列をソートする</h2>
+
+<p>Objective-Cではソートをするために</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>NSComparator comparetor = ^NSComparisonResult (id obj1, id obj2) {
+</span><span class='line'>  NSDate *datea = obj1[DATE];
+</span><span class='line'>  NSDate *dateb = obj2[DATE];
+</span><span class='line'>
+</span><span class='line'>  return [dateb compare:datea];
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで<code>NSComparator</code>を使って日付ソートしていました。<br/>
+これをSwiftで同じ形に書き換えてもいいんですが、SwiftにはArrayの<code>sort</code>が存在するのでそれ使ってみます。</p>
+
+<hr />
+
+<p>問題発生中につきここから先はメモになりますorz</p>
+
+<p>めも<br/>
+Expression resolves to an unused l-value</p>
+
+<p>fatal error: Can&rsquo;t unwrap Optional.None</p>
+
+<a name="Swift...Singleton"></a>
+<h2>SwiftでSingleton</h2>
+
+<p>[絶賛更新中]</p>
+
+<a name="L..............."></a>
+<h1>参考サイト</h1>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/24026497/how-to-declare-a-block-with-arguments-in-swift">How to declare a block with arguments in swift?</a></li>
+<li><a href="http://stackoverflow.com/questions/24133695/how-to-use-objective-c-code-with-define-macros-in-swift">How to use Objective-C code with #define macros in Swift</a></li>
+<li><a href="http://stackoverflow.com/questions/24124635/dont-understand-why-swift-wants-me-to-be-explicit">Don&rsquo;t understand why swift wants me to be explicit</a></li>
+<li><a href="http://qiita.com/1024jp/items/3a7bc437af3e79f74505">Swift でシングルトン</a></li>
+<li><a href="https://github.com/hpique/SwiftSingleton">hpique/SwiftSingleton</a></li>
+<li><a href="http://stackoverflow.com/questions/24024549/dispatch-once-singleton-model-in-swift">dispatch_once singleton model in swift</a></li>
+<li><a href="http://synappse.co/swift-first-steps-singleton/">Swift first steps: Singleton</a></li>
+<li><a href="http://qiita.com/kiyotaman/items/54fe453498513fe92164">The Swift Programming Language - Properties（プロパティ）をまとめる</a></li>
+<li><a href="http://vperi.com/2014/06/05/singleton-pattern-in-swift/">SINGLETON PATTERN IN SWIFT</a></li>
+<li><a href="http://stackoverflow.com/questions/24126261/swift-alternative-to-performselectoronmainthread">Swift alternative to performSelectorOnMainThread</a></li>
+<li><a href="http://stackoverflow.com/questions/24319586/how-do-i-create-a-uiimage-from-a-cgimage-in-swift">How do I create a UIImage from a CGImage in Swift?</a></li>
+</ul>
+
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[iOSで気になるライブラリ Swift編]]></title>
+        <link href="http://pgmy.github.io/blog/2014/06/25/swift-library/"/>
+        <updated>2014-06-25T01:59:36+00:00</updated>
+        <id>http://pgmy.github.io/blog/2014/06/25/swift-library</id>
+        <content type="html"><![CDATA[<p>iOSで気になるライブラリ Swift編
+気になってるだけなので確認をしっかりしてないものもあります。</p>
+
+<!-- more -->
+
+
+<a name="Library"></a>
+<h1>Library</h1>
+
+<a name="Alart"></a>
+<h2>Alart</h2>
+
+<ul>
+<li><a href="https://github.com/vikmeup/SCLAlertView-Swift">SCLAlertView-Swift</a><br/>
+FlatなデザインのAlertView
+
+<a name="View.Layout"></a>
+<h2>View/Layout</h2></li>
+<li><a href="https://github.com/robb/Cartography">Cartography</a><br/>
+オートレイアウト</li>
+<li><a href="https://github.com/indragiek/SwiftAutoLayout">SwiftAutoLayout</a><br/>
+オートレイアウト</li>
+<li><a href="https://github.com/lexrus/LTMorphingLabel">LTMorphingLabel</a><br/>
+文字列がモーフィングしながら変化するラベル</li>
+</ul>
+
+
+<a name="Data"></a>
+<h2>Data</h2>
+
+<ul>
+<li><a href="https://github.com/lingoer/SwiftyJSON">SwiftyJSON</a><br/>
+jsonライブラリ</li>
+<li><a href="https://github.com/FahimF/SQLiteDB">SQLiteDB</a><br/>
+SQLiteのラッパーライブラリ</li>
+<li><a href="https://github.com/slazyk/Observable-Swift">Observable-Swift</a></li>
+<li><a href="https://github.com/ankurp/Dollar.swift">Dollar.swift</a></li>
+<li><a href="https://github.com/maxpow4h/swiftz">swiftz</a></li>
+</ul>
+
+
+<a name="L........."></a>
+<h2>処理系</h2>
+
+<ul>
+<li><a href="https://bitbucket.org/al45tair/async">Async Swift</a></li>
+</ul>
+
+
+<a name="L......"></a>
+<h2>拡張</h2>
+
+<ul>
+<li><a href="https://github.com/pNre/ExSwift">ExSwift</a><br/>
+拡張機能つめあわせ</li>
+</ul>
+
+
+<a name="L........."></a>
+<h2>テスト</h2>
+
+<ul>
+<li><a href="https://github.com/modocache/Quick">Quick</a></li>
+</ul>
+
+
+<a name="Sample"></a>
+<h1>Sample</h1>
+
+<a name="L........."></a>
+<h2>ゲーム</h2>
+
+<ul>
+<li><a href="https://github.com/fullstackio/FlappySwift">FlappySwift</a><br/>
+<a href="http://ja.wikipedia.org/wiki/FLAPPY">FLAPPY</a>をSwiftで書いたサンプル</li>
+<li><a href="https://github.com/austinzheng/swift-2048">swift-2048</a></li>
+<li><a href="https://github.com/JakeLin/SwiftWeather">SwiftWeather</a></li>
+<li><a href="https://github.com/asduk/Flight-Fight-In-Swift">Flight-Fight-In-Swift</a></li>
+</ul>
+
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[背景が時計のHexColorになる時計]]></title>
+        <link href="http://pgmy.github.io/blog/2014/06/24/hex-color-watch/"/>
+        <updated>2014-06-24T05:21:12+00:00</updated>
+        <id>http://pgmy.github.io/blog/2014/06/24/hex-color-watch</id>
+        <content type="html"><![CDATA[<p><a href="http://www.jacopocolo.com/hexclock/">HexClock</a>というサイトを見つけました・ω・<br/>
+どうやら背景が時計の時間・分・秒で構成された６桁の数字の色になるサイト。</p>
+
+<p>面白い＞ω＜<br/>
+ので、アプリにしてみた。</p>
+
+<div class="github-widget" data-repo="PGMY/HexColorWatch"></div>
+
+
+<p>さて、これをせっかくなのでSwiftにするべく奮闘していこうと思いまする。</p>
+
+<!-- more -->
+
+
+<a name="Objective-C...............Swift........................"></a>
+<h1>Objective-CのコードをSwiftへ切り替えていく</h1>
+
+<a name="L.................."></a>
+<h2>カテゴリ作成</h2>
+
+<p>UIColorを拡張してHexのStringからUIColorを生成する関数を追加する形をとってます。<br/>
+Swiftでのカテゴリは<code>extension</code>でいいのかな？<br/>
+ファイル名は<code>UIColor+Hex.swift</code>でいいのかな？<br/>
+とりあえず<code>UIColor+Hex.swift</code>にしてみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>extension UIColor {
+</span><span class='line'>  class func color(hex: Int) -&gt; UIColor{
+</span><span class='line'>    let red :CGFloat = CGFloat(((hex & 0xff000000) &gt;&gt; 24))/225.0
+</span><span class='line'>    let green :CGFloat = CGFloat(((hex & 0x00ff0000) &gt;&gt; 16))/225.0
+</span><span class='line'>    let blue :CGFloat = CGFloat(((hex & 0x0000ff00) &gt;&gt; 8))/225.0
+</span><span class='line'>    let alpha :CGFloat = CGFloat((hex & 0x000000ff))/225.0
+</span><span class='line'>    return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+</span><span class='line'>  }
+</span><span class='line'>  class func color(hexString:String) -&gt; UIColor {
+</span><span class='line'>    var hex:UInt32 = 0x0;
+</span><span class='line'>    var scanner:NSScanner = NSScanner(string: hexString)
+</span><span class='line'>    scanner.scanHexInt(&hex)
+</span><span class='line'>    return self.color(Int(hex))
+</span><span class='line'>  }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じかな？<br/>
+関数名の付け方がまだいまいちですorz<br/>
+とりあえずこれで行きます・ω・´</p>
+
+<a name="NSTimer.................."></a>
+<h2>NSTimerをセットする</h2>
+
+<p>しまったセレクタの書き方がわからないΣ<br/>
+Objective-Cでいう<code>@selector(hoge:)</code>の部分。<br/>
+Timerを使って</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>self.timer = [NSTimer scheduledTimerWithTimeInterval:0.01
+</span><span class='line'>                                              target:self
+</span><span class='line'>                                            selector:@selector(onTimer:)
+</span><span class='line'>                                            userInfo:nil
+</span><span class='line'>                                             repeats:YES];</span></code></pre></td></tr></table></div></figure>
+
+
+<p>と書いていたところをSwiftにするには・・・。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>self.timer = NSTimer.scheduledTimerWithTimeInterval(0.01,target:self, selector:"onTimer", userInfo:nil, repeats:true)</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>func onTimer(){
+</span><span class='line'>  println("Timer")
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな形になりました。<br/>
+引数つきのセレクタってどうするんだろう・・・Σ<br/>
+とりあえずこれでいく！！</p>
+
+<p>と思ったら記事にしていただいている方たいらっしゃいました。<br/>
+⇒<a href="http://tototti.hatenablog.com/entry/2014/06/19/205820">SwiftでiOS SDKの「複数の引数がある@selector」を使う方法。</a><br/>
+普通に<code>:</code>つけるだけでした</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>self.timer = NSTimer.scheduledTimerWithTimeInterval(0.01,target:self, selector:"onTimer:", userInfo:nil, repeats:true)</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>func onTimer(timer:NSTimer){
+</span><span class='line'>  println("Timer")
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>そりゃそうだ。ちょっと寝ぼけてた・ω・｀</p>
+
+<a name="L.................."></a>
+<h1>問題がおきた</h1>
+
+<p>さて。</p>
+
+<div class="github-widget" data-repo="PGMY/HexColorWatch"></div>
+
+
+<p>ここに一応Objective-CのソースとSwiftのソース(プロジェクトファイルからはSwiftを参照するようになってまする)を置いてあるわけですが・・・<br/>
+Objective-Cのソースをそのまんまの形でSwiftにしたんだけど(不要なViewつくってたのでそれはなくした)画面がチカチカ点滅するようになってしまいましたorz</p>
+
+<a name="L......"></a>
+<h2>原因</h2>
+
+<p>onTimerの中の処理を</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var df : NSDateFormatter = NSDateFormatter()
+</span><span class='line'>df.dateFormat = "HHmmss"
+</span><span class='line'>var str:String = df.stringFromDate(NSDate.date())
+</span><span class='line'>self.backGroundView!.backgroundColor = UIColor.color(str+"FF")
+</span><span class='line'>self.hexWatchLabel!.text = "#"+str</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな形にしていました。<br/>
+が、呼び出したかった<code>class func color(hexString:String) -&gt; UIColor</code>ではなく、<code>class func color(hex: Int) -&gt; UIColor</code>に入ってきてたのが原因でした。<br/>
+ほむ・・・<br/>
+片方の引数を<code>hexString</code>とかしちゃってたのがだめなのかと思って統一してみても駄目でした。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class func color(hex: Int) -&gt; UIColor
+</span><span class='line'>class func color(hex:String) -&gt; UIColor</span></code></pre></td></tr></table></div></figure>
+
+
+<p>playgroundで同じ状況を作ってみる。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class SampleClass {
+</span><span class='line'>  class func testFunc(a:String){
+</span><span class='line'>    println("String")
+</span><span class='line'>  }
+</span><span class='line'>
+</span><span class='line'>  class func testFunc(a:Int){
+</span><span class='line'>    println("Int")
+</span><span class='line'>  }
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>SampleClass.testFunc("TEST")
+</span><span class='line'>SampleClass.testFunc(123)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>出力結果は</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>String
+</span><span class='line'>Int</span></code></pre></td></tr></table></div></figure>
+
+
+<p>うぅむ・・・わからないΣ</p>
+
+<a name="L......"></a>
+<h2>解決</h2>
+
+<p>Optional Valueをつけてないのが原因だったみたい？です。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class func color(hex: Int!) -&gt; UIColor
+</span><span class='line'>class func color(hex:String!) -&gt; UIColor</span></code></pre></td></tr></table></div></figure>
+
+
+<p>引数のところに<code>!</code>をつけるといけましたΣ<br/>
+うぅむ・・・！！！！<br/>
+まだ慣れない。</p>
+
+<p>ということでここで一旦完成です。</p>
+
+<a name="L..........................."></a>
+<h1>お世話になりました</h1>
+
+<ul>
+<li><a href="http://nsblogger.hatenablog.com/entry/2014/06/09/swift_string">Swiftの文字列操作まとめ</a></li>
+<li><a href="http://qiita.com/edo_m18/items/ce4e436b78db2e56542d">[Swift] ちょっとしたメモ</a></li>
+<li><a href="http://tototti.hatenablog.com/entry/2014/06/19/205820">SwiftでiOS SDKの「複数の引数がある@selector」を使う方法。</a></li>
+</ul>
+
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[Swiftメモ]]></title>
+        <link href="http://pgmy.github.io/blog/2014/06/18/swiftmemo/"/>
+        <updated>2014-06-18T07:29:16+00:00</updated>
+        <id>http://pgmy.github.io/blog/2014/06/18/swiftmemo</id>
+        <content type="html"><![CDATA[<p>記事になる前のとにかくSwiftについてメモしていく場所</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>extension</span></code></pre></td></tr></table></div></figure>
+
+
+<p>クラスを拡張できる。
+⇒<a href="http://qiita.com/Lewuathe/items/fb7928d846e466031ae0">Control Structure with Extension</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mutating</span></code></pre></td></tr></table></div></figure>
+
+
+<p>いわゆる<code>const</code>？
+⇒<a href="http://stackoverflow.com/questions/24035648/swift-and-mutating-struct">Swift and mutating struct</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let three = 3
+</span><span class='line'>let pointOneFourOneFiveNine = 0.14159
+</span><span class='line'>let pi = three + pointOneFourOneFiveNine</span></code></pre></td></tr></table></div></figure>
+
+
+<p>⇒エラーになる。　<code>Double(three)</code>ってしてあげないと　Integer + Doubleの足し算が用意されていない・・・？</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>typealias</span></code></pre></td></tr></table></div></figure>
+
+
+<p>defineみたいに使えるやつかな？</p>
+
+<p>Swiftの<code>nil</code>はObjective-Cの<code>nil</code>とは意味がちがう。
+Objective-Cは<code>nil</code>はポインタ</p>
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[Swift App Without Storyboard]]></title>
+        <link href="http://pgmy.github.io/blog/2014/06/17/swiftappwithoutstoryboard/"/>
+        <updated>2014-06-17T02:10:29+00:00</updated>
+        <id>http://pgmy.github.io/blog/2014/06/17/swiftappwithoutstoryboard</id>
+        <content type="html"><![CDATA[<p>Swiftのドキュメントを読みながらほむほむと言ってても身に付かないのでやっぱり何か作りつつ、動作確認しつつやっていかないとね！<br/>
+てことでSwiftでストーリーボードを使わずにアプリを作っていってみます・ω・<br/>
+（Swiftでアプリではなく、言語自体をさわってみたい場合はplaygroundも用意されています・ω・♪）</p>
+
+<p>ストーリーボードを使わないのは言語の動きを確かめるためです(ストーリーボードをいつもあまり使ってないってのもありますが)</p>
+
+<div class="github-widget" data-repo="PGMY/FirstSwiftApp"></div>
+
+
+
+
+<!-- more -->
+
+
+<a name="AppDelegate........."></a>
+<h1>AppDelegateを読む</h1>
+
+<p>Emptyでプロジェクトを作成したら<code>AppDelegate.swift</code>が作成されるので内容をざっとみてみます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import UIKit
+</span><span class='line'>
+</span><span class='line'>@UIApplicationMain
+</span><span class='line'>class AppDelegate: UIResponder, UIApplicationDelegate {
+</span><span class='line'>
+</span><span class='line'>    var window: UIWindow?
+</span><span class='line'>
+</span><span class='line'>    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -&gt; Bool {
+</span><span class='line'>        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+</span><span class='line'>        // Override point for customization after application launch.
+</span><span class='line'>        self.window!.backgroundColor = UIColor.whiteColor()
+</span><span class='line'>        self.window!.makeKeyAndVisible()
+</span><span class='line'>        return true
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    -----
+</span><span class='line'>    略
+</span><span class='line'>    -----
+</span><span class='line'>}
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>わおΣ<br/>
+とりあえずmainはどこいったんだとかいろいろわからない。</p>
+
+<a name="main......"></a>
+<h2>main関数</h2>
+
+<p>main関数はなくなりましたΣ<br/>
+けどmain関数を利用するライブラリなどもあるわけで。使おうと思えば使えるみたいです。<br/>
+- <a href="http://qiita.com/kaiinui@github/items/6307d8ebafbb56b3b0f8">Swiftのプロジェクトでmain.mを使う</a></p>
+
+<p>に記載されてましたΣ</p>
+
+<a name="Objective-C..............................import"></a>
+<h2>Objective-Cのコードを使うためのimport</h2>
+
+<p>swiftでObjective-Cのコードを使うには明示的にimportしてあげる必要があります。<br/>
+<code>UIApplicationDelegate</code>と<code>UIResponder</code>を利用したいので<code>AppDelegate</code>では<code>UIKit</code>をimportしてあげます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import UIKit</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こうするとUIKitが使えるようになります。</p>
+
+<a name="L.UIApplicationMain"></a>
+<h2>@UIApplicationMain</h2>
+
+<p>Objective-Cではmain関数でUIApplicationMainにAppDelegateを渡していましたが、Swiftでは<code>@UIApplicationMain</code>をAppDelegateクラスのすぐ上に記述することで、同様の内容になるようです。<br/>
+ということで、今まであったmain関数の中の処理の代わりに、<code>@UIApplicationMain</code>をAppDelegateクラスのswiftファイルに記述します。</p>
+
+<a name="L........."></a>
+<h2>クラス</h2>
+
+<p>クラスの書き方は</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class [クラス名] : [親クラス,デリゲート...] {
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな形になるみたいです。<br/>
+<code>:</code>のすぐ後ろの継承したいクラス名、続けてプロトコル名を記載していきます。<br/>
+もちろんクラスは複数継承することはできないので、親クラスは１つしか記載することができません。<br/>
+複数のクラスを記述した時は</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'> Multiple inheritance from classes 'UIXXXXX' and 'UIXXXXXX'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで怒られましたorz</p>
+
+<a name="L....................."></a>
+<h2>プロパティ宣言</h2>
+
+<p>プロパティの宣言はクラスの一番上に記載します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var window: UIWindow?</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>UIWindow?</code>の最後にある<code>?</code>は<code>nil</code>を許容するかどうかです。<br/>
+初期値は<code>nil</code>なので、宣言時に初期値を代入しない場合、<code>?</code>をつけておかないとエラーになってしまいます。<br/>
+これとは別に、<code>nil</code>を入れたくない変数の場合は<code>!</code>を記載しておくと、変数に<code>nil</code>を代入しようとするとエラーになるようになっています。<br/>
+※このエラーが起きるのは実行時です。</p>
+
+<a name="L......"></a>
+<h2>関数</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>func [関数名]([引数変数]:[引数型], ...) -&gt; [戻り値型]{
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じで記載します。</p>
+
+<p>Objective-C</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Swift</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -&gt; Bool</span></code></pre></td></tr></table></div></figure>
+
+
+<a name="Window.................."></a>
+<h2>Windowの初期化処理</h2>
+
+<p>記載する内容は同じですが、ここもSwiftの記述に書き換えます。</p>
+
+<p>Objective-C</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Swift</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>self.window = UIWindow(frame: UIScreen.mainScreen().bounds)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Swiftだと初期化時に<code>alloc</code>をわざわざ呼び出す必要がなくなりました。<br/>
+今までのものをSwiftに書き換える場合、初期化を表す<code>init</code>と<code>initWith</code>は切り取り、その後ろの続く部分の先頭を小文字にして<code>()</code>の一番前の部分に記載します。<br/>
+<code>initWithFrame:</code> => <code>(frame: )</code></p>
+
+<p>Objective-C</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>UITableView *myTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Swift</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let myTableView: UITableView = UITableView(frame: CGRectZero, style: .Grouped)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ほかのものも同様にこのような形に変換されています。　　
+ちなみに<code>.Grouped</code>の<code>.</code>はenumであることを表しています。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>self.window!.backgroundColor = UIColor.whiteColor()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この<code>self.window!</code>にある<code>!</code>はやはり<code>nil</code>を許容しない意味で、<code>self.window.backgroundColor</code>に値を代入する際、<code>self.window</code>が<code>nil</code>であってはいけないため<code>!</code>をつけておきます。</p>
+
+<a name="ViewController.................."></a>
+<h1>ViewControllerをセットする</h1>
+
+<p>今回はよくある形のNavigationControllerに独自のViewControllerを持たせる形にしてみます。</p>
+
+<a name="SwiftViewController"></a>
+<h2>SwiftViewController</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import UIKit
+</span><span class='line'>
+</span><span class='line'>class SwiftViewController: UIViewController {
+</span><span class='line'>    init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
+</span><span class='line'>        super.init(nibName:nibNameOrNil, bundle:nibBundleOrNil)
+</span><span class='line'>        self.view!.backgroundColor = UIColor.redColor()
+</span><span class='line'>    }
+</span><span class='line'>    override func viewDidLoad(){
+</span><span class='line'>        super.viewDidLoad()
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>ViewControllerはいつも通り初期化メソッドと<code>viewDidLoad</code>を作っておきます。
+わかりやすいように背景色を赤にしてみました。</p>
+
+<a name="AppDelegate............"></a>
+<h2>AppDelegateで初期化</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var navigationController: UINavigationController?</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>navigationController</code>をプロパティに持たせて、<code>SwiftViewController</code>と一緒に初期化します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var swiftController: SwiftViewController? = SwiftViewController(nibName: nil, bundle: nil)
+</span><span class='line'>self.navigationController = UINavigationController(rootViewController: swiftController)
+</span><span class='line'>self.window!.rootViewController = self.navigationController</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで第一段階完成！<br/>
+無事コントローラーを１つセットして、基本となる形を作り出すことができました。</p>
+
+<a name="L..............."></a>
+<h1>参考サイト</h1>
+
+<ul>
+<li><a href="http://suslovjb.wordpress.com/2014/06/09/create-application-without-storyboard-in-swift-language-ios8/">Create application without storyboard in Swift language – iOS8</a></li>
+<li><a href="http://stackoverflow.com/questions/24046898/how-do-i-create-a-new-swift-project-without-using-storyboards">How do I create a new Swift project without using Storyboards?</a></li>
+<li><a href="http://qiita.com/nori0620/items/afa94cc42f3233f54bdc">[Swift] Swiftのoptional valueの便利さ /「?」と「!」でより堅牢なコードへ</a></li>
+<li><a href="http://qiita.com/kaiinui@github/items/6307d8ebafbb56b3b0f8">Swiftのプロジェクトでmain.mを使う</a></li>
+</ul>
+
+]]></content>
+    </entry>
+    
+    <entry>
+        <title type="html"><![CDATA[[絶賛更新中]iOS,OSX向けの新しい言語「swift」について]]></title>
+        <link href="http://pgmy.github.io/blog/2014/06/16/swift/"/>
+        <updated>2014-06-16T01:34:05+00:00</updated>
+        <id>http://pgmy.github.io/blog/2014/06/16/swift</id>
+        <content type="html"><![CDATA[<p>Appleから新しいiOS,OS X向け言語が発表されたみたいです・ω・</p>
+
+<p><a href="https://developer.apple.com/swift/">Swift</a></p>
+
+<p>なんて速そうなお名前。
+さっそくiBook StoreにSwiftに関する電子書籍がアップされていたので読んでみました。</p>
+
+<!-- more -->
+
+
+
+
+<div class="pochireba" style="text-align:left;font-size:small;padding:20px 0;/zoom: 1;overflow: hidden;"><a href="https://itunes.apple.com/jp/book/swift-programming-language/id881256329?mt=11&uo=4&at=10l8vp" target="_blank" ><img src="http://a1.mzstatic.com/us/r30/Publication4/v4/a9/9d/d1/a99dd1d5-39b9-71ce-7500-2eb3e8d56990/cover.60x60-50.jpg" alt="The Swift Programming Language" width="60" height="60" style="float:left;margin:0 15px 0 0;width:60px;height:60px;" class="pochi_img" ></a><div class="pochi_info" style="text-align:left;/zoom: 1;overflow: hidden;"><div class="pochi_name"><a href="https://itunes.apple.com/jp/book/swift-programming-language/id881256329?mt=11&uo=4&at=10l8vp" target="_blank" >The Swift Programming Language</a></div><div class="pochi_price" style="display:inline;">無料</div><div class="pochi_time" style="font-size:x-small;display:inline;">(2014.06.03時点)</div>&nbsp;<a href="https://itunes.apple.com/jp/book/swift-programming-language/id881256329?mt=11&uo=4&at=10l8vp" style="width:60px;color:#ffffff;background:#000000;font-size:8px;font-weight:bold;text-align:center;display:inline;text-decoration:none;border:0px;padding:2px;border-radius:5px;white-space:nowrap;" target="_blank" >App Store</a><div class="pochi_seller"><a href="https://itunes.apple.com/jp/artist/apple-inc./id405307759?mt=11&uo=4&at=10l8vp" target="_blank" >Apple Inc.</a></div><div class="pochi_post" style="font-size:x-small;">posted with <a href="http://pochireba.com" rel="nofollow" target="_blank">ポチレバ</a></div></div><div class="pochireba-footer" style="clear: left"></div></div>
+
+
+<p>第２段の書籍もアップされましたー！</p>
+
+<div class="pochireba" style="text-align:left;font-size:small;padding:20px 0;/zoom: 1;overflow: hidden;"><a href="https://itunes.apple.com/jp/book/using-swift-cocoa-objective/id888894773?mt=11&uo=4&at=10l8vp" target="_blank" ><img src="http://a2.mzstatic.com/us/r30/Publication6/v4/4f/c3/c6/4fc3c655-d36a-9442-ca7d-1d798d5f19ef/using_swift_cover.60x60-50.jpg" alt="Using Swift with Cocoa and Objective-C" width="60" height="60" style="float:left;margin:0 15px 0 0;width:60px;height:60px;" class="pochi_img" ></a><div class="pochi_info" style="text-align:left;/zoom: 1;overflow: hidden;"><div class="pochi_name"><a href="https://itunes.apple.com/jp/book/using-swift-cocoa-objective/id888894773?mt=11&uo=4&at=10l8vp" target="_blank" >Using Swift with Cocoa and Objective-C</a></div><div class="pochi_price" style="display:inline;">無料</div><div class="pochi_time" style="font-size:x-small;display:inline;">(2014.06.16時点)</div>&nbsp;<a href="https://itunes.apple.com/jp/book/using-swift-cocoa-objective/id888894773?mt=11&uo=4&at=10l8vp" style="width:60px;color:#ffffff;background:#000000;font-size:8px;font-weight:bold;text-align:center;display:inline;text-decoration:none;border:0px;padding:2px;border-radius:5px;white-space:nowrap;" target="_blank" >App Store</a><div class="pochi_seller"><a href="https://itunes.apple.com/jp/artist/apple-inc./id405307759?mt=11&uo=4&at=10l8vp" target="_blank" >Apple Inc.</a></div><div class="pochi_post" style="font-size:x-small;">posted with <a href="http://pochireba.com" rel="nofollow" target="_blank">ポチレバ</a></div></div><div class="pochireba-footer" style="clear: left"></div></div>
+
+
+<p>※合間にまとめてるためまったり更新です＞＜</p>
+
+<a name="L..............."></a>
+<h2>変数と定数</h2>
+
+<p>定数は<code>let</code>で宣言、変数は<code>var</code>で宣言します。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let maxNum = 50
+</span><span class='line'>var number = 0</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上記で、<code>maxNum</code>という<code>50</code>が入った定数が宣言。<br/>
+<code>number</code>という変数を<code>0</code>で初期化という形になります。</p>
+
+<p>なるほど。<br/>
+<code>let</code>で宣言した場合は定数という扱いなので、内容が変更される予定がなければ基本的には<code>let</code>で宣言するのが望ましいです。</p>
+
+<a name="L........."></a>
+<h3>型推論</h3>
+
+<p>Swiftには型推論という機能があるようで、代入する値によって型を推論してくれるようです。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let number = 4
+</span><span class='line'>let name = 'PGMY'
+</span><span class='line'>var data = 5.4</span></code></pre></td></tr></table></div></figure>
+
+
+<p>これで、<br/>
+<code>number</code>は<code>Integer</code>型の定数<br/>
+<code>name</code>は<code>String</code>型の定数<br/>
+<code>data</code>は<code>Double</code>型の変数<br/>
+という感じの宣言になります。</p>
+
+<p>コンマで区切れば複数宣言も可能です。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var x = 0.0, y = 0.0, z = 0.0
+</span></code></pre></td></tr></table></div></figure>
+
+
+<a name="L........."></a>
+<h3>型指定</h3>
+
+<p>もちろん型を指定して宣言することもできます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>var message: String</span></code></pre></td></tr></table></div></figure>
+
+
+<p>この<code>:</code>は<code>…の型は…</code>といった感じの意味になっていて、<code>:</code>の後ろに指定したい型を書きます。<br/>
+宣言時に型を指定した時はその他の型を入れることはできません。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>message = 'MESSAGE'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>基本的には型指定を使わなくても、宣言時に型推論を頼って初期値を入れてしまえば、問題ありません。</p>
+
+<a name="L................................................"></a>
+<h3>定数・変数の名前に利用できるもの</h3>
+
+<p>Unicode文字に含まれている文字であればどんなものでも宣言として使えます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>let π = 3.14159
+</span><span class='line'>let あいさつ = "こんにちは！"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>iPhoneで利用されている絵文字なんてのも定数・変数として利用でちゃいます（このブログではちょっと表示できませんが）。</p>
+
+<a name="L........................"></a>
+<h2>定数・変数の出力</h2>
+
+<p>出力については<code>println</code>関数を使うことで文字列を簡単に出力できます。
+Xcodeであればコンソール出力部分に出力されます。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>println("This is a string")</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+    </entry>
+    
+</feed>

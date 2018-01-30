@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+    <title><![CDATA[Category: git | PGMY Programming Blog]]></title>
+    <link href="http://pgmy.github.io/blog/categories/git/atom.xml" rel="self"/>
+    <link href="http://pgmy.github.io/blog/"/>
+    <updated>2018-01-30T07:51:29+00:00</updated>
+    <id>http://pgmy.github.io/blog/</id>
+    <author>
+        <name><![CDATA[PGMY]]></name>
+        
+      </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+
+    
+    <entry>
+        <title type="html"><![CDATA[gitのコミット履歴のユーザー情報を一括変更する]]></title>
+        <link href="http://pgmy.github.io/blog/2014/09/09/change-git-user-info/"/>
+        <updated>2014-09-09T02:36:45+00:00</updated>
+        <id>http://pgmy.github.io/blog/2014/09/09/change-git-user-info</id>
+        <content type="html"><![CDATA[<p>過去のコミット履歴にあるユーザー情報をまとめて一括変更する方法を調べたのでめもも。</p>
+
+<pre><code>git filter-branch -f --commit-filter '
+        if [ "$GIT_AUTHOR_NAME" = "【変更したいユーザー名】" ];
+        then
+                GIT_AUTHOR_NAME="【変更後ユーザー名】";
+                GIT_AUTHOR_EMAIL="【変更後メールアドレス】";
+                git commit-tree "$@";
+        else
+                git commit-tree "$@";
+        fi' HEAD
+</code></pre>
+]]></content>
+    </entry>
+    
+</feed>

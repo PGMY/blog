@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: sshpass | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/sshpass/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Macにsshpassをインストールする]]></title>
+    <link href="http://pgmy.github.io/blog/2014/03/03/sshpass-for-mac/"/>
+    <updated>2014-03-03T07:11:45+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/03/03/sshpass-for-mac</id>
+    <content type="html"><![CDATA[<p>brewでインストールできちゃうみたい。</p>
+
+<pre><code>brew install https://raw.github.com/eugeneoden/homebrew/eca9de1/Library/Formula/sshpass.rb
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

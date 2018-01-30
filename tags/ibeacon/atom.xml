@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: iBeacon | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/ibeacon/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[AirLocate]]></title>
+    <link href="http://pgmy.github.io/blog/2014/04/03/airlocate/"/>
+    <updated>2014-04-03T00:29:31+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/04/03/airlocate</id>
+    <content type="html"><![CDATA[<p>iOS Dev Library にあるサンプルを読んでいきますー・ω・<br/>
+iBeaconに関するサンプル</p>
+
+<p><a href="https://developer.apple.com/library/ios/samplecode/AirLocate/Introduction/Intro.html">AirLocate: Using CoreLocation to monitor, range, and configure your device as an iBeacon</a></p>
+
+<!-- more -->
+
+
+<a name="L............"></a>
+<h2>ファイル</h2>
+
+<ul>
+<li><p>APLUUIDViewController.h / APLUUIDViewController.m</p></li>
+<li><p>APLMonitoringViewController.h / APLMonitoringViewController.m</p></li>
+<li><p>APLRangingViewController.h / APLRangingViewController.m<br/>
+観測領域内のビーコンを検出する
+<a href="https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLBeaconRegion_class/Reference/Reference.html">CLBeaconRegion</a>を生成</p></li>
+<li><p>APLCalibrationBeginViewController.h / APLCalibrationBeginViewController.m</p></li>
+<li><p>APLCalibrationValculator.h / APLCalibrationValculator.m</p></li>
+<li><p>APLCalibrationEndViewCntroller.h / APLCalibrationEndViewCntroller.m</p></li>
+<li><p>APLConfigurationViewController.h / APLConfigurationViewController.m</p></li>
+<li><p>APLDefaults.h / APLDefaults.m<br/>
+共通データを記載しているシングルトン</p></li>
+<li><p>APLProgressTableViewCell.h / APLProgressTableViewCell.m<br/>
+テーブルビュー用セル</p></li>
+<li><p>APLAppDelegate.h / APLAppDelegate.m<br/>
+アプリケーションデリゲート。<br/>
+<a href="https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLLocationManager_Class/CLLocationManager/CLLocationManager.html">CLLocationManager</a>クラスを生成。<br/>
+<a href="https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLLocationManagerDelegate_Protocol/CLLocationManagerDelegate/CLLocationManagerDelegate.html">CLLocationManagerDelegate</a>デリゲートを持つ。</p></li>
+</ul>
+
+
+<a name="L........."></a>
+<h2>クラス</h2>
+
+<ul>
+<li><a href="https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLLocationManager_Class/CLLocationManager/CLLocationManager.html">CLLocationManager</a><br/>
+位置情報クラス。GPS・電子コンパス等。
+
+<ul>
+<li>startMonitoringForRegion:<br/>
+領域観測イベントが発生した時のイベントのハンドリングを開始</li>
+<li>startRangingBeaconsInRegion:<br/>
+Beacon領域への出入りのイベントのハンドリングを開始</li>
+</ul>
+</li>
+<li><a href="https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLBeaconRegion_class/Reference/Reference.html">CLBeaconRegion</a></li>
+</ul>
+
+
+<a name="L..............."></a>
+<h2>デリゲート</h2>
+
+<ul>
+<li><a href="https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLLocationManagerDelegate_Protocol/CLLocationManagerDelegate/CLLocationManagerDelegate.html">CLLocationManagerDelegate</a><br/>
+位置情報に関するデリゲートクラス。
+
+<ul>
+<li>- (void)locationManager:(CLLocationManager <em>)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion </em>)region<br/>
+iBeacon監視状態を知らせてくれるメソッド。<code>CLLocationManager requestStateForRegion:</code>で追加すると呼ばれる</li>
+<li>- (void)locationManager:(CLLocationManager <em>)manager didRangeBeacons:(NSArray </em>)beacons inRegion:(CLBeaconRegion *)region</li>
+</ul>
+</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

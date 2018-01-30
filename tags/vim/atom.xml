@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: vim | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/vim/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[vim_cheat_sheet_wallpaper]]></title>
+    <link href="http://pgmy.github.io/blog/2014/02/25/vim-cheat-sheet-wallpaper/"/>
+    <updated>2014-02-25T06:59:51+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/02/25/vim-cheat-sheet-wallpaper</id>
+    <content type="html"><![CDATA[<a name="Vim................................................"></a>
+<h1>Vimの初心者向けショートカット用壁紙</h1>
+
+<p> ふとあのショートカットなんだっけ？で使いやすい壁紙を見つけました・ω・</p>
+
+<div class="github-widget" data-repo="LevelbossMike/vim_shortcut_wallpaper"></div>
+
+
+<p>めもめも。</p>
+]]></content>
+  </entry>
+  
+</feed>

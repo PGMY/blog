@@ -1,0 +1,991 @@
+<!doctype html>
+    <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+    <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+    <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+    <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+
+    
+      
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>PGMY Programming Blog</title>
+        <meta name="author" content="PGMY">
+        
+        <meta name="description" content="[解決]The app references non-public selectors 2014-10-22 xcode Comments アプリを申請用にValidateしようとした時のエラーめも。
+Xcode 6.1特定で出るみたいです＞＜ iTunes Store operation &hellip;">
+        
+        <meta name="viewport" content="width=device-width">
+        <link rel="canonical" href="http://pgmy.github.io/blog/posts/2">
+
+        <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,400italic' rel='stylesheet' type='text/css'>
+        <link href="http://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet" type="text/css">
+
+        
+        <link href="/blog/favicon.png" rel="icon">
+        <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet">
+        <link href="/blog/blog/atom.xml" rel="alternate" title="PGMY Programming Blog" type="application/atom+xml">
+    </head>
+
+
+    <body >
+
+        <header id="header">
+    <div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-4">
+        <a href="/blog/" class="site-title">PGMY Programming Blog</a>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-8">
+        <nav>
+    <input type="checkbox" id="toggle">
+    <label for="toggle" class="toggle" data-open="Main Menu" data-close="Close Menu"></label>
+    <ul class="menu">
+    <li><a href="/blog/">Home</a></li>
+    <li><a href="/blog/archives/">Archives</a></li>
+    <li><a href="/blog/bookmark/">BookMark</a></li>
+    <li><a href="/blog/pgmy/">Me</a></li>
+</ul>
+
+</nav>
+
+    </div>
+</div>
+
+</header>
+
+
+        <div id="main-content">
+
+            <!--[if lte IE 9]>
+<div class="row upgrade-row">
+    <div class="col-lg-12">
+        <div class="upgrade">
+            <i class="upgrade__icon fa fa-warning"></i>
+            <h1 class="upgrade__title h6">Ohnoes!</h1>
+            <p class="upgrade__text">
+                Unfortunately, certain parts of this site may not display correctly in your version of Internet Explorer!<br>
+                If possible, you should consider <a href="http://browsehappy.com/">upgrading your browser</a>.
+            </p>
+        </div>
+    </div>
+</div>
+<!-- <![endif]-->
+
+
+            
+
+            <div class="row top-xs center-sm center-md center-lg site-wrapper">
+                
+                <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8">
+                
+                        
+    
+        
+        <article class="article article--index">
+            <header class="article__header">
+    
+        <h1 class="h2 article__title">
+            <a href="/blog/2014/10/22/the-app-references-non-public-selectors/">[解決]The app references non-public selectors</a>
+        </h1>
+    
+
+    
+        <div class="article__meta clearfix">
+            
+
+
+
+
+
+
+    <time class="article__date pull-left" datetime="2014-10-22T07:33:22+00:00" pubdate><i class="fa fa-calendar"></i> 2014-10-22 </time>
+
+
+            
+
+    <div class="article__tags pull-left">
+        <i class="fa fa-tags"></i>
+        <ul class="unstyled">
+        
+            
+                <li><a class='category' href='/blog/blog/categories/xcode/'>xcode</a></li>
+            
+            
+        </ul>
+    </div>
+
+
+            
+                <a class="pull-right" href="http://pgmy.github.io/blog/2014/10/22/the-app-references-non-public-selectors/#disqus_thread">
+                    Comments <i class="fa fa-comment"></i>
+                </a>
+            
+        </div>
+    
+</header>
+
+
+
+
+
+
+
+    <p>アプリを申請用にValidateしようとした時のエラーめも。<br/>
+Xcode 6.1特定で出るみたいです＞＜</p>
+
+<blockquote><p>iTunes Store operation failed.<br/>
+Your app contains non-public API usage.Please review the errors, corrent them, and resubmit your application.</p>
+
+<hr />
+
+<p>iTunes Store operation failed.<br/>
+The app references non-public selectors in Palyload/[APP NAME].app/[APP NAME]:allocBatch:withEntity:coount:, allocWithEntity:, firstIndexForKnownKey:, indexForKey:</p>
+
+<hr />
+
+<p>iTunes Store operation failed.<br/>
+If you think this message was sent in error and that you have only used Apple-published APIs in accordance with the guidelines, send the app&rsquo;s nine-digit Apple ID, along with detailed infomation about why you believe the above APIs where incorrectly flagged, to <a href="&#x6d;&#97;&#x69;&#108;&#116;&#x6f;&#58;&#97;&#x70;&#112;&#x72;&#x65;&#x76;&#105;&#101;&#119;&#64;&#x61;&#x70;&#112;&#x6c;&#x65;&#x2e;&#99;&#x6f;&#x6d;&#x2e;">&#x61;&#x70;&#112;&#x72;&#101;&#118;&#105;&#101;&#119;&#64;&#97;&#112;&#x70;&#x6c;&#x65;&#x2e;&#99;&#x6f;&#x6d;&#46;</a> &hellip;.</p></blockquote>
+
+<p>参考：<a href="http://stackoverflow.com/questions/26369633/non-public-selectors-in-payload">Non-public selectors in Payload/</a><br/>
+現時点ではXcode6.0.1で申請を出すしかないみたいです。</p>
+
+<p>古いバージョンのXcodeのダウンロードはここから→<a href="https://developer.apple.com/downloads/index.action">https://developer.apple.com/downloads/index.action</a></p>
+
+<a name="L........."></a>
+<h2>解決策</h2>
+
+<p>Qiitaにも同じ<a href="http://qiita.com/PGMY/items/831618ad416780e0dc7c">投稿</a>をしておいたところ、コメントで教えていただきました！<br/>
+英語なコメントにどきどき。<br/>
+英語力ないのでちゃんと理解するために友人に助けを求めつつ・・・</p>
+
+<p>結論として、</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/Users/{user_home_folder}/Library/Developer/Xcode/DerivedData</span></code></pre></td></tr></table></div></figure>
+
+
+<p>きっちりCleanする時にもよく削除したりしていますが、ここに古いバージョンのXcodeでbuildしたデータが残った状態で、新しいXcodeでArchive->Validationを行うとこのエラーが表示されてしまうみたいです。</p>
+
+<p>DerivedData内のデータを念のため丸ごと削除して行うと無事Xcode6.1でもいけました！</p>
+
+<p>PrivateAPIを使っていないのにこのエラーが出た場合はDerivedDataの削除を試してみてください！</p>
+
+
+
+        </article>
+        <hr>
+    
+        
+        <article class="article article--index">
+            <header class="article__header">
+    
+        <h1 class="h2 article__title">
+            <a href="/blog/2014/09/09/change-git-user-info/">gitのコミット履歴のユーザー情報を一括変更する</a>
+        </h1>
+    
+
+    
+        <div class="article__meta clearfix">
+            
+
+
+
+
+
+
+    <time class="article__date pull-left" datetime="2014-09-09T02:36:45+00:00" pubdate><i class="fa fa-calendar"></i> 2014-09-09 </time>
+
+
+            
+
+    <div class="article__tags pull-left">
+        <i class="fa fa-tags"></i>
+        <ul class="unstyled">
+        
+            
+                <li><a class='category' href='/blog/blog/categories/git/'>git</a></li>
+            
+            
+        </ul>
+    </div>
+
+
+            
+                <a class="pull-right" href="http://pgmy.github.io/blog/2014/09/09/change-git-user-info/#disqus_thread">
+                    Comments <i class="fa fa-comment"></i>
+                </a>
+            
+        </div>
+    
+</header>
+
+
+
+
+
+
+
+    <p>過去のコミット履歴にあるユーザー情報をまとめて一括変更する方法を調べたのでめもも。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git filter-branch -f --commit-filter '
+</span><span class='line'>        if [ "$GIT_AUTHOR_NAME" = "【変更したいユーザー名】" ];
+</span><span class='line'>        then
+</span><span class='line'>                GIT_AUTHOR_NAME="【変更後ユーザー名】";
+</span><span class='line'>                GIT_AUTHOR_EMAIL="【変更後メールアドレス】";
+</span><span class='line'>                git commit-tree "$@";
+</span><span class='line'>        else
+</span><span class='line'>                git commit-tree "$@";
+</span><span class='line'>        fi' HEAD</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+        </article>
+        <hr>
+    
+        
+        <article class="article article--index">
+            <header class="article__header">
+    
+        <h1 class="h2 article__title">
+            <a href="/blog/2014/07/07/swift/"><S>Objective-CからSwiftにしたら処理が劇的に重くなった話</S></a>
+        </h1>
+    
+
+    
+        <div class="article__meta clearfix">
+            
+
+
+
+
+
+
+    <time class="article__date pull-left" datetime="2014-07-07T05:22:22+00:00" pubdate><i class="fa fa-calendar"></i> 2014-07-07 </time>
+
+
+            
+
+    <div class="article__tags pull-left">
+        <i class="fa fa-tags"></i>
+        <ul class="unstyled">
+        
+            
+                <li><a class='category' href='/blog/blog/categories/ios/'>ios</a></li>
+            
+            
+        </ul>
+    </div>
+
+
+            
+                <a class="pull-right" href="http://pgmy.github.io/blog/2014/07/07/swift/#disqus_thread">
+                    Comments <i class="fa fa-comment"></i>
+                </a>
+            
+        </div>
+    
+</header>
+
+
+
+
+
+
+
+    <div class="article__content clearfix">
+        <p>⇒ Arrayの扱いが変わってきたので一旦この記事は保留で全体を見直すことにしました。</p>
+
+<hr />
+
+
+        <a class="btn pull-right" href="/blog/2014/07/07/swift/">Read on &rarr;</a>
+    </div>
+
+
+        </article>
+        <hr>
+    
+        
+        <article class="article article--index">
+            <header class="article__header">
+    
+        <h1 class="h2 article__title">
+            <a href="/blog/2014/07/03/octopress-plus-travis-ci/">Octopress+Travis CI</a>
+        </h1>
+    
+
+    
+        <div class="article__meta clearfix">
+            
+
+
+
+
+
+
+    <time class="article__date pull-left" datetime="2014-07-03T02:56:41+00:00" pubdate><i class="fa fa-calendar"></i> 2014-07-03 </time>
+
+
+            
+
+    <div class="article__tags pull-left">
+        <i class="fa fa-tags"></i>
+        <ul class="unstyled">
+        
+            
+                <li><a class='category' href='/blog/blog/categories/octopress/'>octopress</a></li>
+            
+            
+        </ul>
+    </div>
+
+
+            
+                <a class="pull-right" href="http://pgmy.github.io/blog/2014/07/03/octopress-plus-travis-ci/#disqus_thread">
+                    Comments <i class="fa fa-comment"></i>
+                </a>
+            
+        </div>
+    
+</header>
+
+
+
+
+
+
+
+    <div class="article__content clearfix">
+        <p>OctopressをTravis CIを使って自動デプロイに挑戦してみましたΣ<br/>
+なんとも試行錯誤しまくるハメになったものの、<a href="http://blog.yasuoza.com/2014/01/13/octopress-plus-github-pages-plus-travis/">Octopress + GitHub Pages + Travis</a>の通りにやってやっとこさうまく行きました。<br/>
+はじめはトークンを利用しての方法にしてたんですがうまく行かず、結局公開鍵使ってのデプロイですー。</p>
+
+
+        <a class="btn pull-right" href="/blog/2014/07/03/octopress-plus-travis-ci/">Read on &rarr;</a>
+    </div>
+
+
+        </article>
+        <hr>
+    
+        
+        <article class="article article--index">
+            <header class="article__header">
+    
+        <h1 class="h2 article__title">
+            <a href="/blog/2014/06/27/assetslibrary-swift/">Assetsを表示するプログラムをSwiftにしてみる</a>
+        </h1>
+    
+
+    
+        <div class="article__meta clearfix">
+            
+
+
+
+
+
+
+    <time class="article__date pull-left" datetime="2014-06-27T05:35:19+00:00" pubdate><i class="fa fa-calendar"></i> 2014-06-27 </time>
+
+
+            
+
+    <div class="article__tags pull-left">
+        <i class="fa fa-tags"></i>
+        <ul class="unstyled">
+        
+            
+                <li><a class='category' href='/blog/blog/categories/ios/'>ios</a></li>
+            
+            
+        </ul>
+    </div>
+
+
+            
+                <a class="pull-right" href="http://pgmy.github.io/blog/2014/06/27/assetslibrary-swift/#disqus_thread">
+                    Comments <i class="fa fa-comment"></i>
+                </a>
+            
+        </div>
+    
+</header>
+
+
+
+
+
+
+
+    <div class="article__content clearfix">
+        <p>カメラロールの写真をAssetsLibraryを使って取り出して日付順にソートするプログラムがありまする。</p>
+
+<div class="github-widget" data-repo="PGMY/AssetsLibrary"></div>
+
+
+<p>これをSwiftに書き換えていく記録をつけていきますー。<br/>
+作業を順番に記録していくので構成はちょっとバラバラするかもしれません・・・。</p>
+
+<p><em>つっこみ募集中</em></p>
+
+
+        <a class="btn pull-right" href="/blog/2014/06/27/assetslibrary-swift/">Read on &rarr;</a>
+    </div>
+
+
+        </article>
+        <hr>
+    
+        
+        <article class="article article--index">
+            <header class="article__header">
+    
+        <h1 class="h2 article__title">
+            <a href="/blog/2014/06/25/swift-library/">iOSで気になるライブラリ Swift編</a>
+        </h1>
+    
+
+    
+        <div class="article__meta clearfix">
+            
+
+
+
+
+
+
+    <time class="article__date pull-left" datetime="2014-06-25T01:59:36+00:00" pubdate><i class="fa fa-calendar"></i> 2014-06-25 </time>
+
+
+            
+
+    <div class="article__tags pull-left">
+        <i class="fa fa-tags"></i>
+        <ul class="unstyled">
+        
+            
+                <li><a class='category' href='/blog/blog/categories/ios/'>ios</a></li>
+            
+            
+        </ul>
+    </div>
+
+
+            
+                <a class="pull-right" href="http://pgmy.github.io/blog/2014/06/25/swift-library/#disqus_thread">
+                    Comments <i class="fa fa-comment"></i>
+                </a>
+            
+        </div>
+    
+</header>
+
+
+
+
+
+
+
+    <div class="article__content clearfix">
+        <p>iOSで気になるライブラリ Swift編
+気になってるだけなので確認をしっかりしてないものもあります。</p>
+
+
+        <a class="btn pull-right" href="/blog/2014/06/25/swift-library/">Read on &rarr;</a>
+    </div>
+
+
+        </article>
+        <hr>
+    
+        
+        <article class="article article--index">
+            <header class="article__header">
+    
+        <h1 class="h2 article__title">
+            <a href="/blog/2014/06/24/hex-color-watch/">背景が時計のHexColorになる時計</a>
+        </h1>
+    
+
+    
+        <div class="article__meta clearfix">
+            
+
+
+
+
+
+
+    <time class="article__date pull-left" datetime="2014-06-24T05:21:12+00:00" pubdate><i class="fa fa-calendar"></i> 2014-06-24 </time>
+
+
+            
+
+    <div class="article__tags pull-left">
+        <i class="fa fa-tags"></i>
+        <ul class="unstyled">
+        
+            
+                <li><a class='category' href='/blog/blog/categories/ios/'>ios</a></li>
+            
+            
+        </ul>
+    </div>
+
+
+            
+                <a class="pull-right" href="http://pgmy.github.io/blog/2014/06/24/hex-color-watch/#disqus_thread">
+                    Comments <i class="fa fa-comment"></i>
+                </a>
+            
+        </div>
+    
+</header>
+
+
+
+
+
+
+
+    <div class="article__content clearfix">
+        <p><a href="http://www.jacopocolo.com/hexclock/">HexClock</a>というサイトを見つけました・ω・<br/>
+どうやら背景が時計の時間・分・秒で構成された６桁の数字の色になるサイト。</p>
+
+<p>面白い＞ω＜<br/>
+ので、アプリにしてみた。</p>
+
+<div class="github-widget" data-repo="PGMY/HexColorWatch"></div>
+
+
+<p>さて、これをせっかくなのでSwiftにするべく奮闘していこうと思いまする。</p>
+
+
+        <a class="btn pull-right" href="/blog/2014/06/24/hex-color-watch/">Read on &rarr;</a>
+    </div>
+
+
+        </article>
+        <hr>
+    
+        
+        <article class="article article--index">
+            <header class="article__header">
+    
+        <h1 class="h2 article__title">
+            <a href="/blog/2014/06/18/swiftmemo/">Swiftメモ</a>
+        </h1>
+    
+
+    
+        <div class="article__meta clearfix">
+            
+
+
+
+
+
+
+    <time class="article__date pull-left" datetime="2014-06-18T07:29:16+00:00" pubdate><i class="fa fa-calendar"></i> 2014-06-18 </time>
+
+
+            
+
+    <div class="article__tags pull-left">
+        <i class="fa fa-tags"></i>
+        <ul class="unstyled">
+        
+            
+                <li><a class='category' href='/blog/blog/categories/ios/'>ios</a></li>
+            
+            
+        </ul>
+    </div>
+
+
+            
+                <a class="pull-right" href="http://pgmy.github.io/blog/2014/06/18/swiftmemo/#disqus_thread">
+                    Comments <i class="fa fa-comment"></i>
+                </a>
+            
+        </div>
+    
+</header>
+
+
+
+
+
+
+
+    <div class="article__content clearfix">
+        <p>記事になる前のとにかくSwiftについてメモしていく場所</p>
+
+
+        <a class="btn pull-right" href="/blog/2014/06/18/swiftmemo/">Read on &rarr;</a>
+    </div>
+
+
+        </article>
+        <hr>
+    
+        
+        <article class="article article--index">
+            <header class="article__header">
+    
+        <h1 class="h2 article__title">
+            <a href="/blog/2014/06/17/swiftappwithoutstoryboard/">Swift App Without Storyboard</a>
+        </h1>
+    
+
+    
+        <div class="article__meta clearfix">
+            
+
+
+
+
+
+
+    <time class="article__date pull-left" datetime="2014-06-17T02:10:29+00:00" pubdate><i class="fa fa-calendar"></i> 2014-06-17 </time>
+
+
+            
+
+    <div class="article__tags pull-left">
+        <i class="fa fa-tags"></i>
+        <ul class="unstyled">
+        
+            
+                <li><a class='category' href='/blog/blog/categories/ios/'>ios</a></li>
+            
+            
+        </ul>
+    </div>
+
+
+            
+                <a class="pull-right" href="http://pgmy.github.io/blog/2014/06/17/swiftappwithoutstoryboard/#disqus_thread">
+                    Comments <i class="fa fa-comment"></i>
+                </a>
+            
+        </div>
+    
+</header>
+
+
+
+
+
+
+
+    <div class="article__content clearfix">
+        <p>Swiftのドキュメントを読みながらほむほむと言ってても身に付かないのでやっぱり何か作りつつ、動作確認しつつやっていかないとね！<br/>
+てことでSwiftでストーリーボードを使わずにアプリを作っていってみます・ω・<br/>
+（Swiftでアプリではなく、言語自体をさわってみたい場合はplaygroundも用意されています・ω・♪）</p>
+
+<p>ストーリーボードを使わないのは言語の動きを確かめるためです(ストーリーボードをいつもあまり使ってないってのもありますが)</p>
+
+<div class="github-widget" data-repo="PGMY/FirstSwiftApp"></div>
+
+
+
+
+
+        <a class="btn pull-right" href="/blog/2014/06/17/swiftappwithoutstoryboard/">Read on &rarr;</a>
+    </div>
+
+
+        </article>
+        <hr>
+    
+        
+        <article class="article article--index">
+            <header class="article__header">
+    
+        <h1 class="h2 article__title">
+            <a href="/blog/2014/06/16/swift/">[絶賛更新中]iOS,OSX向けの新しい言語「swift」について</a>
+        </h1>
+    
+
+    
+        <div class="article__meta clearfix">
+            
+
+
+
+
+
+
+    <time class="article__date pull-left" datetime="2014-06-16T01:34:05+00:00" pubdate><i class="fa fa-calendar"></i> 2014-06-16 </time>
+
+
+            
+
+    <div class="article__tags pull-left">
+        <i class="fa fa-tags"></i>
+        <ul class="unstyled">
+        
+            
+                <li><a class='category' href='/blog/blog/categories/ios/'>ios</a></li>
+            
+            
+        </ul>
+    </div>
+
+
+            
+                <a class="pull-right" href="http://pgmy.github.io/blog/2014/06/16/swift/#disqus_thread">
+                    Comments <i class="fa fa-comment"></i>
+                </a>
+            
+        </div>
+    
+</header>
+
+
+
+
+
+
+
+    <div class="article__content clearfix">
+        <p>Appleから新しいiOS,OS X向け言語が発表されたみたいです・ω・</p>
+
+<p><a href="https://developer.apple.com/swift/">Swift</a></p>
+
+<p>なんて速そうなお名前。
+さっそくiBook StoreにSwiftに関する電子書籍がアップされていたので読んでみました。</p>
+
+
+        <a class="btn pull-right" href="/blog/2014/06/16/swift/">Read on &rarr;</a>
+    </div>
+
+
+        </article>
+        <hr>
+    
+
+    <div class="pagination">
+    
+        <a class="btn pull-left" href="/blog/posts/3">&larr; Older</a>
+    
+
+    
+        <a class="btn pull-right" href="/blog/index.html">Newer &rarr;</a>
+    
+    </div>
+
+                </div>
+
+                
+                <aside class="sidebar col-xs-12 col-md-4 col-lg-4">
+                    <div class="row">
+
+    
+
+    
+<section class="social col-xs-12 col-sm-6 col-md-12">
+    <h1>
+        Follow me!
+    </h1>
+    <ul class="unstyled">
+        
+        
+        
+        
+        <li><a class="github" href="//github.com/PGMY"><i class="fa fa-github"></i> Github</a></li>
+        
+        
+        
+        
+        
+        
+        
+        <li><a class="twitter" href="//twitter.com/PGMYBIZ"><i class="fa fa-twitter"></i> Twitter</a></li>
+        
+    </ul>
+</section>
+
+
+
+    <section>
+  <h1>About Me</h1>
+  <p>A little something about me.</p>
+</section>
+<section id="recent-posts" class="col-xs-12 col-sm-6 col-md-12">
+    <h1>Recent Posts</h1>
+    <ul class="divided">
+        
+        <li class="post">
+            <a href="/blog/2016/11/10/swift3-processing-time/">Swift3 処理時間の計測</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/10/03/jenkins-macos10-dot-12-sierra/">macOS10.12 SierraにアップデートしたらうちのJenkins執事ちゃんがストライキを起こしてしまったメモ</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/08/31/font/">文字組をコントロールするフォントとライブラリ</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/08/03/uibutton/">uibuttonのtextサイズ自動調整</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/07/25/apptransfer/">iOS アプリ譲渡 App Transfer</a>
+        </li>
+        
+    </ul>
+</section>
+
+  
+  <section class="col-xs-12 col-sm-6 col-md-12">
+    <div class="github-card" data-github="PGMY" data-width="100%" data-height="" data-theme="default"></div>
+    <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
+  </section>
+  
+<section class="col-xs-12 col-sm-6 col-md-12">
+  <a class="qiita-timeline" href="https://qiita.com/users/PGMY" data-qiita-username="PGMY">PGMYのtips</a><script src="//qiita-widget.suin.org/widget.js"></script>
+</section>
+
+<section id="twitter-timeline" class="col-xs-12 col-sm-6 col-md-12">
+    <h1>
+        Latest Tweets
+        
+        <small class="pull-right">
+            <a class="btn" href="//twitter.com/PGMYBIZ" title="@PGMYBIZ on Twitter" target="_blank">
+                <i class="fa fa-external-link"></i>
+            </a>
+        </small>
+        
+    </h1>
+
+    <a class="twitter-timeline" data-dnt="true" href="//twitter.com/PGMYBIZ"  data-widget-id=""  data-link-color="#049cdb" data-tweet-limit="" data-chrome="noheader nofooter transparent noscrollbar">Tweets by @PGMYBIZ</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+<section>
+  <h1>Tag Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/tags/api' style='font-size: 108.57142857142857%'>API(1)</a> <a href='/blog/tags/apptransfer' style='font-size: 108.57142857142857%'>AppTransfer(1)</a> <a href='/blog/tags/assetslibrary' style='font-size: 108.57142857142857%'>AssetsLibrary(1)</a> <a href='/blog/tags/atom' style='font-size: 108.57142857142857%'>atom(1)</a> <a href='/blog/tags/avspeechsynthesizer' style='font-size: 108.57142857142857%'>AVSpeechSynthesizer(1)</a> <a href='/blog/tags/codesign' style='font-size: 108.57142857142857%'>CodeSign(1)</a> <a href='/blog/tags/collectionview' style='font-size: 108.57142857142857%'>CollectionView(1)</a> <a href='/blog/tags/custom' style='font-size: 108.57142857142857%'>Custom(1)</a> <a href='/blog/tags/custom' style='font-size: 108.57142857142857%'>custom(1)</a> <a href='/blog/tags/e-mail-plugin' style='font-size: 108.57142857142857%'>E-Mail plugin(1)</a> <a href='/blog/tags/error' style='font-size: 117.14285714285714%'>Error(2)</a> <a href='/blog/tags/facebook' style='font-size: 108.57142857142857%'>Facebook(1)</a> <a href='/blog/tags/font' style='font-size: 108.57142857142857%'>font(1)</a> <a href='/blog/tags/font' style='font-size: 108.57142857142857%'>Font(1)</a> <a href='/blog/tags/fuelphp' style='font-size: 108.57142857142857%'>FuelPHP(1)</a> <a href='/blog/tags/git' style='font-size: 108.57142857142857%'>Git(1)</a> <a href='/blog/tags/git' style='font-size: 108.57142857142857%'>git(1)</a> <a href='/blog/tags/github' style='font-size: 117.14285714285714%'>Github(2)</a> <a href='/blog/tags/hack' style='font-size: 108.57142857142857%'>hack(1)</a> <a href='/blog/tags/hacklang' style='font-size: 108.57142857142857%'>hacklang(1)</a> <a href='/blog/tags/hex' style='font-size: 108.57142857142857%'>Hex(1)</a> <a href='/blog/tags/homebrew' style='font-size: 108.57142857142857%'>homebrew(1)</a> <a href='/blog/tags/ibeacon' style='font-size: 108.57142857142857%'>iBeacon(1)</a> <a href='/blog/tags/install' style='font-size: 108.57142857142857%'>install(1)</a> <a href='/blog/tags/ios' style='font-size: 125.71428571428572%'>iOS(3)</a> <a href='/blog/tags/jenkins' style='font-size: 108.57142857142857%'>Jenkins(1)</a> <a href='/blog/tags/language' style='font-size: 117.14285714285714%'>Language(2)</a> <a href='/blog/tags/library' style='font-size: 108.57142857142857%'>library(1)</a> <a href='/blog/tags/library' style='font-size: 108.57142857142857%'>Library(1)</a> <a href='/blog/tags/mysql' style='font-size: 108.57142857142857%'>MySQL(1)</a> <a href='/blog/tags/objective-c' style='font-size: 108.57142857142857%'>Objective-C(1)</a> <a href='/blog/tags/octopress' style='font-size: 117.14285714285714%'>Octopress(2)</a> <a href='/blog/tags/oil' style='font-size: 108.57142857142857%'>oil(1)</a> <a href='/blog/tags/osx' style='font-size: 108.57142857142857%'>OSX(1)</a> <a href='/blog/tags/plugin' style='font-size: 108.57142857142857%'>Plugin(1)</a> <a href='/blog/tags/prefectly' style='font-size: 108.57142857142857%'>Prefectly(1)</a> <a href='/blog/tags/rsa' style='font-size: 108.57142857142857%'>RSA(1)</a> <a href='/blog/tags/sample' style='font-size: 108.57142857142857%'>Sample(1)</a> <a href='/blog/tags/sierra' style='font-size: 108.57142857142857%'>Sierra(1)</a> <a href='/blog/tags/snippet' style='font-size: 108.57142857142857%'>Snippet(1)</a> <a href='/blog/tags/snippets' style='font-size: 108.57142857142857%'>snippets(1)</a> <a href='/blog/tags/snippets' style='font-size: 108.57142857142857%'>Snippets(1)</a> <a href='/blog/tags/ssh' style='font-size: 108.57142857142857%'>SSH(1)</a> <a href='/blog/tags/sshpass' style='font-size: 108.57142857142857%'>sshpass(1)</a> <a href='/blog/tags/swift' style='font-size: 160.0%'>Swift(7)</a> <a href='/blog/tags/tagcloud' style='font-size: 108.57142857142857%'>TagCloud(1)</a> <a href='/blog/tags/travisci' style='font-size: 108.57142857142857%'>TravisCI(1)</a> <a href='/blog/tags/uibutton' style='font-size: 108.57142857142857%'>UIButton(1)</a> <a href='/blog/tags/uipickerview' style='font-size: 108.57142857142857%'>uipickerview(1)</a> <a href='/blog/tags/vim' style='font-size: 108.57142857142857%'>vim(1)</a> <a href='/blog/tags/warning' style='font-size: 108.57142857142857%'>Warning(1)</a> <a href='/blog/tags/xcode' style='font-size: 125.71428571428572%'>Xcode(3)</a> <a href='/blog/tags/memo' style='font-size: 108.57142857142857%'>メモ(1)</a> </span>
+</section>
+<section class="col-xs-12 col-sm-6 col-md-12">
+    <h1>PR</h1>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- PGMY-Responsive -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-0667701444055003"
+         data-ad-slot="6896982449"
+         data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</section>
+
+
+</div>
+
+                </aside>
+                
+            </div>
+        </div>
+
+        
+
+    
+    
+
+
+
+
+<footer class="footer">
+    <div class="row middle-xs">
+        
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <p class="footer__copyright">
+    All content copyright PGMY.<br>
+    Code under <a href="//github.com/coogie/oscailte/blob/master/README.md">MIT Licence</a>.
+</p>
+
+        </div>
+        
+        
+    </div>
+</footer>
+
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+<script defer src="/blog/javascripts/octopress.js"></script>
+<script defer src="/blog/javascripts/jquery.githubRepoWidget.min.js"></script>
+
+
+<script>
+    var _gaq=[['_setAccount','UA-34429647-2'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+
+
+<script>
+    var disqus_shortname = 'pgmy';
+    
+        
+        var disqus_script = 'count.js';
+    
+    (function () {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+<script>
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/blog/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'PGMY',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+</script>
+<script src="/blog/javascripts/github.js"></script>
+
+
+
+
+
+
+
+
+    </body>
+
+</html>

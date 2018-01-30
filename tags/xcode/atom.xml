@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Xcode | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/xcode/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[macOS10.12 SierraにアップデートしたらうちのJenkins執事ちゃんがストライキを起こしてしまったメモ]]></title>
+    <link href="http://pgmy.github.io/blog/2016/10/03/jenkins-macos10-dot-12-sierra/"/>
+    <updated>2016-10-03T07:11:35+00:00</updated>
+    <id>http://pgmy.github.io/blog/2016/10/03/jenkins-macos10-dot-12-sierra</id>
+    <content type="html"><![CDATA[<p>Macをアップデートしたらうちの大事な執事ちゃんがストライキを起こしたのでなだめる方法をめもめも。<br/>
+正直原因が多岐に渡っていたので、実は必要なかった設定とかがあるかもしれない…</p>
+
+<p>余計な処理とか推奨されない対応してるとかあったら教えてください偉い人Σ・ω・｀</p>
+
+<p>XcodeBuilderを利用させるために四苦八苦したメモです。
+brewとrubyは既にmacOS10.12に対応させるためごにょごにょしてあります。</p>
+
+<!-- more -->
+
+
+<a name="L...............Jenkins......................................."></a>
+<h2>とりあえずJenkinsが真っ白になってしまった…</h2>
+
+<p>OSをアップデートしてから起動画面を見に行くと画面が真っ白に…
+CSS等が読み込まれずに文字だけの表示というのは経験があったんだけども、画面全体が真っ白で何も映らない。<br/>
+接続エラーの画面ではないのでJenkins自体はちゃんと起動している様子。
+Chromeで確認すると413エラーが帰ってきていたのでそのあたりで検索かけたら見つけましたほんっとうにありがとうございます！！！！！！</p>
+
+<p>⇒<a href="http://orca8.blogspot.jp/2014/08/jenkinsfull-head-413.html">JenkinsでFULL head 413を返すとき</a></p>
+
+<p>とりあえずクッキーを消せばどうにかなる！
+ということなので、個別にCookieを編集・削除できるExtention <a href="https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg?hl=ja">EditThisCookie</a> を導入しました・ω・これ、便利。<br/>
+ざざっとJenkinsページのCookieをまるまる削除したら画面が表示されるようになりましたわーい♪♪</p>
+
+<a name="NullPointer.............."></a>
+<h2>NullPointer??なエラー</h2>
+
+<p>画面が表示されるようになったのでさっそくXcodeBuildを試してみる…</p>
+
+<pre><code>ERROR: Build step failed with exception java.lang.NullPointerException at au.com.rayh.XCodeBuilder.perform
+</code></pre>
+
+<p>上記とともにざざざっとスタックトレースが表示されているんだけども…どうやらRubyまわりの問題みたい。
+実はSierraにアップデートしてからrubyの管理をrbenvで管理するように変更したのだけれども、こちらに対応させる必要があった様子。
+<a href="http://qiita.com/kitaro_tn/items/22fd3830ba9a85ad5320">Jenkinsでrubyのビルドでハマった点</a>で設定方法が解説されてたのでこの通りにしました。</p>
+
+<a name="resource-rules..deprecated.in.Mac.OS.X....10.10..............."></a>
+<h2>resource-rules (deprecated in Mac OS X >= 10.10)! なエラー</h2>
+
+<p>どうやら<code>--resource-rules</code>オプションがdeprecatedになっている様子なので
+<a href="https://www.jayway.com/2015/05/21/fixing-your-ios-build-scripts/">Fixing your iOS build scripts</a>を参考に</p>
+
+<pre><code>/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/PackageApplication
+</code></pre>
+
+<p>上記ビルドスクリプト内の <code>@codesign_args</code> から <code>resource-rules</code> と <code>--resource-rules=$destApp/ResourceRules.plist</code> を削除してあげる。<br/>
+参考先は<code>ResourceRules.plist</code> が存在している場合としていない場合とで分けるように修正してくれていました＞ω＜</p>
+
+<pre><code>...
+my @codesign_args;
+    if (-e '$destApp/ResourceRules.plist') {  # If ResourceRules.plist exists, include it in codesign arguments, for backwards compatability
+        @codesign_args = ("/usr/bin/codesign", "--force", "--preserve-metadata=identifier,entitlements,resource-rules",
+                         "--sign", $opt{sign},
+                         "--resource-rules=$destApp/ResourceRules.plist");
+    } else { # If ResourceRules.plist isn't found, don't include it in the codesign arguments
+        @codesign_args = ("/usr/bin/codesign", "--force", "--preserve-metadata=identifier,entitlements",
+                         "--sign", $opt{sign});
+    }
+</code></pre>
+
+<a name="ambiguous............"></a>
+<h2>ambiguousなエラー</h2>
+
+<pre><code>error: /usr/bin/codesign --force --preserve-metadata=identifier,entitlements --sign iPhone Distribution: [証明書] --entitlements /var/folders/_c/xblnly_j59n4vmbhq061q_g00000gp/T/W_1s7LZRB8/entitlements_plist3tPGS55p /var/folders/_c/xblnly_j59n4vmbhq061q_g00000gp/T/W_1s7LZRB8/Payload/MEME-Run-iOS.app failed with error 1. Output: iPhone Distribution: [証明書]: ambiguous (matches "iPhone Distribution: [証明書]" in /Users/[ユーザー名]/Library/Keychains/login.keychain-db and "iPhone Distribution: [証明書]" in /Library/Keychains/System.keychain)
+</code></pre>
+
+<p>これは通常証明書が２つ存在している場合等に表示されるエラー。使っている証明書と期限切れの証明書がまだキーチェーンの中に入っている場合は削除すれば問題ない。<br/>
+Xcode8からはAuto Siging機能が追加されているので、<a href="http://dev.classmethod.jp/smartphone/xcode-8-signing/">What&rsquo;s New in Xcode App Signing</a>を参考に、プロビジョニング等の設定を全てAutoに変更し、Jenkins内のXcodeBuilder設定の証明書の記述も全て削除してしまえば問題なくビルドできるようになりました。</p>
+
+<p>ふあーーーすっきり。
+ちょっと対応が多すぎて実際必要だったのがどれやら…
+とりあえず整理のためにめもめもしておきます。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[gcc-warning-options]]></title>
+    <link href="http://pgmy.github.io/blog/2015/09/08/gcc-warning-options/"/>
+    <updated>2015-09-08T01:59:18+00:00</updated>
+    <id>http://pgmy.github.io/blog/2015/09/08/gcc-warning-options</id>
+    <content type="html"><![CDATA[<p>gccの警告オプションを弄ぶ機会があったので調べてたら・・・<br/>
+きっちりしっかりまとまっているところがありました本当にありがとうございます！！！</p>
+
+<p>ということでただのブックマークメモですΣ＞＜</p>
+
+<!-- more -->
+
+
+<a name="L........."></a>
+<h2>日本語</h2>
+
+<p><a href="https://gist.github.com/tosihisa/2585404">gcc の警告オプションを調べてみた。</a></p>
+
+<a name="L......"></a>
+<h2>英語</h2>
+
+<p><a href="https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html">3.8 Options to Request or Suppress Warnings</a></p>
+
+<p>いやぁ・・・まとめて載ってるって便利！</p>
+
+<a name="L..............."></a>
+<h1>警告の無視</h1>
+
+<p>警告が無視したくて探したのでこれもついでに。
+ignoredの後ろのオプションに上記の無視したい対象オプションを指定すればオッケーです。</p>
+
+<pre><code>#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-compare"
+#pragma clang diagnostic pop
+</code></pre>
+
+<p>ーωー*</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Code Sign error: Your build settings specify a provisioning profile with the UUID]]></title>
+    <link href="http://pgmy.github.io/blog/2014/02/21/code-sign-error-your-build-settings-specify-a-provisioning-profile-with-the-uuid/"/>
+    <updated>2014-02-21T06:53:08+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/02/21/code-sign-error-your-build-settings-specify-a-provisioning-profile-with-the-uuid</id>
+    <content type="html"><![CDATA[<pre><code>Check dependencies
+Code Sign error: No matching provisioning profile found: Your build settings specify a provisioning profile with the UUID XXXXX-XXXXX-XXXXX, however, no such provisioning profile was found.
+CodeSign error: code signing is required for product type 'Application' in SDK 'iOS 7.0'
+
+** BUILD FAILED **
+</code></pre>
+
+<p>上記エラーが出た時。</p>
+
+<p>project.pbxprojをメモ帳とかで開いてPROVISIONING_PROFILEがある行を全て削除すればいいみたい。</p>
+]]></content>
+  </entry>
+  
+</feed>

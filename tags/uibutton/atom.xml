@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: UIButton | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/uibutton/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[uibuttonのtextサイズ自動調整]]></title>
+    <link href="http://pgmy.github.io/blog/2016/08/03/uibutton/"/>
+    <updated>2016-08-03T02:46:43+00:00</updated>
+    <id>http://pgmy.github.io/blog/2016/08/03/uibutton</id>
+    <content type="html"><![CDATA[<p>UIButtonのテキストのフォントサイズを自動調整するスニペット<br/>
+忘れて調べ直すことになったのでメモ</p>
+
+<pre><code>button.titleLabel.numberOfLines = 1;
+button.titleLabel.adjustsFontSizeToFitWidth = YES;
+button.titleLabel.lineBreakMode = NSLineBreakByClipping;
+</code></pre>
+]]></content>
+  </entry>
+  
+</feed>

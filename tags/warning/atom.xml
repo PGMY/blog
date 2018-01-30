@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Warning | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/warning/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[gcc-warning-options]]></title>
+    <link href="http://pgmy.github.io/blog/2015/09/08/gcc-warning-options/"/>
+    <updated>2015-09-08T01:59:18+00:00</updated>
+    <id>http://pgmy.github.io/blog/2015/09/08/gcc-warning-options</id>
+    <content type="html"><![CDATA[<p>gccの警告オプションを弄ぶ機会があったので調べてたら・・・<br/>
+きっちりしっかりまとまっているところがありました本当にありがとうございます！！！</p>
+
+<p>ということでただのブックマークメモですΣ＞＜</p>
+
+<!-- more -->
+
+
+<a name="L........."></a>
+<h2>日本語</h2>
+
+<p><a href="https://gist.github.com/tosihisa/2585404">gcc の警告オプションを調べてみた。</a></p>
+
+<a name="L......"></a>
+<h2>英語</h2>
+
+<p><a href="https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html">3.8 Options to Request or Suppress Warnings</a></p>
+
+<p>いやぁ・・・まとめて載ってるって便利！</p>
+
+<a name="L..............."></a>
+<h1>警告の無視</h1>
+
+<p>警告が無視したくて探したのでこれもついでに。
+ignoredの後ろのオプションに上記の無視したい対象オプションを指定すればオッケーです。</p>
+
+<pre><code>#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-compare"
+#pragma clang diagnostic pop
+</code></pre>
+
+<p>ーωー*</p>
+]]></content>
+  </entry>
+  
+</feed>

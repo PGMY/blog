@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: AVSpeechSynthesizer | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/avspeechsynthesizer/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[AVSpeechSynthesizerで使えるロケールID]]></title>
+    <link href="http://pgmy.github.io/blog/2014/05/14/avspeechsynthesizer-lang/"/>
+    <updated>2014-05-14T07:25:52+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/05/14/avspeechsynthesizer-lang</id>
+    <content type="html"><![CDATA[<p>ブックマークついでにメモ。<br/>
+参考：<a href="http://www.toyship.org/archives/1483">AVSpeechSynthesizer による音声読み上げ</a></p>
+
+<p>利用できるロケールIDの一覧を探していたので助かりました。</p>
+
+<!-- more -->
+
+
+<table>
+<thead>
+<tr>
+<th style="text-align:center;"> Locale </th>
+<th style="text-align:center;">  Language/Country </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;"> ar-SA </td>
+<td style="text-align:center;">   Arabic (Saudi Arabia)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> en-ZA </td>
+<td style="text-align:center;">   English (South Africa)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> th-TH </td>
+<td style="text-align:center;">   Thai (Thailand)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> nl-BE </td>
+<td style="text-align:center;">   Dutch (Belgium)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> en-AU </td>
+<td style="text-align:center;">   English (Australia)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> de-DE </td>
+<td style="text-align:center;">   German (Germany)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> en-US </td>
+<td style="text-align:center;">   English (United States)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> pt-BR </td>
+<td style="text-align:center;">   Portuguese (Brazil)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> pl-PL </td>
+<td style="text-align:center;">   Polish (Poland)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> en-IE </td>
+<td style="text-align:center;">   English (Ireland)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> el-GR </td>
+<td style="text-align:center;">   Greek (Greece)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> id-ID </td>
+<td style="text-align:center;">   Indonesian (Indonesia)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> sv-SE </td>
+<td style="text-align:center;">   Swedish (Sweden)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> tr-TR </td>
+<td style="text-align:center;">   Turkish (Turkey)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> pt-PT </td>
+<td style="text-align:center;">   Portuguese (Portugal)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> ja-JP </td>
+<td style="text-align:center;">   Japanese (Japan)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> ko-KR </td>
+<td style="text-align:center;">   Korean (Korea)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> hu-HU </td>
+<td style="text-align:center;">   Hungarian (Hungary)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> cs-CZ </td>
+<td style="text-align:center;">   Czech (Czech Republic)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> da-DK </td>
+<td style="text-align:center;">   Danish (Denmark)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> es-MX </td>
+<td style="text-align:center;">   Spanish (Mexico)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> fr-CA </td>
+<td style="text-align:center;">   French (Canada)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> nl-NL </td>
+<td style="text-align:center;">   Dutch (Netherlands)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> fi-FI </td>
+<td style="text-align:center;">   Finnish (Finland)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> es-ES </td>
+<td style="text-align:center;">   Spanish (Spain)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> it-IT </td>
+<td style="text-align:center;">   Italian (Italy)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> ro-RO </td>
+<td style="text-align:center;">   Romanian (Romania)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> no-NO </td>
+<td style="text-align:center;">   Norwegian(Norway)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> zh-HK </td>
+<td style="text-align:center;">   Chinese (Hong Kong)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> zh-TW </td>
+<td style="text-align:center;">   Chinese (Taiwan)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> sk-SK </td>
+<td style="text-align:center;">   Slovak (Slovakia)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> zh-CN </td>
+<td style="text-align:center;">   Chinese (China)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> ru-RU </td>
+<td style="text-align:center;">   Russian (Russia)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> en-GB </td>
+<td style="text-align:center;">   English (United Kingdom)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> fr-FR </td>
+<td style="text-align:center;">   French (France)</td>
+</tr>
+<tr>
+<td style="text-align:center;"> hi-IN </td>
+<td style="text-align:center;">   Hindi (India)</td>
+</tr>
+</tbody>
+</table>
+
+]]></content>
+  </entry>
+  
+</feed>

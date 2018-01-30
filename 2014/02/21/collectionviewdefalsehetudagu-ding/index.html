@@ -1,0 +1,774 @@
+<!doctype html>
+    <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+    <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+    <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+    <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+
+    
+      
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>CollectionViewでのヘッダー固定 - PGMY Programming Blog</title>
+        <meta name="author" content="PGMY">
+        
+        <meta name="description" content="CollectionViewでのヘッダー固定 2014-02-21 ios Comments コレクションビューでのヘッダーの固定（同じセクションの場合表示されっぱなしになるやつ）の方法がわからず検索していたら出会ったのでメモです。 実装 &hellip;">
+        
+        <meta name="viewport" content="width=device-width">
+        <link rel="canonical" href="http://pgmy.github.io/blog/2014/02/21/collectionviewdefalsehetudagu-ding">
+
+        <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,400italic' rel='stylesheet' type='text/css'>
+        <link href="http://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet" type="text/css">
+
+        
+        <link href="/blog/favicon.png" rel="icon">
+        <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet">
+        <link href="/blog/blog/atom.xml" rel="alternate" title="PGMY Programming Blog" type="application/atom+xml">
+    </head>
+
+
+    <body >
+
+        <header id="header">
+    <div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-4">
+        <a href="/blog/" class="site-title">PGMY Programming Blog</a>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-8">
+        <nav>
+    <input type="checkbox" id="toggle">
+    <label for="toggle" class="toggle" data-open="Main Menu" data-close="Close Menu"></label>
+    <ul class="menu">
+    <li><a href="/blog/">Home</a></li>
+    <li><a href="/blog/archives/">Archives</a></li>
+    <li><a href="/blog/bookmark/">BookMark</a></li>
+    <li><a href="/blog/pgmy/">Me</a></li>
+</ul>
+
+</nav>
+
+    </div>
+</div>
+
+</header>
+
+
+        <div id="main-content">
+
+            <!--[if lte IE 9]>
+<div class="row upgrade-row">
+    <div class="col-lg-12">
+        <div class="upgrade">
+            <i class="upgrade__icon fa fa-warning"></i>
+            <h1 class="upgrade__title h6">Ohnoes!</h1>
+            <p class="upgrade__text">
+                Unfortunately, certain parts of this site may not display correctly in your version of Internet Explorer!<br>
+                If possible, you should consider <a href="http://browsehappy.com/">upgrading your browser</a>.
+            </p>
+        </div>
+    </div>
+</div>
+<!-- <![endif]-->
+
+
+            
+
+            <div class="row top-xs center-sm center-md center-lg site-wrapper">
+                
+                <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8">
+                
+                    <article class="article article--single">
+    <header class="article__header">
+    
+        <h1 class="article__title">CollectionViewでのヘッダー固定</h1>
+    
+
+    
+        <div class="article__meta clearfix">
+            
+
+
+
+
+
+
+    <time class="article__date pull-left" datetime="2014-02-21T03:57:47+00:00" pubdate><i class="fa fa-calendar"></i> 2014-02-21 </time>
+
+
+            
+
+    <div class="article__tags pull-left">
+        <i class="fa fa-tags"></i>
+        <ul class="unstyled">
+        
+
+            
+                <li><a class='category' href='/blog/blog/categories/ios/'>ios</a></li>
+            
+        
+        </ul>
+    </div>
+
+
+            
+                <a class="pull-right" href="#disqus_thread">
+                    Comments <i class="fa fa-comment"></i>
+                </a>
+            
+        </div>
+    
+</header>
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- PGMY-Responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-0667701444055003"
+     data-ad-slot="6896982449"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<br />
+
+
+
+
+
+    <p>コレクションビューでのヘッダーの固定（同じセクションの場合表示されっぱなしになるやつ）の方法がわからず検索していたら出会ったのでメモです。</p>
+
+<div class="github-widget" data-repo="griffin-stewie/CSNFloatingHeaderViewFlowLayout"></div>
+
+
+
+
+<!-- more -->
+
+
+<a name="L......"></a>
+<h2>実装</h2>
+
+<p>UICollectionViewFlowLayoutのサブクラスを作ることで実現すればいいみたいです。
+<a href="https://github.com/griffin-stewie/CSNFloatingHeaderViewFlowLayout">CSNFloatingHeaderViewFlowLayout</a>を見つけました・ω・</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//
+</span><span class='line'>//  CSNFloatingHeaderViewFlowLayout.h
+</span><span class='line'>//
+</span><span class='line'>//  Created by griffin_stewie on 2013/10/14.
+</span><span class='line'>//  Copyright (c) 2013年 cyan-stivy.net. All rights reserved.
+</span><span class='line'>//
+</span><span class='line'>
+</span><span class='line'>#import &lt;UIKit/UIKit.h&gt;
+</span><span class='line'>
+</span><span class='line'>@interface CSNFloatingHeaderViewFlowLayout : UICollectionViewFlowLayout
+</span><span class='line'>
+</span><span class='line'>/** zIndex for header
+</span><span class='line'> default value is 1024
+</span><span class='line'> */
+</span><span class='line'>@property (nonatomic, assign) NSInteger headerViewZIndex;
+</span><span class='line'>
+</span><span class='line'>/** take over property values
+</span><span class='line'> @return new instance
+</span><span class='line'> */
+</span><span class='line'>- (instancetype)initWithFlowLayout:(UICollectionViewFlowLayout *)layout;
+</span><span class='line'>
+</span><span class='line'>@end</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//
+</span><span class='line'>//  CSNFloatingHeaderViewFlowLayout.m
+</span><span class='line'>//
+</span><span class='line'>//  Created by griffin_stewie on 2013/10/14. Based on https://gist.github.com/toblerpwn/5393460
+</span><span class='line'>//  Copyright (c) 2013年 cyan-stivy.net. All rights reserved.
+</span><span class='line'>//
+</span><span class='line'>
+</span><span class='line'>#import "CSNFloatingHeaderViewFlowLayout.h"
+</span><span class='line'>
+</span><span class='line'>@implementation CSNFloatingHeaderViewFlowLayout
+</span><span class='line'>
+</span><span class='line'>- (void)commonInit;
+</span><span class='line'>{
+</span><span class='line'>    _headerViewZIndex = 1024;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>- (id)init
+</span><span class='line'>{
+</span><span class='line'>    self = [super init];
+</span><span class='line'>    if (self) {
+</span><span class='line'>        [self commonInit];
+</span><span class='line'>    }
+</span><span class='line'>    
+</span><span class='line'>    return self;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>- (id)initWithCoder:(NSCoder *)aDecoder
+</span><span class='line'>{
+</span><span class='line'>    self = [super initWithCoder:aDecoder];
+</span><span class='line'>    if (self) {
+</span><span class='line'>        [self commonInit];
+</span><span class='line'>    }
+</span><span class='line'>    
+</span><span class='line'>    return self;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>- (instancetype)initWithFlowLayout:(UICollectionViewFlowLayout *)layout
+</span><span class='line'>{
+</span><span class='line'>    self = [self init];
+</span><span class='line'>    if (self) {
+</span><span class='line'>        self.minimumLineSpacing = layout.minimumLineSpacing;
+</span><span class='line'>        self.minimumInteritemSpacing = layout.minimumInteritemSpacing;
+</span><span class='line'>        self.itemSize = layout.itemSize;
+</span><span class='line'>        self.scrollDirection = layout.scrollDirection;
+</span><span class='line'>        self.headerReferenceSize = layout.headerReferenceSize;
+</span><span class='line'>        self.footerReferenceSize = layout.footerReferenceSize;
+</span><span class='line'>        self.sectionInset = layout.sectionInset;
+</span><span class='line'>    }
+</span><span class='line'>    
+</span><span class='line'>    return self;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
+</span><span class='line'>{
+</span><span class='line'>    NSMutableArray *answer = [[super layoutAttributesForElementsInRect:rect] mutableCopy];
+</span><span class='line'>    UICollectionView * const collectionView = self.collectionView;
+</span><span class='line'>    CGPoint const contentOffset = collectionView.contentOffset;
+</span><span class='line'>    
+</span><span class='line'>    NSMutableIndexSet *missingSections = [NSMutableIndexSet indexSet];
+</span><span class='line'>    for (UICollectionViewLayoutAttributes *layoutAttributes in answer) {
+</span><span class='line'>        if (layoutAttributes.representedElementCategory == UICollectionElementCategoryCell) {
+</span><span class='line'>            [missingSections addIndex:layoutAttributes.indexPath.section];
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>    for (UICollectionViewLayoutAttributes *layoutAttributes in answer) {
+</span><span class='line'>        if ([layoutAttributes.representedElementKind isEqualToString:UICollectionElementKindSectionHeader]) {
+</span><span class='line'>            [missingSections removeIndex:layoutAttributes.indexPath.section];
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>    
+</span><span class='line'>    [missingSections enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+</span><span class='line'>        
+</span><span class='line'>        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:idx];
+</span><span class='line'>        
+</span><span class='line'>        UICollectionViewLayoutAttributes *layoutAttributes = [self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:indexPath];
+</span><span class='line'>        
+</span><span class='line'>        [answer addObject:layoutAttributes];
+</span><span class='line'>        
+</span><span class='line'>    }];
+</span><span class='line'>    
+</span><span class='line'>    for (UICollectionViewLayoutAttributes *layoutAttributes in answer) {
+</span><span class='line'>        
+</span><span class='line'>        if ([layoutAttributes.representedElementKind isEqualToString:UICollectionElementKindSectionHeader]) {
+</span><span class='line'>            
+</span><span class='line'>            NSInteger section = layoutAttributes.indexPath.section;
+</span><span class='line'>            NSInteger numberOfItemsInSection = [collectionView numberOfItemsInSection:section];
+</span><span class='line'>            
+</span><span class='line'>            NSIndexPath *firstObjectIndexPath = [NSIndexPath indexPathForItem:0 inSection:section];
+</span><span class='line'>            NSIndexPath *lastObjectIndexPath = [NSIndexPath indexPathForItem:MAX(0, (numberOfItemsInSection - 1)) inSection:section];
+</span><span class='line'>            
+</span><span class='line'>            BOOL cellsExist;
+</span><span class='line'>            UICollectionViewLayoutAttributes *firstObjectAttrs;
+</span><span class='line'>            UICollectionViewLayoutAttributes *lastObjectAttrs;
+</span><span class='line'>            
+</span><span class='line'>            if (numberOfItemsInSection &gt; 0) { // use cell data if items exist
+</span><span class='line'>                cellsExist = YES;
+</span><span class='line'>                firstObjectAttrs = [self layoutAttributesForItemAtIndexPath:firstObjectIndexPath];
+</span><span class='line'>                lastObjectAttrs = [self layoutAttributesForItemAtIndexPath:lastObjectIndexPath];
+</span><span class='line'>            } else { // else use the header and footer
+</span><span class='line'>                cellsExist = NO;
+</span><span class='line'>                firstObjectAttrs = [self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader
+</span><span class='line'>                                                                        atIndexPath:firstObjectIndexPath];
+</span><span class='line'>                lastObjectAttrs = [self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionFooter
+</span><span class='line'>                                                                       atIndexPath:lastObjectIndexPath];
+</span><span class='line'>                
+</span><span class='line'>            }
+</span><span class='line'>            
+</span><span class='line'>            CGFloat topHeaderHeight = (cellsExist) ? CGRectGetHeight(layoutAttributes.frame) : 0;
+</span><span class='line'>            CGFloat bottomHeaderHeight = CGRectGetHeight(layoutAttributes.frame);
+</span><span class='line'>            CGRect frameWithEdgeInsets = UIEdgeInsetsInsetRect(layoutAttributes.frame,
+</span><span class='line'>                                                               collectionView.contentInset);
+</span><span class='line'>            
+</span><span class='line'>            CGPoint origin = frameWithEdgeInsets.origin;
+</span><span class='line'>            UIEdgeInsets sectionInset = self.sectionInset;
+</span><span class='line'>            
+</span><span class='line'>            origin.y = MIN(
+</span><span class='line'>                           MAX(
+</span><span class='line'>                               contentOffset.y + collectionView.contentInset.top,
+</span><span class='line'>                               (CGRectGetMinY(firstObjectAttrs.frame) - topHeaderHeight - sectionInset.top)
+</span><span class='line'>                               ),
+</span><span class='line'>                           (CGRectGetMaxY(lastObjectAttrs.frame) - bottomHeaderHeight + sectionInset.bottom)
+</span><span class='line'>                           );
+</span><span class='line'>
+</span><span class='line'>            
+</span><span class='line'>            layoutAttributes.zIndex = self.headerViewZIndex;
+</span><span class='line'>            layoutAttributes.frame = (CGRect){
+</span><span class='line'>                .origin = origin,
+</span><span class='line'>                .size = layoutAttributes.frame.size
+</span><span class='line'>            };
+</span><span class='line'>            
+</span><span class='line'>        }
+</span><span class='line'>        
+</span><span class='line'>    }
+</span><span class='line'>    
+</span><span class='line'>    return answer;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>- (BOOL) shouldInvalidateLayoutForBoundsChange:(CGRect)newBound
+</span><span class='line'>{
+</span><span class='line'>    return YES;
+</span><span class='line'>}
+</span><span class='line'>@end</span></code></pre></td></tr></table></div></figure>
+
+
+<a name="L....................."></a>
+<h2>ライセンス情報</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>The MIT License (MIT)
+</span><span class='line'>
+</span><span class='line'>Copyright (c) 2013 griffin-stewie
+</span><span class='line'>
+</span><span class='line'>Permission is hereby granted, free of charge, to any person obtaining a copy of
+</span><span class='line'>this software and associated documentation files (the "Software"), to deal in
+</span><span class='line'>the Software without restriction, including without limitation the rights to
+</span><span class='line'>use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+</span><span class='line'>the Software, and to permit persons to whom the Software is furnished to do so,
+</span><span class='line'>subject to the following conditions:
+</span><span class='line'>
+</span><span class='line'>The above copyright notice and this permission notice shall be included in all
+</span><span class='line'>copies or substantial portions of the Software.
+</span><span class='line'>
+</span><span class='line'>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+</span><span class='line'>IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+</span><span class='line'>FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+</span><span class='line'>COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+</span><span class='line'>IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+</span><span class='line'>CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</span></code></pre></td></tr></table></div></figure>
+
+
+<a name="L........."></a>
+<h2>リンク</h2>
+
+<ul>
+<li><a href="http://qiita.com/griffin_stewie/items/7e8b9ef40481af18286f">UICollectionView で UITableView のセクションヘッダー風の SupplementaryView を実装する</a></li>
+<li><a href="https://github.com/griffin-stewie/CSNFloatingHeaderViewFlowLayout/tree/master/CSNFloatingHeaderViewFlowLayout">CSNFloatingHeaderViewFlowLayout</a></li>
+</ul>
+
+
+
+
+</article>
+
+<section id="post_ad">
+    <div>
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- PGMY-Responsive -->
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-0667701444055003"
+       data-ad-slot="6896982449"
+       data-ad-format="auto"></ins>
+  <script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+</section>
+
+
+<section id="disqus">
+    <h1 class="disqus__title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+
+
+                </div>
+
+                
+                <aside class="sidebar col-xs-12 col-md-4 col-lg-4">
+                    <div class="row">
+
+    
+
+    
+<section class="social col-xs-12 col-sm-6 col-md-12">
+    <h1>
+        Follow me!
+    </h1>
+    <ul class="unstyled">
+        
+        
+        
+        
+        <li><a class="github" href="//github.com/PGMY"><i class="fa fa-github"></i> Github</a></li>
+        
+        
+        
+        
+        
+        
+        
+        <li><a class="twitter" href="//twitter.com/PGMYBIZ"><i class="fa fa-twitter"></i> Twitter</a></li>
+        
+    </ul>
+</section>
+
+
+
+    <section>
+  <h1>About Me</h1>
+  <p>A little something about me.</p>
+</section>
+<section id="recent-posts" class="col-xs-12 col-sm-6 col-md-12">
+    <h1>Recent Posts</h1>
+    <ul class="divided">
+        
+        <li class="post">
+            <a href="/blog/2016/11/10/swift3-processing-time/">Swift3 処理時間の計測</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/10/03/jenkins-macos10-dot-12-sierra/">macOS10.12 SierraにアップデートしたらうちのJenkins執事ちゃんがストライキを起こしてしまったメモ</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/08/31/font/">文字組をコントロールするフォントとライブラリ</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/08/03/uibutton/">uibuttonのtextサイズ自動調整</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/07/25/apptransfer/">iOS アプリ譲渡 App Transfer</a>
+        </li>
+        
+    </ul>
+</section>
+
+  
+  <section class="col-xs-12 col-sm-6 col-md-12">
+    <div class="github-card" data-github="PGMY" data-width="100%" data-height="" data-theme="default"></div>
+    <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
+  </section>
+  
+<section class="col-xs-12 col-sm-6 col-md-12">
+  <a class="qiita-timeline" href="https://qiita.com/users/PGMY" data-qiita-username="PGMY">PGMYのtips</a><script src="//qiita-widget.suin.org/widget.js"></script>
+</section>
+
+<section id="twitter-timeline" class="col-xs-12 col-sm-6 col-md-12">
+    <h1>
+        Latest Tweets
+        
+        <small class="pull-right">
+            <a class="btn" href="//twitter.com/PGMYBIZ" title="@PGMYBIZ on Twitter" target="_blank">
+                <i class="fa fa-external-link"></i>
+            </a>
+        </small>
+        
+    </h1>
+
+    <a class="twitter-timeline" data-dnt="true" href="//twitter.com/PGMYBIZ"  data-widget-id=""  data-link-color="#049cdb" data-tweet-limit="" data-chrome="noheader nofooter transparent noscrollbar">Tweets by @PGMYBIZ</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+<section>
+  <h1>Tag Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/tags/api' style='font-size: 108.57142857142857%'>API(1)</a> <a href='/blog/tags/apptransfer' style='font-size: 108.57142857142857%'>AppTransfer(1)</a> <a href='/blog/tags/assetslibrary' style='font-size: 108.57142857142857%'>AssetsLibrary(1)</a> <a href='/blog/tags/atom' style='font-size: 108.57142857142857%'>atom(1)</a> <a href='/blog/tags/avspeechsynthesizer' style='font-size: 108.57142857142857%'>AVSpeechSynthesizer(1)</a> <a href='/blog/tags/codesign' style='font-size: 108.57142857142857%'>CodeSign(1)</a> <a href='/blog/tags/collectionview' style='font-size: 108.57142857142857%'>CollectionView(1)</a> <a href='/blog/tags/custom' style='font-size: 108.57142857142857%'>Custom(1)</a> <a href='/blog/tags/custom' style='font-size: 108.57142857142857%'>custom(1)</a> <a href='/blog/tags/e-mail-plugin' style='font-size: 108.57142857142857%'>E-Mail plugin(1)</a> <a href='/blog/tags/error' style='font-size: 117.14285714285714%'>Error(2)</a> <a href='/blog/tags/facebook' style='font-size: 108.57142857142857%'>Facebook(1)</a> <a href='/blog/tags/font' style='font-size: 108.57142857142857%'>font(1)</a> <a href='/blog/tags/font' style='font-size: 108.57142857142857%'>Font(1)</a> <a href='/blog/tags/fuelphp' style='font-size: 108.57142857142857%'>FuelPHP(1)</a> <a href='/blog/tags/git' style='font-size: 108.57142857142857%'>Git(1)</a> <a href='/blog/tags/git' style='font-size: 108.57142857142857%'>git(1)</a> <a href='/blog/tags/github' style='font-size: 117.14285714285714%'>Github(2)</a> <a href='/blog/tags/hack' style='font-size: 108.57142857142857%'>hack(1)</a> <a href='/blog/tags/hacklang' style='font-size: 108.57142857142857%'>hacklang(1)</a> <a href='/blog/tags/hex' style='font-size: 108.57142857142857%'>Hex(1)</a> <a href='/blog/tags/homebrew' style='font-size: 108.57142857142857%'>homebrew(1)</a> <a href='/blog/tags/ibeacon' style='font-size: 108.57142857142857%'>iBeacon(1)</a> <a href='/blog/tags/install' style='font-size: 108.57142857142857%'>install(1)</a> <a href='/blog/tags/ios' style='font-size: 125.71428571428572%'>iOS(3)</a> <a href='/blog/tags/jenkins' style='font-size: 108.57142857142857%'>Jenkins(1)</a> <a href='/blog/tags/language' style='font-size: 117.14285714285714%'>Language(2)</a> <a href='/blog/tags/library' style='font-size: 108.57142857142857%'>library(1)</a> <a href='/blog/tags/library' style='font-size: 108.57142857142857%'>Library(1)</a> <a href='/blog/tags/mysql' style='font-size: 108.57142857142857%'>MySQL(1)</a> <a href='/blog/tags/objective-c' style='font-size: 108.57142857142857%'>Objective-C(1)</a> <a href='/blog/tags/octopress' style='font-size: 117.14285714285714%'>Octopress(2)</a> <a href='/blog/tags/oil' style='font-size: 108.57142857142857%'>oil(1)</a> <a href='/blog/tags/osx' style='font-size: 108.57142857142857%'>OSX(1)</a> <a href='/blog/tags/plugin' style='font-size: 108.57142857142857%'>Plugin(1)</a> <a href='/blog/tags/prefectly' style='font-size: 108.57142857142857%'>Prefectly(1)</a> <a href='/blog/tags/rsa' style='font-size: 108.57142857142857%'>RSA(1)</a> <a href='/blog/tags/sample' style='font-size: 108.57142857142857%'>Sample(1)</a> <a href='/blog/tags/sierra' style='font-size: 108.57142857142857%'>Sierra(1)</a> <a href='/blog/tags/snippet' style='font-size: 108.57142857142857%'>Snippet(1)</a> <a href='/blog/tags/snippets' style='font-size: 108.57142857142857%'>snippets(1)</a> <a href='/blog/tags/snippets' style='font-size: 108.57142857142857%'>Snippets(1)</a> <a href='/blog/tags/ssh' style='font-size: 108.57142857142857%'>SSH(1)</a> <a href='/blog/tags/sshpass' style='font-size: 108.57142857142857%'>sshpass(1)</a> <a href='/blog/tags/swift' style='font-size: 160.0%'>Swift(7)</a> <a href='/blog/tags/tagcloud' style='font-size: 108.57142857142857%'>TagCloud(1)</a> <a href='/blog/tags/travisci' style='font-size: 108.57142857142857%'>TravisCI(1)</a> <a href='/blog/tags/uibutton' style='font-size: 108.57142857142857%'>UIButton(1)</a> <a href='/blog/tags/uipickerview' style='font-size: 108.57142857142857%'>uipickerview(1)</a> <a href='/blog/tags/vim' style='font-size: 108.57142857142857%'>vim(1)</a> <a href='/blog/tags/warning' style='font-size: 108.57142857142857%'>Warning(1)</a> <a href='/blog/tags/xcode' style='font-size: 125.71428571428572%'>Xcode(3)</a> <a href='/blog/tags/memo' style='font-size: 108.57142857142857%'>メモ(1)</a> </span>
+</section>
+<section class="col-xs-12 col-sm-6 col-md-12">
+    <h1>PR</h1>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- PGMY-Responsive -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-0667701444055003"
+         data-ad-slot="6896982449"
+         data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</section>
+
+
+</div>
+
+                </aside>
+                
+            </div>
+        </div>
+
+        
+
+    
+    
+
+
+
+
+<footer class="footer">
+    <div class="row middle-xs">
+        
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <p class="footer__copyright">
+    All content copyright PGMY.<br>
+    Code under <a href="//github.com/coogie/oscailte/blob/master/README.md">MIT Licence</a>.
+</p>
+
+        </div>
+        
+        
+    </div>
+</footer>
+
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+<script defer src="/blog/javascripts/octopress.js"></script>
+<script defer src="/blog/javascripts/jquery.githubRepoWidget.min.js"></script>
+
+
+<script>
+    var _gaq=[['_setAccount','UA-34429647-2'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+
+
+<script>
+    var disqus_shortname = 'pgmy';
+    
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://pgmy.github.io/blog/2014/02/21/collectionviewdefalsehetudagu-ding/';
+        var disqus_url = 'http://pgmy.github.io/blog/2014/02/21/collectionviewdefalsehetudagu-ding/';
+        var disqus_script = 'embed.js';
+    
+    (function () {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+<script>
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/blog/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'PGMY',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+</script>
+<script src="/blog/javascripts/github.js"></script>
+
+
+
+
+
+
+
+
+    </body>
+
+</html>

@@ -1,0 +1,697 @@
+<!doctype html>
+    <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+    <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+    <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+    <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+
+    
+      
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>PHPでのMySQL接続APIを選ぶ - PGMY Programming Blog</title>
+        <meta name="author" content="PGMY">
+        
+        <meta name="description" content="PHPでのMySQL接続APIを選ぶ 2014-04-04 php Comments PHPを勉強しはじめたところでMySQLへの接続部分で疑問だらけになったので整理しつつメモしていきます。 MysqliとPOD_MySQL 参考：MySQL用PHPドライバの概要 > どのAPIを使うか &hellip;">
+        <meta name="keywords" content="php-mysql-api">
+        <meta name="viewport" content="width=device-width">
+        <link rel="canonical" href="http://pgmy.github.io/blog/2014/04/04/php-mysql-api">
+
+        <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,400italic' rel='stylesheet' type='text/css'>
+        <link href="http://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet" type="text/css">
+
+        
+        <link href="/blog/favicon.png" rel="icon">
+        <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet">
+        <link href="/blog/blog/atom.xml" rel="alternate" title="PGMY Programming Blog" type="application/atom+xml">
+    </head>
+
+
+    <body >
+
+        <header id="header">
+    <div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-4">
+        <a href="/blog/" class="site-title">PGMY Programming Blog</a>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-8">
+        <nav>
+    <input type="checkbox" id="toggle">
+    <label for="toggle" class="toggle" data-open="Main Menu" data-close="Close Menu"></label>
+    <ul class="menu">
+    <li><a href="/blog/">Home</a></li>
+    <li><a href="/blog/archives/">Archives</a></li>
+    <li><a href="/blog/bookmark/">BookMark</a></li>
+    <li><a href="/blog/pgmy/">Me</a></li>
+</ul>
+
+</nav>
+
+    </div>
+</div>
+
+</header>
+
+
+        <div id="main-content">
+
+            <!--[if lte IE 9]>
+<div class="row upgrade-row">
+    <div class="col-lg-12">
+        <div class="upgrade">
+            <i class="upgrade__icon fa fa-warning"></i>
+            <h1 class="upgrade__title h6">Ohnoes!</h1>
+            <p class="upgrade__text">
+                Unfortunately, certain parts of this site may not display correctly in your version of Internet Explorer!<br>
+                If possible, you should consider <a href="http://browsehappy.com/">upgrading your browser</a>.
+            </p>
+        </div>
+    </div>
+</div>
+<!-- <![endif]-->
+
+
+            
+
+            <div class="row top-xs center-sm center-md center-lg site-wrapper">
+                
+                <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8">
+                
+                    <article class="article article--single">
+    <header class="article__header">
+    
+        <h1 class="article__title">PHPでのMySQL接続APIを選ぶ</h1>
+    
+
+    
+        <div class="article__meta clearfix">
+            
+
+
+
+
+
+
+    <time class="article__date pull-left" datetime="2014-04-04T02:20:28+00:00" pubdate><i class="fa fa-calendar"></i> 2014-04-04 </time>
+
+
+            
+
+    <div class="article__tags pull-left">
+        <i class="fa fa-tags"></i>
+        <ul class="unstyled">
+        
+
+            
+                <li><a class='category' href='/blog/blog/categories/php/'>php</a></li>
+            
+        
+        </ul>
+    </div>
+
+
+            
+                <a class="pull-right" href="#disqus_thread">
+                    Comments <i class="fa fa-comment"></i>
+                </a>
+            
+        </div>
+    
+</header>
+
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- PGMY-Responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-0667701444055003"
+     data-ad-slot="6896982449"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<br />
+
+
+
+
+
+    <p>PHPを勉強しはじめたところでMySQLへの接続部分で疑問だらけになったので整理しつつメモしていきます。</p>
+
+<a name="Mysqli...POD_MySQL"></a>
+<h1>MysqliとPOD_MySQL</h1>
+
+<ul>
+<li>参考：<a href="http://us1.php.net/manual/ja/mysqlinfo.api.choosing.php">MySQL用PHPドライバの概要 > どのAPIを使うか</a></li>
+</ul>
+
+
+<!-- more -->
+
+
+<p>いろんなサイトでMySQLへの接続は<code>mysql_connect</code>を利用すると書かれているものの、マニュアルサイトを見たら</p>
+
+<blockquote><p>この拡張モジュールはPHP5.5.0で非推奨になりました。将来のバージョンで削除される予定です。 <a href="http://www.php.net/manual/ja/book.mysqli.php">MySQLi</a>あるいは<a href="http://www.php.net/manual/ja/ref.pdo-mysql.php">PDO_MySQL</a>を使うべきです。詳細な情報は <a href="http://www.php.net/manual/ja/mysqlinfo.api.choosing.php">MySQL:APIの選択</a>やそれに<a href="http://www.php.net/manual/ja/faq.databases.php#faq.databases.mysql.deprecated">関連するFAQ</a>を参照ください。この関数の代替として、これらが使えます。</p></blockquote>
+
+<p>との警告が赤字ででてました。なるほど。<br/>
+FAQの方には</p>
+
+<blockquote><p>広く使われている拡張モジュールなので、ある日突然消えてしまうなどということはないでしょう。でも、今後新しく書くコードではmysqliかPDO_MySQLを使うことを強く推奨します。</p></blockquote>
+
+<p>と書かれていました。私はこれから勉強するので存在は知りつつも、実際に勉強して使っていくのは<code>mysqli</code>か<code>PDO_MySQL</code>ってことでいいのかな。<br/>
+じゃあどっち使えばいいのよ！となるわけで。</p>
+
+<p>とりあえず比較表がでてました。</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">  </th>
+<th style="text-align:center;"> 　ext/mysqli　 </th>
+<th style="text-align:center;"> 　PDO_MySQL　 </th>
+<th style="text-align:center;"> 　ext/mysql　 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;"> どのバージョンの PHP から使えるか </td>
+<td style="text-align:center;"> 5.0 </td>
+<td style="text-align:center;"> 5.1 </td>
+<td style="text-align:center;"> 2.0</td>
+</tr>
+<tr>
+<td style="text-align:left;"> PHP 5.x に同梱されているか </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Yes</td>
+</tr>
+<tr>
+<td style="text-align:left;"> 開発状況 </td>
+<td style="text-align:center;"> 進行中 </td>
+<td style="text-align:center;"> 進行中 </td>
+<td style="text-align:center;"> 保守対応のみ</td>
+</tr>
+<tr>
+<td style="text-align:left;"> ライフサイクル </td>
+<td style="text-align:center;"> 活動中 </td>
+<td style="text-align:center;"> 活動中 </td>
+<td style="text-align:center;"> 非推奨</td>
+</tr>
+<tr>
+<td style="text-align:left;"> 新規開発でおすすめできるか </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> No</td>
+</tr>
+<tr>
+<td style="text-align:left;"> オブジェクト指向のインターフェイス </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> No</td>
+</tr>
+<tr>
+<td style="text-align:left;"> 手続き型のインターフェイス </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> No </td>
+<td style="text-align:center;"> Yes</td>
+</tr>
+<tr>
+<td style="text-align:left;"> mysqlnd によるノンブロッキングな非同期クエリ </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> No </td>
+<td style="text-align:center;"> No</td>
+</tr>
+<tr>
+<td style="text-align:left;"> 持続的接続 </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Yes</td>
+</tr>
+<tr>
+<td style="text-align:left;"> 文字セット </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Yes</td>
+</tr>
+<tr>
+<td style="text-align:left;"> サーバーサイドのプリペアドステートメント </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> No</td>
+</tr>
+<tr>
+<td style="text-align:left;"> クライアントサイドのプリペアドステートメント </td>
+<td style="text-align:center;"> No </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> No</td>
+</tr>
+<tr>
+<td style="text-align:left;"> ストアドプロシージャ </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> No</td>
+</tr>
+<tr>
+<td style="text-align:left;"> 複数ステートメント </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Most </td>
+<td style="text-align:center;"> No</td>
+</tr>
+<tr>
+<td style="text-align:left;"> トランザクション </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> No</td>
+</tr>
+<tr>
+<td style="text-align:left;"> SQL によるトランザクション制御 </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Yes</td>
+</tr>
+<tr>
+<td style="text-align:left;"> MySQL 5.1+ の全機能への対応 </td>
+<td style="text-align:center;"> Yes </td>
+<td style="text-align:center;"> Most </td>
+<td style="text-align:center;"> No</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>ほむ。わからない言葉がいろいろと。</p>
+
+<a name="L......................................."></a>
+<h2>オブジェクト指向と手続き型</h2>
+
+<p>このあたりの違いは下記サイトを見るととてもわかりやすいです。</p>
+
+<ul>
+<li>参考：<a href="http://quill3.hatenablog.com/entry/20090321/p1">手続き型とオブジェクト指向の違いをWebアプリで理解する</a></li>
+</ul>
+
+
+<p>MySQLの例ではありませんが。<br/>
+両方使えるmysqliで見てみると、</p>
+
+<ul>
+<li>手続き型</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$db = mysqli_connect("example.com", "user", "password", "database");
+</span><span class='line'>$result = mysqli_query($db,"SELECT 'Hello, dear MySQL user!' AS _message FROM DUAL");
+</span><span class='line'>$row = mysqli_fetch_assoc($result);
+</span><span class='line'>echo htmlentities($row['_message']);</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>オブジェクト指向</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$mysqli = new mysqli("example.com", "user", "password", "database");
+</span><span class='line'>$result = $mysqli-&gt;query("SELECT 'Hello, dear MySQL user!' AS _message FROM DUAL");
+</span><span class='line'>$row = $result-&gt;fetch_assoc();
+</span><span class='line'>echo htmlentities($row['_message']);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>こんな感じになるのかなぁ・・・。<br/>
+基本的には手続き型は使わない方向でいこうと思っているのでmysqliでもPDO_MySQLでもどちらでも大丈夫という結論に・ω・</p>
+
+<a name="mysqlnd.........................................................."></a>
+<h2>mysqlnd によるノンブロッキングな非同期クエリ？</h2>
+
+<p>ひとまずmysqlndってなんだ！　⇒　MySQL Native Driver For PHPのことだそうです。</p>
+
+<ul>
+<li>参考：<a href="http://d.hatena.ne.jp/bco/20110101/1293887044">MySQL native driver for PHP(通称mysqlnd)だ</a></li>
+</ul>
+
+
+<blockquote><p>mysqlndの利点は2つある。ひとつはパフォーマンス。オリジナルのmysql(i)拡張およびPDO_MYSQLよりも速い。そしてライセンス。
+mysqlndはGPLv2ではなくPHPライセンスなのだ。</p></blockquote>
+
+<p>パフォーマンスが良くなるってことなのかな？ライセンスについてはマニュアルに詳しく記載されてます。</p>
+
+<ul>
+<li>参考：[PHPマニュアル>mysqlnd>概要]</li>
+</ul>
+
+
+<p>おすすめ機能として下記があげらえていました。</p>
+
+<blockquote><p>MySQL Native Driver には、それ特有の機能もあります。 以下にまとめるこれらの機能は、MySQL Client Library を使った MySQL データベース用の拡張モジュールでは利用できないものです。
+- 持続的接続の改善
+- mysqli_fetch_all() 関数
+- パフォーマンス統計用の関数 mysqli_get_cache_stats()、 mysqli_get_client_stats()、 mysqli_get_connection_stats()<br/>
+パフォーマンス統計機能を活用すれば、 パフォーマンス上のボトルネックを見つけるのに大いに役立つでしょう。</p>
+
+<p>MySQL Native Driver を mysqli 拡張モジュールで使うと、持続的接続も可能です。
+- SSL サポート<br/>
+MySQL Native Driver は PHP 5.3.3 以降で SSL をサポートします。
+- 圧縮プロトコルのサポート<br/>
+PHP 5.3.2 以降では、MySQL Native Driver は圧縮したクライアントサーバープロトコルをサポートします。 5.3.0 や 5.3.1 の時点ではまだ対応していませんでした。 ext/mysql や ext/mysqli では、MySQL Native Driver を使うように設定すればこの機能を使えるようになります。 ただし、PDO_MYSQL については mysqlnd と組み合わせても圧縮機能が使えないことに注意しましょう。</p></blockquote>
+
+<p>つまりPDO_MYSQLはmysqlndの圧縮機能が使えない・非同期クエリが使えない、ということでいいのかな？<br/>
+非同期クエリについては下記に詳しく記載されていました。</p>
+
+<ul>
+<li>参考：<a href="http://fukaoi.org/2012/03/31/php_mysqli">PHPの非同期クエリで並行処理をやってみる</a></li>
+</ul>
+
+
+<a name="L..............."></a>
+<h2>持続的接続</h2>
+
+<ul>
+<li>参考：<a href="http://www.phppro.jp/phpmanual/php/function.mysql-pconnect.html">mysql_pconnect: MySQL サーバへの持続的な接続をオープンする</a></li>
+<li>　　：<a href="http://www.phppro.jp/phpmanual/php/features.persistent-connections.html">持続的データベース接続</a></li>
+</ul>
+
+
+<blockquote><p>mysql_pconnect()は、 mysql_connect()とよく似た動作をしますが、 2 つの大きな違いがあります。<br/>
+1. 1 番目の違いとして、この関数は接続時にまず 同じホスト、ユーザ名、パスワードを有する(持続的)リンクが すでにオープンされていないかどうかを調べます。 それがみつかった場合、新規の接続をオープンする代わりに そのリンクの ID が返されます。<br/>
+1. 2 番目の違いは、スクリプトの実行が終了しても SQL サーバとの接続が 閉じられないということです。そのかわりに、将来再利用されるために リンクがオープンされたままとなります（mysql_close() は、mysql_pconnect() によって確立されたリンクを 閉じません）。</p>
+
+<p>このため、この型のリンクは、'持続的(persistent)&lsquo;であると言われます。</p></blockquote>
+
+<p>つまり、同じホスト、ユーザ名、パスワードを有する場合、スクリプトの実行が終了してもSQLサーバとの接続が閉じられない・・・？<br/>
+いろいろ説明を読むと、注意すべき点が多くあるようで、少し難しい内容でした。<br/>
+まだいろいろ理解しきれていないため、この機能の利用は保留にしようと思います。</p>
+
+<a name="L...................................."></a>
+<h2>プリペアドステートメント</h2>
+
+<ul>
+<li>参考：<a href="http://www.phpbook.jp/pear/pear_db/index12.html">PHPBook プリペアドステートメント</a></li>
+<li>　　：<a href="http://www.atmarkit.co.jp/fsecurity/column/ueno/60.html">今夜こそわかる安全なSQLの呼び出し方　～ 高木浩光氏に聞いてみた</a></li>
+<li>　　：<a href="http://qiita.com/tabo_purify/items/d1166236f3b03c7be60d">PDOで接続、SELECT、プリペアドステートメントとは（PHPでMySQLに接続）</a></li>
+</ul>
+
+
+<blockquote><p>SQLの実行は、SQL文を構文解析する作業と、それを解釈する作業に分かれる。プリペアド・ステートメントというのは、この構文解析をDBMS側で先に済ませておき、そこにパラメータを当てはめて繰り返し使うことで、処理効率を高めるために活用されるものだ。<br/>
+プリペアド・ステートメントを使用していれば、どんなパラメータが与えられても構文解析は変わらないので、結果的にSQLインジェクションによってSQL文の構文が破壊されることは起きない。</p></blockquote>
+
+<ul>
+<li>構文解析作業を先にすませておける。</li>
+<li>パラメータを当てはめて使うことで処理効率が良くなる。</li>
+<li>SQLインジェクションで構文が破壊されることが起きない。(そのままw)</li>
+</ul>
+
+
+<p>ということみたい。なるほどー。これは使わない手はない！<br/>
+ただ、サーバーサイドとクライアントサイドのプリペアドステートメントというのがあるそうだけど、この違いがいまいちわからない。<br/>
+mysqliがクライアントサイドのプリペアドステートメントをサポートしていない。<br/>
+ので、mysqliを使う時はここを調べないといけないけどわからないー＞△＜教えて偉い人！</p>
+
+<a name="L.............................."></a>
+<h2>ストアドプロシージャ</h2>
+
+<ul>
+<li>参考：<a href="http://kozy.heteml.jp/pukiwiki/index.php?MySQL%20%A5%B9%A5%C8%A5%A2%A5%C9%A5%D7%A5%ED%A5%B7%A1%BC%A5%B8%A5%E3">MySQL ストアドプロシージャ</a></li>
+<li>　　：<a href="http://blog.livedoor.jp/sasata299/archives/51180619.html">mysqlのストアドプロシージャの便利さをアピールしてみる </a></li>
+<li>　　：<a href="http://d.hatena.ne.jp/Sikushima/20100610/1276153844">ストアドプロシージャでシステムを構築するとDBサーバの負荷が増えるか</a></li>
+</ul>
+
+
+<blockquote><p>■ストアドプロシージャとは？<br/>
+一連のSQL文や処理を名前をつけてサーバ側に保存し、関数呼び出しのように使用できるもの。<br/>
+■ストアドプロシージャを使うメリットは？<br/>
+- アプリ側の言語を選ばない。（MySQLで実装されていて、呼ぶだけなので）<br/>
+- アプリサーバの負荷が減る。（複雑な処理はMySQL側で実行されているため）</p>
+
+<p>よく似たのに、ストアドファンクションってのもあります。</p></blockquote>
+
+<p>ほむほむ・・・SQL文とか処理を保存しておけて、関数みたいに呼び出すことができると。便利そう！<br/>
+これはどちらでもサポートしているものみたい。</p>
+
+<a name="L..........................."></a>
+<h2>複数ステートメント</h2>
+
+<ul>
+<li>参考：<a href="http://freestyle.nvo.jp/archives/260">最近知ったSQL〜複数のINSERTとUPDATE〜</a></li>
+</ul>
+
+
+<p>これもちょっといまいちわからないままでした・・・。<br/>
+とりあえず？どちらも利用できるようですが、INSERTやUPDATEを複数行まとめて行えるものなのか・・・。<br/>
+似た名前のものに<a href="http://dev.mysql.com/doc/refman/5.1-olh/ja/begin-end.html">複合ステートメント</a>というものがあるようで、これとはまた別なのか？<br/>
+と、ちょっぴり怪しいままです・・・。</p>
+
+<a name="L.........................SQL......................................."></a>
+<h2>トランザクション/SQLによるトランザクション制御</h2>
+
+<ul>
+<li>参考：<a href="http://wiki.bit-hive.com/tomizoo/pg/MySQL%20%A5%C8%A5%E9%A5%F3%A5%B6%A5%AF%A5%B7%A5%E7%A5%F3">MySQL トランザクション</a></li>
+</ul>
+
+
+<blockquote><p>トランザクションを使うと複数のクエリをまとめて１つの処理として扱うことができる。処理の途中でエラーになって処理を取り消したいような場合はROLLBACKをすることで変更内容を元に戻すことができる。</p></blockquote>
+
+<p>トランザクションは元々しっていたので大丈夫でした。<br/>
+注意すべきはMyISAMでは利用できず、InnoDBにしておく必要がある、ということでしょうか。<br/>
+これは両方で利用することができます。重要な機能！</p>
+
+<p>ざっと調べたものをまとめただけですが。内容に誤りがあったり、理解できなかった部分がわかった時にはまた更新する予定です・・・。</p>
+
+
+
+</article>
+
+<section id="post_ad">
+    <div>
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- PGMY-Responsive -->
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-0667701444055003"
+       data-ad-slot="6896982449"
+       data-ad-format="auto"></ins>
+  <script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+</section>
+
+
+<section id="disqus">
+    <h1 class="disqus__title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+
+
+                </div>
+
+                
+                <aside class="sidebar col-xs-12 col-md-4 col-lg-4">
+                    <div class="row">
+
+    
+
+    
+<section class="social col-xs-12 col-sm-6 col-md-12">
+    <h1>
+        Follow me!
+    </h1>
+    <ul class="unstyled">
+        
+        
+        
+        
+        <li><a class="github" href="//github.com/PGMY"><i class="fa fa-github"></i> Github</a></li>
+        
+        
+        
+        
+        
+        
+        
+        <li><a class="twitter" href="//twitter.com/PGMYBIZ"><i class="fa fa-twitter"></i> Twitter</a></li>
+        
+    </ul>
+</section>
+
+
+
+    <section>
+  <h1>About Me</h1>
+  <p>A little something about me.</p>
+</section>
+<section id="recent-posts" class="col-xs-12 col-sm-6 col-md-12">
+    <h1>Recent Posts</h1>
+    <ul class="divided">
+        
+        <li class="post">
+            <a href="/blog/2016/11/10/swift3-processing-time/">Swift3 処理時間の計測</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/10/03/jenkins-macos10-dot-12-sierra/">macOS10.12 SierraにアップデートしたらうちのJenkins執事ちゃんがストライキを起こしてしまったメモ</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/08/31/font/">文字組をコントロールするフォントとライブラリ</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/08/03/uibutton/">uibuttonのtextサイズ自動調整</a>
+        </li>
+        
+        <li class="post">
+            <a href="/blog/2016/07/25/apptransfer/">iOS アプリ譲渡 App Transfer</a>
+        </li>
+        
+    </ul>
+</section>
+
+  
+  <section class="col-xs-12 col-sm-6 col-md-12">
+    <div class="github-card" data-github="PGMY" data-width="100%" data-height="" data-theme="default"></div>
+    <script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
+  </section>
+  
+<section class="col-xs-12 col-sm-6 col-md-12">
+  <a class="qiita-timeline" href="https://qiita.com/users/PGMY" data-qiita-username="PGMY">PGMYのtips</a><script src="//qiita-widget.suin.org/widget.js"></script>
+</section>
+
+<section id="twitter-timeline" class="col-xs-12 col-sm-6 col-md-12">
+    <h1>
+        Latest Tweets
+        
+        <small class="pull-right">
+            <a class="btn" href="//twitter.com/PGMYBIZ" title="@PGMYBIZ on Twitter" target="_blank">
+                <i class="fa fa-external-link"></i>
+            </a>
+        </small>
+        
+    </h1>
+
+    <a class="twitter-timeline" data-dnt="true" href="//twitter.com/PGMYBIZ"  data-widget-id=""  data-link-color="#049cdb" data-tweet-limit="" data-chrome="noheader nofooter transparent noscrollbar">Tweets by @PGMYBIZ</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+<section>
+  <h1>Tag Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/tags/api' style='font-size: 108.57142857142857%'>API(1)</a> <a href='/blog/tags/apptransfer' style='font-size: 108.57142857142857%'>AppTransfer(1)</a> <a href='/blog/tags/assetslibrary' style='font-size: 108.57142857142857%'>AssetsLibrary(1)</a> <a href='/blog/tags/atom' style='font-size: 108.57142857142857%'>atom(1)</a> <a href='/blog/tags/avspeechsynthesizer' style='font-size: 108.57142857142857%'>AVSpeechSynthesizer(1)</a> <a href='/blog/tags/codesign' style='font-size: 108.57142857142857%'>CodeSign(1)</a> <a href='/blog/tags/collectionview' style='font-size: 108.57142857142857%'>CollectionView(1)</a> <a href='/blog/tags/custom' style='font-size: 108.57142857142857%'>Custom(1)</a> <a href='/blog/tags/custom' style='font-size: 108.57142857142857%'>custom(1)</a> <a href='/blog/tags/e-mail-plugin' style='font-size: 108.57142857142857%'>E-Mail plugin(1)</a> <a href='/blog/tags/error' style='font-size: 117.14285714285714%'>Error(2)</a> <a href='/blog/tags/facebook' style='font-size: 108.57142857142857%'>Facebook(1)</a> <a href='/blog/tags/font' style='font-size: 108.57142857142857%'>font(1)</a> <a href='/blog/tags/font' style='font-size: 108.57142857142857%'>Font(1)</a> <a href='/blog/tags/fuelphp' style='font-size: 108.57142857142857%'>FuelPHP(1)</a> <a href='/blog/tags/git' style='font-size: 108.57142857142857%'>Git(1)</a> <a href='/blog/tags/git' style='font-size: 108.57142857142857%'>git(1)</a> <a href='/blog/tags/github' style='font-size: 117.14285714285714%'>Github(2)</a> <a href='/blog/tags/hack' style='font-size: 108.57142857142857%'>hack(1)</a> <a href='/blog/tags/hacklang' style='font-size: 108.57142857142857%'>hacklang(1)</a> <a href='/blog/tags/hex' style='font-size: 108.57142857142857%'>Hex(1)</a> <a href='/blog/tags/homebrew' style='font-size: 108.57142857142857%'>homebrew(1)</a> <a href='/blog/tags/ibeacon' style='font-size: 108.57142857142857%'>iBeacon(1)</a> <a href='/blog/tags/install' style='font-size: 108.57142857142857%'>install(1)</a> <a href='/blog/tags/ios' style='font-size: 125.71428571428572%'>iOS(3)</a> <a href='/blog/tags/jenkins' style='font-size: 108.57142857142857%'>Jenkins(1)</a> <a href='/blog/tags/language' style='font-size: 117.14285714285714%'>Language(2)</a> <a href='/blog/tags/library' style='font-size: 108.57142857142857%'>library(1)</a> <a href='/blog/tags/library' style='font-size: 108.57142857142857%'>Library(1)</a> <a href='/blog/tags/mysql' style='font-size: 108.57142857142857%'>MySQL(1)</a> <a href='/blog/tags/objective-c' style='font-size: 108.57142857142857%'>Objective-C(1)</a> <a href='/blog/tags/octopress' style='font-size: 117.14285714285714%'>Octopress(2)</a> <a href='/blog/tags/oil' style='font-size: 108.57142857142857%'>oil(1)</a> <a href='/blog/tags/osx' style='font-size: 108.57142857142857%'>OSX(1)</a> <a href='/blog/tags/plugin' style='font-size: 108.57142857142857%'>Plugin(1)</a> <a href='/blog/tags/prefectly' style='font-size: 108.57142857142857%'>Prefectly(1)</a> <a href='/blog/tags/rsa' style='font-size: 108.57142857142857%'>RSA(1)</a> <a href='/blog/tags/sample' style='font-size: 108.57142857142857%'>Sample(1)</a> <a href='/blog/tags/sierra' style='font-size: 108.57142857142857%'>Sierra(1)</a> <a href='/blog/tags/snippet' style='font-size: 108.57142857142857%'>Snippet(1)</a> <a href='/blog/tags/snippets' style='font-size: 108.57142857142857%'>snippets(1)</a> <a href='/blog/tags/snippets' style='font-size: 108.57142857142857%'>Snippets(1)</a> <a href='/blog/tags/ssh' style='font-size: 108.57142857142857%'>SSH(1)</a> <a href='/blog/tags/sshpass' style='font-size: 108.57142857142857%'>sshpass(1)</a> <a href='/blog/tags/swift' style='font-size: 160.0%'>Swift(7)</a> <a href='/blog/tags/tagcloud' style='font-size: 108.57142857142857%'>TagCloud(1)</a> <a href='/blog/tags/travisci' style='font-size: 108.57142857142857%'>TravisCI(1)</a> <a href='/blog/tags/uibutton' style='font-size: 108.57142857142857%'>UIButton(1)</a> <a href='/blog/tags/uipickerview' style='font-size: 108.57142857142857%'>uipickerview(1)</a> <a href='/blog/tags/vim' style='font-size: 108.57142857142857%'>vim(1)</a> <a href='/blog/tags/warning' style='font-size: 108.57142857142857%'>Warning(1)</a> <a href='/blog/tags/xcode' style='font-size: 125.71428571428572%'>Xcode(3)</a> <a href='/blog/tags/memo' style='font-size: 108.57142857142857%'>メモ(1)</a> </span>
+</section>
+<section class="col-xs-12 col-sm-6 col-md-12">
+    <h1>PR</h1>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- PGMY-Responsive -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-0667701444055003"
+         data-ad-slot="6896982449"
+         data-ad-format="auto"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</section>
+
+
+</div>
+
+                </aside>
+                
+            </div>
+        </div>
+
+        
+
+    
+    
+
+
+
+
+<footer class="footer">
+    <div class="row middle-xs">
+        
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <p class="footer__copyright">
+    All content copyright PGMY.<br>
+    Code under <a href="//github.com/coogie/oscailte/blob/master/README.md">MIT Licence</a>.
+</p>
+
+        </div>
+        
+        
+    </div>
+</footer>
+
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+<script defer src="/blog/javascripts/octopress.js"></script>
+<script defer src="/blog/javascripts/jquery.githubRepoWidget.min.js"></script>
+
+
+<script>
+    var _gaq=[['_setAccount','UA-34429647-2'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+
+
+<script>
+    var disqus_shortname = 'pgmy';
+    
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://pgmy.github.io/blog/2014/04/04/php-mysql-api/';
+        var disqus_url = 'http://pgmy.github.io/blog/2014/04/04/php-mysql-api/';
+        var disqus_script = 'embed.js';
+    
+    (function () {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+<script>
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/blog/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'PGMY',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+</script>
+<script src="/blog/javascripts/github.js"></script>
+
+
+
+
+
+
+
+
+    </body>
+
+</html>

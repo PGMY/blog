@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: RSA | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/rsa/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[１つの端末で２つのGithubアカウントを利用する]]></title>
+    <link href="http://pgmy.github.io/blog/2016/07/14/another-github-user/"/>
+    <updated>2016-07-14T03:52:22+00:00</updated>
+    <id>http://pgmy.github.io/blog/2016/07/14/another-github-user</id>
+    <content type="html"><![CDATA[<p>毎回手順を忘れるのでメモしておくことにした</p>
+
+<a name="SSH.Key......"></a>
+<h2>SSH Key問題</h2>
+
+<p>Githubだと別のアカウントで同じSSH Keyを利用できないので、１つの端末で別のgithubアカウントを同時に利用しようと思うとちょっと工夫が必要な感じ。</p>
+
+<a name="L.....................SSH.Key..............."></a>
+<h2>アカウント別のSSH Keyを作成する</h2>
+
+<p>普通に・ω・</p>
+
+<pre><code>ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+</code></pre>
+
+<p>ファイル名はデフォルトのままではなくて、そのアカウントとわかる形の名前にしておくのがいい。</p>
+
+<a name="L.ssh.config......"></a>
+<h2>.ssh/config設定</h2>
+
+<p>configに接続情報を記載する。<br/>
+Host名をgithub.comじゃなくてそのアカウント用と分かるような名前をつけてあげる。<br/>
+HostNameはgithub.comのまま。<br/>
+IdentityFileで作成したkeyへのパスを指定する。</p>
+
+<pre><code>Host github-another-user
+  User git
+  Port 22
+  HostName github.com
+  IdentityFile ~/.ssh/another_rsa
+  TCPKeepAlive yes
+  IdentitiesOnly yes
+</code></pre>
+
+<a name="L............"></a>
+<h2>接続する</h2>
+
+<p>通常の <code>git@github.com:PGMY/ProjectName.git</code> で接続するんじゃなくて、configで指定したhost名を書き換えて接続する。</p>
+
+<pre><code>git@github-another-user:PGMY/ProjectName.git
+</code></pre>
+
+<p>これでおけΣｄ・ω・</p>
+]]></content>
+  </entry>
+  
+</feed>

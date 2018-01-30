@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Github | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/github/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[１つの端末で２つのGithubアカウントを利用する]]></title>
+    <link href="http://pgmy.github.io/blog/2016/07/14/another-github-user/"/>
+    <updated>2016-07-14T03:52:22+00:00</updated>
+    <id>http://pgmy.github.io/blog/2016/07/14/another-github-user</id>
+    <content type="html"><![CDATA[<p>毎回手順を忘れるのでメモしておくことにした</p>
+
+<a name="SSH.Key......"></a>
+<h2>SSH Key問題</h2>
+
+<p>Githubだと別のアカウントで同じSSH Keyを利用できないので、１つの端末で別のgithubアカウントを同時に利用しようと思うとちょっと工夫が必要な感じ。</p>
+
+<a name="L.....................SSH.Key..............."></a>
+<h2>アカウント別のSSH Keyを作成する</h2>
+
+<p>普通に・ω・</p>
+
+<pre><code>ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+</code></pre>
+
+<p>ファイル名はデフォルトのままではなくて、そのアカウントとわかる形の名前にしておくのがいい。</p>
+
+<a name="L.ssh.config......"></a>
+<h2>.ssh/config設定</h2>
+
+<p>configに接続情報を記載する。<br/>
+Host名をgithub.comじゃなくてそのアカウント用と分かるような名前をつけてあげる。<br/>
+HostNameはgithub.comのまま。<br/>
+IdentityFileで作成したkeyへのパスを指定する。</p>
+
+<pre><code>Host github-another-user
+  User git
+  Port 22
+  HostName github.com
+  IdentityFile ~/.ssh/another_rsa
+  TCPKeepAlive yes
+  IdentitiesOnly yes
+</code></pre>
+
+<a name="L............"></a>
+<h2>接続する</h2>
+
+<p>通常の <code>git@github.com:PGMY/ProjectName.git</code> で接続するんじゃなくて、configで指定したhost名を書き換えて接続する。</p>
+
+<pre><code>git@github-another-user:PGMY/ProjectName.git
+</code></pre>
+
+<p>これでおけΣｄ・ω・</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[GithubによるエディタAtomな情報まとめて]]></title>
+    <link href="http://pgmy.github.io/blog/2014/04/02/atom/"/>
+    <updated>2014-04-02T08:21:47+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/04/02/atom</id>
+    <content type="html"><![CDATA[<p>ブックマークついでにまとめておきたくて・・・。</p>
+
+<a name="ATOM.-.A.hackable.text.editor.for.the.21st.Century"></a>
+<h1><a href="https://atom.io/">ATOM - A hackable text editor for the 21st Century</a></h1>
+
+<blockquote><p>Atomとは
+GitHub 製テキストエディタ。Sublime のようにデフォルト状態でも十分使える、かつカスタマイズ可能
+      from :<a href="http://qiita.com/spesnova/items/d3096d062d70e7385e9d">GitHub 製エディタ Atom リファレンス</a></p></blockquote>
+
+<!-- more -->
+
+
+<a name="Get.Atom.without.an.invite."></a>
+<h2><a href="https://coderwall.com/p/fmxtzg">Get Atom without an invite.</a></h2>
+
+<p>coderwallからこっそりAtom for Mac. VERSION: 0.69を入手できちゃいます</p>
+
+<a name="L..............."></a>
+<h2>便利系情報</h2>
+
+<a name="ATOM............................"></a>
+<h3>ATOM パッケージ作成情報</h3>
+
+<ul>
+<li><a href="http://yosuke-furukawa.hatenablog.com/entry/2014/03/02/230456">atomのpackageの作り方 from scratch</a></li>
+<li><a href="http://blog.stanaka.org/entry/2014/03/03/225327">Github製エディタAtomでパッケージを作ってみた</a></li>
+</ul>
+
+
+<a name="L......................................."></a>
+<h3>リファレンス・チートシート</h3>
+
+<ul>
+<li><a href="http://qiita.com/spesnova/items/d3096d062d70e7385e9d">GitHub 製エディタ Atom リファレンス</a></li>
+<li><a href="https://bugsnag.com/blog/atom-editor-cheat-sheet">Atom Editor Keyboard Shortcut Cheat Sheet</a></li>
+</ul>
+
+
+<a name="Core.Settings"></a>
+<h2>Core Settings</h2>
+
+<ul>
+<li>Audio Beep<br/>
+ビープ音を鳴らすかどうか</li>
+<li>Destroy Empty Panes</li>
+<li>Exclude Vcs Ignored Paths</li>
+<li>Ignored Names</li>
+<li>Project Home</li>
+</ul>
+
+
+<a name="Editor.Settings"></a>
+<h2>Editor Settings</h2>
+
+<ul>
+<li>Auto Indent</li>
+<li>Font Family</li>
+<li>Font Size</li>
+<li>Non Word Charactors</li>
+<li>Normalize Indent On Paste</li>
+<li>Oreferred Line Length</li>
+<li>Show Indent Guide</li>
+<li>Show Invisibles</li>
+<li>Show Line Numbers</li>
+<li>Soft Tabs</li>
+<li>Soft Wrap</li>
+<li>Soft Wrap At Preferred Line Length</li>
+<li>Tab Length</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

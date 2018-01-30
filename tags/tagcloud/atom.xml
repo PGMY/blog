@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: TagCloud | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/tagcloud/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Octopressでタグクラウドを表示するプラグインを導入してみた]]></title>
+    <link href="http://pgmy.github.io/blog/2014/03/03/tagclound/"/>
+    <updated>2014-03-03T05:12:50+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/03/03/tagclound</id>
+    <content type="html"><![CDATA[<p>OctoPressでタグクラウドを表示するプラグインを導入してみたので作業記録を・・・。</p>
+
+<p>利用したのはこちらのプラグインです。</p>
+
+<div class="github-widget" data-repo="tokkonopapa/octopress-tagcloud"></div>
+
+
+
+
+<!-- more -->
+
+
+<p>カテゴリー部分をタグクラウドとして実現するプラグインですが、タグとカテゴリーは分けて使いたいな・・・と思ったらこんな記事を見つけました！</p>
+
+<p><a href="http://rcmdnk.github.io/blog/2013/04/12/blog-octopress/">Octopressでのタグの運用</a></p>
+
+<p>上記記事の通り上から下まで設定させていただきました・ω・ありがとうございます！</p>
+
+<p>で、残念ながらtag_croud.rbでうまく動作しない部分があったのでそこも修正しました。</p>
+
+<ul>
+<li>タグのリンクが２重になってしまう　tags/tagcloudtagcloud</li>
+<li>タグのページに移動するとタグ部分のリンクがさらに２重になってしまう　tags/tagcloudtagcloudtags/tagcloudtagcloud</li>
+</ul>
+
+
+<p>みたいな感じになってしまったので修正しました。
+設置している環境によるのかも。</p>
+
+<pre><code>tag_dir = config['root'] + config['category_dir'] + '/'
+　↓
+tag_dir = config['tag_dir'] + '/'
+</code></pre>
+
+<pre><code>html = ''
+　↓
+html = ""
+</code></pre>
+
+<p>Rubyは詳しくないんですが、シングルコーテーションだと初期化されないのかな？ダブルコーテーションに変更しました。</p>
+
+<p>これで思った通りに動くようになりました・ω・</p>
+
+<p>ありがたく使わせていただきます＞ω＜ありがとうございます！</p>
+]]></content>
+  </entry>
+  
+</feed>

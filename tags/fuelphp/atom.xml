@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: FuelPHP | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/fuelphp/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[FuelPHPを初めてみる #00インストール]]></title>
+    <link href="http://pgmy.github.io/blog/2014/04/21/fuelphp0/"/>
+    <updated>2014-04-21T07:38:04+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/04/21/fuelphp0</id>
+    <content type="html"><![CDATA[<a name="L...............FuelPHP"></a>
+<h1>はじめてのFuelPHP</h1>
+
+<p>ちょっとさわってみることになったのでいろいろとメモしていきたいなと思います。<br/>
+環境はMacOSXで。<br/>
+oilコマンドからのプロジェクト作成までです。</p>
+
+<!-- more -->
+
+
+<a name="oil....................."></a>
+<h2>oilのインストール</h2>
+
+<p>コマンドラインからだと簡単インストール。<br/>
+下記コマンドを実行すればオッケーです。</p>
+
+<pre><code>curl get.fuelphp.com/oil | sh
+</code></pre>
+
+<a name="L..........................."></a>
+<h2>プロジェクトの作成</h2>
+
+<p>やることを一気に書いちゃいます。</p>
+
+<pre><code>oil create [projectName]
+cd [projectName]
+rm -rf .git .gitmodules *.md docs fuel/core fuel/packages
+git init
+git submodule add git://github.com/fuel/core.git fuel/core
+git submodule add git://github.com/fuel/oil.git fuel/packages/oil
+git submodule add git://github.com/fuel/auth.git fuel/packages/auth
+git submodule add git://github.com/fuel/parser.git fuel/packages/parser
+git submodule add git://github.com/fuel/orm.git fuel/packages/orm
+git submodule add git://github.com/fuel/email.git fuel/packages/email
+git submodule foreach 'git checkout 1.7/master'
+git add .
+git commit -m "initial commit"
+</code></pre>
+
+<p>クローンする時は</p>
+
+<pre><code>git clone --recursive [リポジトリURL]
+</code></pre>
+
+<p>サブモジュールをアップデートしたい時は</p>
+
+<pre><code>git submodule foreach 'git pull'
+git submodule foreach 'git checkout [目的のバージョン]/master'
+</code></pre>
+
+<a name="L..........................."></a>
+<h1>エラーが出たところ</h1>
+
+<p>インストールする時にいくつかエラーが出てたのでその辺りをまとめて。</p>
+
+<a name="default_timezone.................."></a>
+<h2>default_timezoneの設定エラー</h2>
+
+<p><code>oil create</code>した時に</p>
+
+<pre><code>Error - date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in COREPATH/classes/fuel.php on line 161
+</code></pre>
+
+<p>タイムゾーンの設定ができてないよ！のエラー。<br/>
+これは<code>config.php</code>のtimezoneを設定すればオッケーです。</p>
+
+<pre><code>vi fuel/app/config/config.php
+</code></pre>
+
+<pre><code>'default_timezone'   =&gt; 'Asia/Tokyo',
+</code></pre>
+
+<p>97行目あたりに<code>// 'default_timezone'   =&gt; null,</code>とコメントアウトされている部分があるのでここを変更。</p>
+
+<a name="Composer..................................................."></a>
+<h2>Composerがインストールできてない！のエラー</h2>
+
+<p>そのままプロジェクトを配置してアクセスした時にブラウザに</p>
+
+<pre><code>Composer is not installed. Please run "php composer.phar update" in the root to install Composer
+</code></pre>
+
+<p>が表示される。</p>
+
+<p>プロジェクトを置いたルートディレクトリ(<code>composer.phar</code>が置かれているディレクトリ)で</p>
+
+<pre><code>php composer.phar update
+</code></pre>
+
+<p>をすればオッケーです。</p>
+
+<a name="L......"></a>
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://qiita.com/L_e_k_o/items/956bd92645769dece5e7">FuelPHPプロジェクトをgit管理するときにすべきこと</a>
+もはやこのページのブックマークを残しておきたいがための記事ですが。</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

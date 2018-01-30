@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Hex | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/hex/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[背景が時計のHexColorになる時計]]></title>
+    <link href="http://pgmy.github.io/blog/2014/06/24/hex-color-watch/"/>
+    <updated>2014-06-24T05:21:12+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/06/24/hex-color-watch</id>
+    <content type="html"><![CDATA[<p><a href="http://www.jacopocolo.com/hexclock/">HexClock</a>というサイトを見つけました・ω・<br/>
+どうやら背景が時計の時間・分・秒で構成された６桁の数字の色になるサイト。</p>
+
+<p>面白い＞ω＜<br/>
+ので、アプリにしてみた。</p>
+
+<div class="github-widget" data-repo="PGMY/HexColorWatch"></div>
+
+
+<p>さて、これをせっかくなのでSwiftにするべく奮闘していこうと思いまする。</p>
+
+<!-- more -->
+
+
+<a name="Objective-C...............Swift........................"></a>
+<h1>Objective-CのコードをSwiftへ切り替えていく</h1>
+
+<a name="L.................."></a>
+<h2>カテゴリ作成</h2>
+
+<p>UIColorを拡張してHexのStringからUIColorを生成する関数を追加する形をとってます。<br/>
+Swiftでのカテゴリは<code>extension</code>でいいのかな？<br/>
+ファイル名は<code>UIColor+Hex.swift</code>でいいのかな？<br/>
+とりあえず<code>UIColor+Hex.swift</code>にしてみます。</p>
+
+<pre><code>extension UIColor {
+  class func color(hex: Int) -&gt; UIColor{
+    let red :CGFloat = CGFloat(((hex &amp; 0xff000000) &gt;&gt; 24))/225.0
+    let green :CGFloat = CGFloat(((hex &amp; 0x00ff0000) &gt;&gt; 16))/225.0
+    let blue :CGFloat = CGFloat(((hex &amp; 0x0000ff00) &gt;&gt; 8))/225.0
+    let alpha :CGFloat = CGFloat((hex &amp; 0x000000ff))/225.0
+    return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+  }
+  class func color(hexString:String) -&gt; UIColor {
+    var hex:UInt32 = 0x0;
+    var scanner:NSScanner = NSScanner(string: hexString)
+    scanner.scanHexInt(&amp;hex)
+    return self.color(Int(hex))
+  }
+}
+</code></pre>
+
+<p>こんな感じかな？<br/>
+関数名の付け方がまだいまいちですorz<br/>
+とりあえずこれで行きます・ω・´</p>
+
+<a name="NSTimer.................."></a>
+<h2>NSTimerをセットする</h2>
+
+<p>しまったセレクタの書き方がわからないΣ<br/>
+Objective-Cでいう<code>@selector(hoge:)</code>の部分。<br/>
+Timerを使って</p>
+
+<pre><code>self.timer = [NSTimer scheduledTimerWithTimeInterval:0.01
+                                              target:self
+                                            selector:@selector(onTimer:)
+                                            userInfo:nil
+                                             repeats:YES];
+</code></pre>
+
+<p>と書いていたところをSwiftにするには・・・。</p>
+
+<pre><code>self.timer = NSTimer.scheduledTimerWithTimeInterval(0.01,target:self, selector:"onTimer", userInfo:nil, repeats:true)
+</code></pre>
+
+<pre><code>func onTimer(){
+  println("Timer")
+}
+</code></pre>
+
+<p>こんな形になりました。<br/>
+引数つきのセレクタってどうするんだろう・・・Σ<br/>
+とりあえずこれでいく！！</p>
+
+<p>と思ったら記事にしていただいている方たいらっしゃいました。<br/>
+⇒<a href="http://tototti.hatenablog.com/entry/2014/06/19/205820">SwiftでiOS SDKの「複数の引数がある@selector」を使う方法。</a><br/>
+普通に<code>:</code>つけるだけでした</p>
+
+<pre><code>self.timer = NSTimer.scheduledTimerWithTimeInterval(0.01,target:self, selector:"onTimer:", userInfo:nil, repeats:true)
+</code></pre>
+
+<pre><code>func onTimer(timer:NSTimer){
+  println("Timer")
+}
+</code></pre>
+
+<p>そりゃそうだ。ちょっと寝ぼけてた・ω・｀</p>
+
+<a name="L.................."></a>
+<h1>問題がおきた</h1>
+
+<p>さて。</p>
+
+<div class="github-widget" data-repo="PGMY/HexColorWatch"></div>
+
+
+<p>ここに一応Objective-CのソースとSwiftのソース(プロジェクトファイルからはSwiftを参照するようになってまする)を置いてあるわけですが・・・<br/>
+Objective-Cのソースをそのまんまの形でSwiftにしたんだけど(不要なViewつくってたのでそれはなくした)画面がチカチカ点滅するようになってしまいましたorz</p>
+
+<a name="L......"></a>
+<h2>原因</h2>
+
+<p>onTimerの中の処理を</p>
+
+<pre><code>var df : NSDateFormatter = NSDateFormatter()
+df.dateFormat = "HHmmss"
+var str:String = df.stringFromDate(NSDate.date())
+self.backGroundView!.backgroundColor = UIColor.color(str+"FF")
+self.hexWatchLabel!.text = "#"+str
+</code></pre>
+
+<p>こんな形にしていました。<br/>
+が、呼び出したかった<code>class func color(hexString:String) -&gt; UIColor</code>ではなく、<code>class func color(hex: Int) -&gt; UIColor</code>に入ってきてたのが原因でした。<br/>
+ほむ・・・<br/>
+片方の引数を<code>hexString</code>とかしちゃってたのがだめなのかと思って統一してみても駄目でした。</p>
+
+<pre><code>class func color(hex: Int) -&gt; UIColor
+class func color(hex:String) -&gt; UIColor
+</code></pre>
+
+<p>playgroundで同じ状況を作ってみる。</p>
+
+<pre><code>class SampleClass {
+  class func testFunc(a:String){
+    println("String")
+  }
+
+  class func testFunc(a:Int){
+    println("Int")
+  }
+}
+
+SampleClass.testFunc("TEST")
+SampleClass.testFunc(123)
+</code></pre>
+
+<p>出力結果は</p>
+
+<pre><code>String
+Int
+</code></pre>
+
+<p>うぅむ・・・わからないΣ</p>
+
+<a name="L......"></a>
+<h2>解決</h2>
+
+<p>Optional Valueをつけてないのが原因だったみたい？です。</p>
+
+<pre><code>class func color(hex: Int!) -&gt; UIColor
+class func color(hex:String!) -&gt; UIColor
+</code></pre>
+
+<p>引数のところに<code>!</code>をつけるといけましたΣ<br/>
+うぅむ・・・！！！！<br/>
+まだ慣れない。</p>
+
+<p>ということでここで一旦完成です。</p>
+
+<a name="L..........................."></a>
+<h1>お世話になりました</h1>
+
+<ul>
+<li><a href="http://nsblogger.hatenablog.com/entry/2014/06/09/swift_string">Swiftの文字列操作まとめ</a></li>
+<li><a href="http://qiita.com/edo_m18/items/ce4e436b78db2e56542d">[Swift] ちょっとしたメモ</a></li>
+<li><a href="http://tototti.hatenablog.com/entry/2014/06/19/205820">SwiftでiOS SDKの「複数の引数がある@selector」を使う方法。</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

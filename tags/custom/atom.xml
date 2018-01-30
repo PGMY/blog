@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: custom | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/custom/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[initWithFrameの大きさでUIPickerViewを作る]]></title>
+    <link href="http://pgmy.github.io/blog/2014/05/14/uipickerview/"/>
+    <updated>2014-05-14T04:52:12+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/05/14/uipickerview</id>
+    <content type="html"><![CDATA[<p>UIPickerViewはinitWithFrameでframeを指定してもその大きさには作られてこないので、その大きさで作れるpicker作りました。<br/>
+ちょっと変えただけ。</p>
+
+<div class="github-widget" data-repo="PGMY/MYPickerView"></div>
+
+]]></content>
+  </entry>
+  
+</feed>

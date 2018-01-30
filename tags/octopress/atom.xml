@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Octopress | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/octopress/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Octopress+Travis CI]]></title>
+    <link href="http://pgmy.github.io/blog/2014/07/03/octopress-plus-travis-ci/"/>
+    <updated>2014-07-03T02:56:41+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/07/03/octopress-plus-travis-ci</id>
+    <content type="html"><![CDATA[<p>OctopressをTravis CIを使って自動デプロイに挑戦してみましたΣ<br/>
+なんとも試行錯誤しまくるハメになったものの、<a href="http://blog.yasuoza.com/2014/01/13/octopress-plus-github-pages-plus-travis/">Octopress + GitHub Pages + Travis</a>の通りにやってやっとこさうまく行きました。<br/>
+はじめはトークンを利用しての方法にしてたんですがうまく行かず、結局公開鍵使ってのデプロイですー。</p>
+
+<!-- more -->
+
+
+<a name="Step.1.-.travis................................."></a>
+<h2>Step 1 - travisコマンドをインストール</h2>
+
+<pre><code>gem install travis
+</code></pre>
+
+<p>これをたたけばオッケーです。<br/>
+環境によっては<code>sudo</code>権限必要ですよーう！</p>
+
+<a name="Step.2.-.TravisCI...................................."></a>
+<h2>Step 2 - TravisCI用の鍵を作って登録します</h2>
+
+<pre><code># 鍵を作成する
+ssh-keygen -t rsa -C 'youremail@examp.com' -f ~/.ssh/travis_rsa
+# クリップボードにコピーする
+cat ~/.ssh/travis_rsa.pub | pbcopy
+</code></pre>
+
+<p><code>https://github.com/ユーザー名/リポジトリ名/settings/keys</code><br/>
+上記URLからデプロイキーを登録します</p>
+
+<a name="Step.3.-.Prose................................."></a>
+<h2>Step 3 - Proseのための設定を追加する</h2>
+
+<p><code>_config.yml</code>に下記をそのまま追加させてもらいました</p>
+
+<pre><code>#prose.io settings
+prose:
+  rooturl: "source"
+  metadata:
+    "source/_posts":
+      - name: "layout"
+        field:
+          element: "hidden"
+          value: "post"
+      - name: "title"
+        field:
+          element: "text"
+          value: "Title"
+      - name: "comments"
+        field:
+          label: "Allow comments"
+          element: "checkbox"
+          value: true
+      - name: "categories"
+        field:
+          element: "text"
+          value: "misc"
+      - name: "published"
+        field:
+          label: "Published"
+          element: "checkbox"
+          value: true
+</code></pre>
+
+<p>Proseから編集する際のルートとなるディレクトリと編集できるファイルを設定します。<br/>
+詳細は<a href="https://github.com/prose/prose/wiki/Prose-Configuration">Prose Configuration</a>に記載されているようですが、私は<a href="http://rogerz.github.io/blog/2013/02/21/prose-io-github-travis-ci/">参考先</a>のデータをそのまま利用させてもらいました。</p>
+
+<a name="Step.4.-.TravisCI................................."></a>
+<h2>Step 4 - TravisCIのための設定を追加する</h2>
+
+<p><code>.travis.yml</code>を下記のように書きます</p>
+
+<pre><code>language: ruby
+rvm:
+- 2.1.0
+branches:
+  only:
+  - master
+before_script:
+- git config --global user.name "ユーザー名(via Travis CI)"
+- git config --global user.email "メールアドレス"
+- git remote set-url origin $REPO.git
+- if [ -z "$id_rsa_{1..23}" ]; then echo 'No $id_rsa_{1..23} found !' ; exit 1; fi
+- echo -n $id_rsa_{1..23} &gt;&gt; ~/.ssh/travis_rsa_64
+- base64 --decode --ignore-garbage ~/.ssh/travis_rsa_64 &gt; ~/.ssh/id_rsa
+- chmod 600 ~/.ssh/id_rsa
+- echo -e "Host github.com\n\tStrictHostKeyChecking no\n" &gt;&gt; ~/.ssh/config
+- bundle exec rake setup_github_pages[$REPO]
+- git checkout -- _config.yml
+script:
+- bundle exec rake generate
+after_script:
+- bundle exec rake deploy
+env:
+  global:
+  - REPO="git@github.com:ユーザー名/リポジトリ"
+</code></pre>
+
+<a name="Step.5.-................"></a>
+<h2>Step 5 - 鍵の暗号化</h2>
+
+<p>base64で鍵を暗号化します。</p>
+
+<pre><code># Macを使っている場合はこれで。
+$ base64 --break=0 ~/.ssh/travis_rsa &gt; ~/.ssh/travis_rsa_64
+
+# Linuxの場合はこっちを使います
+# base64 --wrap=0 ~/.ssh/travis_rsa &gt; ~/.ssh/travis_rsa_64
+
+$ bash &lt;(cat ~/.ssh/travis_rsa_64 | perl -pe 's/(.{100})/$1\n/g' | nl | perl -pe 's/\s*(\d+)\s*(.*)/travis encrypt id_rsa_$1="$2" --add/')
+</code></pre>
+
+<p><code>.travis.yml</code>内の<code>$id_rsa_{1..23}</code>部分の<code>23</code>の個数を数えます</p>
+
+<pre><code>cat ~/.ssh/travis_rsa_64 | perl -pe 's/(.{100})/$1\n/g' | nl | tail
+</code></pre>
+
+<pre><code>...
+21  ZktBVTJMZHFZajA0UUpFZnQvd01mblRDTWQKRVBMdHF3QU9rM05wOUh5T3V0MlZ1SnREa3VHVU14dUlKWWcvT0JDU0thSEhUMW1P
+22  bWJ5eSt5QmtUdkdiQkx3OApPT29lRFBzLzRwUEpibjN5eTVCemk2TEtLK3hwRHBzYUg5MHZwUkg3WXdRd3NLQUNvdElLNHdzPQot
+23  LS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
+...
+</code></pre>
+
+<p>こんな感じに出力されるので、左側の数字を使います。</p>
+
+<a name="Step.6.-.Rakefile........."></a>
+<h2>Step 6 - Rakefileを修正</h2>
+
+<pre><code>-  cd "#{deploy_dir}" do
+-    system "git pull"
++  cd "#{deploy_dir}" do
++    system "git pull origin #{deploy_branch}"
+</code></pre>
+
+<p>これでオッケーでした！！パチパチ。</p>
+
+<a name="L......"></a>
+<h2>参考</h2>
+
+<ul>
+<li><a href="http://rogerz.github.io/blog/2013/02/21/prose-io-github-travis-ci/">Octopress+Prose+Github+Travis CI = Coders' Blog</a></li>
+<li><a href="http://gutti.jp/blog/2014/02/19/octopress-travis-ci/">OctopressをTravis CIでデプロイするやつ</a></li>
+<li><a href="http://pchw.github.io/blog/2013/06/27/octopress-travis/">OctopressとTravis CIを連携させてBlog生成を自動にする</a></li>
+<li><a href="http://blog.yasuoza.com/2014/01/13/octopress-plus-github-pages-plus-travis/">Octopress + GitHub Pages + Travis</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Octopressでjavascripts/libs/jXHR.js 404 (Not Found)]]></title>
+    <link href="http://pgmy.github.io/blog/2014/02/10/octopressdejavascripts-slash-libs-slash-jxhr-dot-js-404-not-found/"/>
+    <updated>2014-02-10T06:41:04+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/02/10/octopressdejavascripts-slash-libs-slash-jxhr-dot-js-404-not-found</id>
+    <content type="html"><![CDATA[<p>Octopressを設置するとコンソールにエラー出力が。</p>
+
+<pre><code>GET http://pgmy.github.io/javascripts/libs/jXHR.js 404 (Not Found) 
+</code></pre>
+
+<p>このブログをおいているのが<code>http://pgmy.github.io/blog</code>なので正しくは</p>
+
+<pre><code>http://pgmy.github.io/blog/javascripts/libs/jXHR.js
+</code></pre>
+
+<p>にならないといけないところ。</p>
+
+<p>検索すると同様の問題が出てきたのでメモ。
+- <a href="http://giskou.com/blog/octopress-finally-working/">Octopress Finally Working</a>
+- <a href="https://github.com/imathis/octopress/issues/221">jXHR in github.html has wrong URL #221</a></p>
+
+<pre><code>jxhr.src = '/javascripts/libs/jXHR.js'
+</code></pre>
+
+<p>となっている箇所を</p>
+
+<pre><code>jxhr.src = '/blog/javascripts/libs/jXHR.js'
+</code></pre>
+
+<p>へ変更する</p>
+
+<p>これでオッケーΣd・ω・</p>
+]]></content>
+  </entry>
+  
+</feed>

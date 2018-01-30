@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+    <title><![CDATA[Category: jenkins | PGMY Programming Blog]]></title>
+    <link href="http://pgmy.github.io/blog/categories/jenkins/atom.xml" rel="self"/>
+    <link href="http://pgmy.github.io/blog/"/>
+    <updated>2018-01-30T07:51:29+00:00</updated>
+    <id>http://pgmy.github.io/blog/</id>
+    <author>
+        <name><![CDATA[PGMY]]></name>
+        
+      </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+
+    
+    <entry>
+        <title type="html"><![CDATA[Jenkins 拡張E-mailの設定]]></title>
+        <link href="http://pgmy.github.io/blog/2015/10/13/jenkins-email-settings/"/>
+        <updated>2015-10-13T02:46:46+00:00</updated>
+        <id>http://pgmy.github.io/blog/2015/10/13/jenkins-email-settings</id>
+        <content type="html"><![CDATA[<a name="L..............."></a>
+<h1>プラグイン</h1>
+
+<a name="L......................................................................................."></a>
+<h1>お世話になりました本当にありがとうございます！！！！！！！</h1>
+
+<p><a href="http://changesworlds.com/2015/03/automation-of-mail-notification-by-jenkins/">Jenkinsによるメール通知の自動化</a></p>
+]]></content>
+    </entry>
+    
+</feed>

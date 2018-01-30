@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: snippets | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/snippets/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Swift3 処理時間の計測]]></title>
+    <link href="http://pgmy.github.io/blog/2016/11/10/swift3-processing-time/"/>
+    <updated>2016-11-10T02:11:07+00:00</updated>
+    <id>http://pgmy.github.io/blog/2016/11/10/swift3-processing-time</id>
+    <content type="html"><![CDATA[<pre><code>let start = Date()
+// 処理
+let elapsed = Date().timeIntervalSince(start)
+print(elapsed)
+</code></pre>
+
+<pre><code>class Benchmark {
+
+    // 開始時刻を保存する変数
+    var startTime: Date
+    var key: String
+
+    // 処理開始
+    init(_ key: String) {
+        self.startTime = Date()
+        self.key = key
+    }
+
+    // 処理終了
+    func finish() {
+        let elapsed = Date().timeIntervalSince(self.startTime) as Double
+        let formatedElapsed = String(format: "%.3f", elapsed)
+        print("Benchmark: \(key), Elasped time: \(formatedElapsed)(s)")
+    }
+
+    // 処理をブロックで受け取る
+    class func measure(key: String, block: () -&gt; ()) {
+        let benchmark = Benchmark(key)
+        block()
+        benchmark.finish()
+    }
+}
+</code></pre>
+
+<p><a href="http://qiita.com/tady/items/40d7c4feecda337cf271">Swiftで重い処理の処理時間を測定する</a></p>
+]]></content>
+  </entry>
+  
+</feed>

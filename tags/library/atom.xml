@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: library | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/library/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[iOSで気になるライブラリ Swift編]]></title>
+    <link href="http://pgmy.github.io/blog/2014/06/25/swift-library/"/>
+    <updated>2014-06-25T01:59:36+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/06/25/swift-library</id>
+    <content type="html"><![CDATA[<p>iOSで気になるライブラリ Swift編
+気になってるだけなので確認をしっかりしてないものもあります。</p>
+
+<!-- more -->
+
+
+<a name="Library"></a>
+<h1>Library</h1>
+
+<a name="Alart"></a>
+<h2>Alart</h2>
+
+<ul>
+<li><a href="https://github.com/vikmeup/SCLAlertView-Swift">SCLAlertView-Swift</a><br/>
+FlatなデザインのAlertView
+
+<a name="View.Layout"></a>
+<h2>View/Layout</h2></li>
+<li><a href="https://github.com/robb/Cartography">Cartography</a><br/>
+オートレイアウト</li>
+<li><a href="https://github.com/indragiek/SwiftAutoLayout">SwiftAutoLayout</a><br/>
+オートレイアウト</li>
+<li><a href="https://github.com/lexrus/LTMorphingLabel">LTMorphingLabel</a><br/>
+文字列がモーフィングしながら変化するラベル</li>
+</ul>
+
+
+<a name="Data"></a>
+<h2>Data</h2>
+
+<ul>
+<li><a href="https://github.com/lingoer/SwiftyJSON">SwiftyJSON</a><br/>
+jsonライブラリ</li>
+<li><a href="https://github.com/FahimF/SQLiteDB">SQLiteDB</a><br/>
+SQLiteのラッパーライブラリ</li>
+<li><a href="https://github.com/slazyk/Observable-Swift">Observable-Swift</a></li>
+<li><a href="https://github.com/ankurp/Dollar.swift">Dollar.swift</a></li>
+<li><a href="https://github.com/maxpow4h/swiftz">swiftz</a></li>
+</ul>
+
+
+<a name="L........."></a>
+<h2>処理系</h2>
+
+<ul>
+<li><a href="https://bitbucket.org/al45tair/async">Async Swift</a></li>
+</ul>
+
+
+<a name="L......"></a>
+<h2>拡張</h2>
+
+<ul>
+<li><a href="https://github.com/pNre/ExSwift">ExSwift</a><br/>
+拡張機能つめあわせ</li>
+</ul>
+
+
+<a name="L........."></a>
+<h2>テスト</h2>
+
+<ul>
+<li><a href="https://github.com/modocache/Quick">Quick</a></li>
+</ul>
+
+
+<a name="Sample"></a>
+<h1>Sample</h1>
+
+<a name="L........."></a>
+<h2>ゲーム</h2>
+
+<ul>
+<li><a href="https://github.com/fullstackio/FlappySwift">FlappySwift</a><br/>
+<a href="http://ja.wikipedia.org/wiki/FLAPPY">FLAPPY</a>をSwiftで書いたサンプル</li>
+<li><a href="https://github.com/austinzheng/swift-2048">swift-2048</a></li>
+<li><a href="https://github.com/JakeLin/SwiftWeather">SwiftWeather</a></li>
+<li><a href="https://github.com/asduk/Flight-Fight-In-Swift">Flight-Fight-In-Swift</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: AssetsLibrary | PGMY Programming Blog]]></title>
+  <link href="http://pgmy.github.io/blog/tags/assetslibrary/atom.xml" rel="self"/>
+  <link href="http://pgmy.github.io/blog/"/>
+  <updated>2018-01-30T07:51:29+00:00</updated>
+  <id>http://pgmy.github.io/blog/</id>
+  <author>
+    <name><![CDATA[PGMY]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Assetsを表示するプログラムをSwiftにしてみる]]></title>
+    <link href="http://pgmy.github.io/blog/2014/06/27/assetslibrary-swift/"/>
+    <updated>2014-06-27T05:35:19+00:00</updated>
+    <id>http://pgmy.github.io/blog/2014/06/27/assetslibrary-swift</id>
+    <content type="html"><![CDATA[<p>カメラロールの写真をAssetsLibraryを使って取り出して日付順にソートするプログラムがありまする。</p>
+
+<div class="github-widget" data-repo="PGMY/AssetsLibrary"></div>
+
+
+<p>これをSwiftに書き換えていく記録をつけていきますー。<br/>
+作業を順番に記録していくので構成はちょっとバラバラするかもしれません・・・。</p>
+
+<p><em>つっこみ募集中</em></p>
+
+<!-- more -->
+
+
+<a name="L..........................."></a>
+<h1>基本部分の書き換え</h1>
+
+<a name="main.........AppDelegate"></a>
+<h2>main関数とAppDelegate</h2>
+
+<p>Swiftに書き換えるにはmain関数のファイルを削除し、AppDelegateクラスに<code>@UIApplicationMain</code>をつければオッケーです。</p>
+
+<pre><code>import UIKit
+
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+  var window: UIWindow?
+  var myRootViewController: MYRootViewController?
+
+  func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -&gt; Bool {
+    self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+    self.window!.backgroundColor = UIColor.whiteColor()
+    self.myRootViewController = MYRootViewController(nibName: nil, bundle: nil)
+    self.window!.rootViewController = self.myRootViewController;
+    self.window!.makeKeyAndVisible()
+    return true
+  }
+  .....
+</code></pre>
+
+<p>こんな感じ。もはやいつもの光景</p>
+
+<a name="TabBarController.................."></a>
+<h2>TabBarControllerでぷち詰まり</h2>
+
+<pre><code>self.dateViewController = DateViewController(nibName:nil, bundle:nil)
+
+var tabs = [self.dateViewController!]
+let tabBarController = UITabBarController()
+tabBarController.setViewControllers(tabs, animated: true)
+</code></pre>
+
+<p>ここ。</p>
+
+<pre><code>var tabs = [self.dateViewController]
+</code></pre>
+
+<p><code>!</code>を書かなかったばっかりに<code>.setViewControllers</code>でエラーが出てしまって何が原因かわからずちょっと詰まってしまいました。<br/>
+まだ慣れないorz</p>
+
+<a name="enum........................Assets.Group.Type........."></a>
+<h2>enumで宣言されているAssets Group Typeの指定</h2>
+
+<p>Objective-C</p>
+
+<pre><code>ALAssetsGroupType assetsGroupType = ALAssetsGroupAlbum | ALAssetsGroupEvent | ALAssetsGroupFaces | ALAssetsGroupSavedPhotos;
+</code></pre>
+
+<p>これをSwiftにしようと思ったのですが、Objective-Cでは</p>
+
+<pre><code>enum {
+    ALAssetsGroupLibrary        = (1 &lt;&lt; 0),         // The Library group that includes all assets.
+    ALAssetsGroupAlbum          = (1 &lt;&lt; 1),         // All the albums synced from iTunes or created on the device.
+    ALAssetsGroupEvent          = (1 &lt;&lt; 2),         // All the events synced from iTunes.
+    ALAssetsGroupFaces          = (1 &lt;&lt; 3),         // All the faces albums synced from iTunes.
+    ALAssetsGroupSavedPhotos    = (1 &lt;&lt; 4),         // The Saved Photos album.
+#if __IPHONE_5_0 &lt;= __IPHONE_OS_VERSION_MAX_ALLOWED
+    ALAssetsGroupPhotoStream    = (1 &lt;&lt; 5),         // The PhotoStream album.
+#endif
+    ALAssetsGroupAll            = 0xFFFFFFFF,       // The same as ORing together all the available group types,
+};
+typedef NSUInteger ALAssetsGroupType;
+</code></pre>
+
+<p>こんな風に宣言されてましたが、Swiftでは</p>
+
+<pre><code>var ALAssetsGroupLibrary: CUnsignedInt { get } // The Library group that includes all assets.
+var ALAssetsGroupAlbum: CUnsignedInt { get } // All the albums synced from iTunes or created on the device.
+var ALAssetsGroupEvent: CUnsignedInt { get } // All the events synced from iTunes.
+var ALAssetsGroupFaces: CUnsignedInt { get } // All the faces albums synced from iTunes.
+var ALAssetsGroupSavedPhotos: CUnsignedInt { get } // The Saved Photos album.
+
+var ALAssetsGroupPhotoStream: CUnsignedInt { get } // The PhotoStream album.
+
+var ALAssetsGroupAll: CUnsignedInt { get } // The same as ORing together all the available group types,
+
+typealias ALAssetsGroupType = Int
+</code></pre>
+
+<p>こう変わっています。<br/>
+ということで、普通に</p>
+
+<pre><code>let assetsGroupType :ALAssetsGroupType = ALAssetsGroupAlbum | ALAssetsGroupEvent | ALAssetsGroupFaces | ALAssetsGroupSavedPhotos;
+</code></pre>
+
+<p>こう書いてしまうと、<code>ALAssetsGroupType</code>はInt型で宣言されてるため、エラーがでてしまいます。<br/>
+ということでそのまま型変換して解決させてみました。</p>
+
+<pre><code>let assetsGroupType :ALAssetsGroupType = Int(ALAssetsGroupAlbum) | Int(ALAssetsGroupEvent) | Int(ALAssetsGroupFaces) | Int(ALAssetsGroupSavedPhotos);
+</code></pre>
+
+<p><s>⇒　これじゃ駄目？でした。そもそも<code>import AssetsLibrary</code>と書いているにもかかわらず</p>
+
+<pre><code>error: use of unresolved identifier 'ALAssetsGroupAll'
+</code></pre>
+
+<p>が出てしまいます。<br/>
+⇒　絶賛調査中</s></p>
+
+<p>Xcodeがアップデートされて読み込めるようになりました・ω・<br/>
+最終的な形はこうなりました。</p>
+
+<pre><code>let assetsGroupType :ALAssetsGroupType!  = ALAssetsGroupType(ALAssetsGroupAlbum|ALAssetsGroupEvent|ALAssetsGroupFaces|ALAssetsGroupSavedPhotos)
+</code></pre>
+
+<a name="Blocks...closure..."></a>
+<h2>Blocksをclosureへ</h2>
+
+<p>AssetsLibraryのAssetsごとに入ってくるBlocksをSwiftのClosureに書き換えます。</p>
+
+<pre><code>ALAssetsGroupEnumerationResultsBlock groupResultBlock = ^(ALAsset *asset, NSUInteger index, BOOL *stop) {
+  if (asset) {
+    NSDate   *assetDate    = [asset valueForProperty:ALAssetPropertyDate];
+    NSString *assetDateStr = [formatter stringFromDate:assetDate];
+    [allAssets addObject:@{ ASSET: asset, DATE: assetDate, DATE_STR: assetDateStr }];
+  }
+};
+</code></pre>
+
+<p><code>allAssets</code>は日付ソートをするための<code>Array</code>です。<br/>
+これをClosureにすると</p>
+
+<pre><code>var groupResultBlock : ALAssetsGroupEnumerationResultsBlock = { (asset: ALAsset!, index: Int, stop:CMutablePointer&lt;ObjCBool&gt;) -&gt; Void in
+  if asset {
+    let assetDate: NSDate = asset.valueForProperty(ALAssetPropertyDate) as NSDate
+    let assetDateStr = fomatter.stringFromDate(assetDate)
+    allAssets.append([self.ASSET:asset, self.DATE:assetDate, self.DATE_STR:assetDateStr])
+  }
+}
+</code></pre>
+
+<p>こんな感じになりました！<br/>
+クロージャーは<code>{(引数) -&gt; 戻り値 in }</code>といった書き方になるみたいです。<br/>
+(正直このクロージャーがイマイチまだ理解しきれてないので学びながら進みたいと思います。)</p>
+
+<a name="L................................."></a>
+<h2>日付で配列をソートする</h2>
+
+<p>Objective-Cではソートをするために</p>
+
+<pre><code>NSComparator comparetor = ^NSComparisonResult (id obj1, id obj2) {
+  NSDate *datea = obj1[DATE];
+  NSDate *dateb = obj2[DATE];
+
+  return [dateb compare:datea];
+};
+</code></pre>
+
+<p>こんな感じで<code>NSComparator</code>を使って日付ソートしていました。<br/>
+これをSwiftで同じ形に書き換えてもいいんですが、SwiftにはArrayの<code>sort</code>が存在するのでそれ使ってみます。</p>
+
+<hr />
+
+<p>問題発生中につきここから先はメモになりますorz</p>
+
+<p>めも<br/>
+Expression resolves to an unused l-value</p>
+
+<p>fatal error: Can&rsquo;t unwrap Optional.None</p>
+
+<a name="Swift...Singleton"></a>
+<h2>SwiftでSingleton</h2>
+
+<p>[絶賛更新中]</p>
+
+<a name="L..............."></a>
+<h1>参考サイト</h1>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/24026497/how-to-declare-a-block-with-arguments-in-swift">How to declare a block with arguments in swift?</a></li>
+<li><a href="http://stackoverflow.com/questions/24133695/how-to-use-objective-c-code-with-define-macros-in-swift">How to use Objective-C code with #define macros in Swift</a></li>
+<li><a href="http://stackoverflow.com/questions/24124635/dont-understand-why-swift-wants-me-to-be-explicit">Don&rsquo;t understand why swift wants me to be explicit</a></li>
+<li><a href="http://qiita.com/1024jp/items/3a7bc437af3e79f74505">Swift でシングルトン</a></li>
+<li><a href="https://github.com/hpique/SwiftSingleton">hpique/SwiftSingleton</a></li>
+<li><a href="http://stackoverflow.com/questions/24024549/dispatch-once-singleton-model-in-swift">dispatch_once singleton model in swift</a></li>
+<li><a href="http://synappse.co/swift-first-steps-singleton/">Swift first steps: Singleton</a></li>
+<li><a href="http://qiita.com/kiyotaman/items/54fe453498513fe92164">The Swift Programming Language - Properties（プロパティ）をまとめる</a></li>
+<li><a href="http://vperi.com/2014/06/05/singleton-pattern-in-swift/">SINGLETON PATTERN IN SWIFT</a></li>
+<li><a href="http://stackoverflow.com/questions/24126261/swift-alternative-to-performselectoronmainthread">Swift alternative to performSelectorOnMainThread</a></li>
+<li><a href="http://stackoverflow.com/questions/24319586/how-do-i-create-a-uiimage-from-a-cgimage-in-swift">How do I create a UIImage from a CGImage in Swift?</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

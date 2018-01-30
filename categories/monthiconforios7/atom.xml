@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+    <title><![CDATA[Category: monthiconforios7 | PGMY Programming Blog]]></title>
+    <link href="http://pgmy.github.io/blog/categories/monthiconforios7/atom.xml" rel="self"/>
+    <link href="http://pgmy.github.io/blog/"/>
+    <updated>2018-01-30T07:51:29+00:00</updated>
+    <id>http://pgmy.github.io/blog/</id>
+    <author>
+        <name><![CDATA[PGMY]]></name>
+        
+      </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+
+    
+    <entry>
+        <title type="html"><![CDATA[iPhoneのホーム画面に月のアイコンを表示する＞iOS7風]]></title>
+        <link href="http://pgmy.github.io/blog/2014/03/03/monthiconforios7/"/>
+        <updated>2014-03-03T06:06:28+00:00</updated>
+        <id>http://pgmy.github.io/blog/2014/03/03/monthiconforios7</id>
+        <content type="html"><![CDATA[<p>iPhoneのホーム画面に月のアイコンを表示するためのサイトを作りました。
+Webは作るのが苦手なんですが・・・。
+いろいろ調べながらとりあえず自分用につくったものです。</p>
+
+<div class="github-widget" data-repo="PGMY/MonthIconForiOS7"></div>
+
+
+
+]]></content>
+    </entry>
+    
+</feed>
